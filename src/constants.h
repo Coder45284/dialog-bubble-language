@@ -1,0 +1,14 @@
+#ifndef CONSTANTS_DTLWS
+#define CONSTANTS_DTLWS
+
+#include <stdint.h>
+
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
+#define VOICE_BUFFER_SIZE 8192
+
+#define PCM_SAMPLE_TYPE int16_t
+#define PCM_SAMPLE_BITS 16
+#define PCM_SAMPLES_PER_SECOND 44100
+
+#endif // CONSTANTS_DTLWS
