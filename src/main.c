@@ -11,7 +11,7 @@ typedef struct {
 } Note;
 
 #define DEFINE_NOTE( name, times_a_second, time_off, amp, frequency) \
-Note name = {(float)PCM_SAMPLES_PER_SECOND / (float)times_a_second, ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * time_off, (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
+Note name = {(float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second), ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * (time_off), (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
 
 typedef struct {
     const Note *const note_r;
@@ -38,7 +38,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         context.time++;
 
         if(context.time >= context.note_r->on_period)
-            context.time = context.time % context.note_r->period;
+            context.time = 0;
     }
 }
 
