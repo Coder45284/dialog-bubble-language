@@ -41,64 +41,70 @@ Context context = {{}, 0, 0};
 
 void soundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
+    PCM_SAMPLE_TYPE *current_frame_r;
+    Note *note_r = &context.notes[context.note_index];
 
-    int true_off_period = context.notes[context.note_index].off_period / context.notes[context.note_index].period;
-    true_off_period += (context.notes[context.note_index].off_period % context.notes[context.note_index].period) != 0;
-    true_off_period *= context.notes[context.note_index].period;
+    int true_off_period = note_r->off_period / note_r->period;
+    true_off_period += (note_r->off_period % note_r->period) != 0;
+    true_off_period *= note_r->period;
 
     for( unsigned int f = 0; f < frames; f++ ) {
-        switch( context.notes[context.note_index].type) {
+        current_frame_r = &frame_data[f];
+
+        switch(note_r->type) {
             case SINE:
             {
-                frame_data[f] = (double)context.notes[context.note_index].amplitude * sin(2. * M_PI * (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period);
+                *current_frame_r = (double)note_r->amplitude * sin(2. * M_PI * (context.time % note_r->period) / (double)note_r->period);
                 break;
             }
             case SQUARE:
             {
-                if(context.time % context.notes[context.note_index].period > (context.notes[context.note_index].period / 2))
-                    frame_data[f] =  context.notes[context.note_index].amplitude;
+                if(context.time % note_r->period > (note_r->period / 2))
+                    *current_frame_r =  note_r->amplitude;
                 else
-                    frame_data[f] = -context.notes[context.note_index].amplitude;
+                    *current_frame_r = -note_r->amplitude;
                 break;
             }
             case TRIANGLE:
             {
-                double time = ((context.time + context.notes[context.note_index].period / 4) % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period;
+                double time = ((context.time + note_r->period / 4) % note_r->period) / (double)note_r->period;
 
                 if(time > 0.5)
-                    frame_data[f] =  context.notes[context.note_index].amplitude - 4.* (time - 0.5) * context.notes[context.note_index].amplitude;
+                    *current_frame_r =  note_r->amplitude - 4.* (time - 0.5) * note_r->amplitude;
                 else
-                    frame_data[f] = -context.notes[context.note_index].amplitude + 4. * time * context.notes[context.note_index].amplitude;
+                    *current_frame_r = -note_r->amplitude + 4. * time * note_r->amplitude;
 
                 break;
             }
             case SAWTOOTH:
             {
-                double time = (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period;
+                double time = (context.time % note_r->period) / (double)note_r->period;
 
-                double displace = 2. * time * context.notes[context.note_index].amplitude;
+                double displace = 2. * time * note_r->amplitude;
 
-                if(displace > context.notes[context.note_index].amplitude)
-                    frame_data[f] = displace - 2. * context.notes[context.note_index].amplitude;
+                if(displace > note_r->amplitude)
+                    *current_frame_r = displace - 2. * note_r->amplitude;
 
                 break;
             }
         }
 
         if(context.time > true_off_period)
-            frame_data[f] = 0;
+            *current_frame_r = 0;
 
         context.time++;
 
-        if(context.time >= context.notes[context.note_index].on_period) {
+        if(context.time >= note_r->on_period) {
             context.note_index++;
 
             if(context.note_index >= 32) {
                 context.note_index = 0;
-                true_off_period = context.notes[context.note_index].off_period / context.notes[context.note_index].period;
-                true_off_period += (context.notes[context.note_index].off_period % context.notes[context.note_index].period) != 0;
-                true_off_period *= context.notes[context.note_index].period;
+                true_off_period = note_r->off_period / note_r->period;
+                true_off_period += (note_r->off_period % note_r->period) != 0;
+                true_off_period *= note_r->period;
             }
+
+            note_r = &context.notes[context.note_index];
 
             context.time = 0;
         }
