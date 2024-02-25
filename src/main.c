@@ -4,34 +4,41 @@
 #include "constants.h"
 
 typedef struct {
-    unsigned int  on_period;
-    unsigned int off_period;
+    int  on_period;
+    int off_period;
+    int period;
     PCM_SAMPLE_TYPE amplitude;
-
 } Note;
+
+#define DEFINE_NOTE( name, times_a_second, time_off, amp, frequency) \
+Note name = {(float)PCM_SAMPLES_PER_SECOND / (float)times_a_second, ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * time_off, (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
 
 typedef struct {
     const Note *const note_r;
-    unsigned int period;
+    int time;
 } Context;
 
-Note note = {(float)PCM_SAMPLES_PER_SECOND / 4.0, (float)PCM_SAMPLES_PER_SECOND / 4.0 - (float)PCM_SAMPLES_PER_SECOND / 8.0, 2048};
+DEFINE_NOTE(note, 8.0, 0.25, 2048, 500);
 Context context = {&note, 0};
 
 void soundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
 
     for( unsigned int f = 0; f < frames; f++ ) {
-        if(context.period % 256 > 128) {
+        if(context.time % context.note_r->period > (context.note_r->period / 2)) {
             frame_data[f] =  context.note_r->amplitude;
         }
-        else
+        else {
             frame_data[f] = -context.note_r->amplitude;
+        }
 
-        context.period++;
+        if(context.time > context.note_r->off_period)
+            frame_data[f] = 0;
 
-        if(context.period >= 256)
-            context.period = 0;
+        context.time++;
+
+        if(context.time >= context.note_r->on_period)
+            context.time = context.time % context.note_r->period;
     }
 }
 
