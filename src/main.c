@@ -25,12 +25,6 @@ typedef struct {
 #define DEFINE_NOTE(name, type, times_a_second, time_off, amp, frequency) \
 const Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(frequency), amp}
 
-#define SETUP_NOTE(note, times_a_second, time_off, amp, frequency) \
-note.on_period  = TIMES_A_SECOND(times_a_second); \
-note.off_period = TIMES_A_SECOND(times_a_second) * (time_off); \
-note.period = FREQUENCY_TO_PERIOD(frequency); \
-note.amplitude = amp;
-
 typedef struct {
     Note notes[32];
     unsigned int note_index;
