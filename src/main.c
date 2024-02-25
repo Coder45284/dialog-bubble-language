@@ -4,7 +4,13 @@
 
 #include "constants.h"
 
+typedef enum {
+    SINE,
+    SQUARE
+} Wavetype;
+
 typedef struct {
+    Wavetype type;
     int  on_period;
     int off_period;
     int period;
@@ -12,7 +18,7 @@ typedef struct {
 } Note;
 
 #define DEFINE_NOTE(name, times_a_second, time_off, amp, frequency) \
-const Note name = {(float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second), ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * (time_off), (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
+const Note name = {SINE, (float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second), ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * (time_off), (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
 
 #define SETUP_NOTE(note, times_a_second, time_off, amp, frequency) \
 {\
@@ -39,13 +45,21 @@ void soundCallback(void *buffer_data, unsigned int frames) {
     true_off_period *= context.notes[context.note_index].period;
 
     for( unsigned int f = 0; f < frames; f++ ) {
-        if(context.time % context.notes[context.note_index].period > (context.notes[context.note_index].period / 2)) {
-            frame_data[f] =  context.notes[context.note_index].amplitude;
+        switch( context.notes[context.note_index].type) {
+            case SQUARE:
+            {
+                if(context.time % context.notes[context.note_index].period > (context.notes[context.note_index].period / 2))
+                    frame_data[f] =  context.notes[context.note_index].amplitude;
+                else
+                    frame_data[f] = -context.notes[context.note_index].amplitude;
+                break;
+            }
+            case SINE:
+            {
+                frame_data[f] = (double)context.notes[context.note_index].amplitude * sin(2. * M_PI * (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period);
+                break;
+            }
         }
-        else {
-            frame_data[f] = -context.notes[context.note_index].amplitude;
-        }
-        frame_data[f] = (double)context.notes[context.note_index].amplitude * sin(2. * M_PI * (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period);
 
         if(context.time > true_off_period)
             frame_data[f] = 0;
@@ -68,9 +82,12 @@ void soundCallback(void *buffer_data, unsigned int frames) {
 }
 
 int main() {
+    Wavetype wave_types[2] = {SINE, SQUARE};
+
     for(int i = 0; i < 32; i++) {
         context.notes[i] = base;
-        context.notes[i].period = (float)PCM_SAMPLES_PER_SECOND / (250 * (i + 1));
+        context.notes[i].type = wave_types[i % 2];
+        context.notes[i].period = (float)PCM_SAMPLES_PER_SECOND / (250 * (i / 2 + 1));
     }
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
