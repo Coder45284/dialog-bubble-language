@@ -32,6 +32,7 @@ file(GLOB SOURCE_FILES src/*.c )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
+target_link_libraries (${PROJECT_NAME} m)
 
 # Web Configurations
 if ("${PLATFORM}" STREQUAL "Web")
