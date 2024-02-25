@@ -19,8 +19,8 @@ typedef struct {
     PCM_SAMPLE_TYPE amplitude;
 } Note;
 
-#define DEFINE_NOTE(name, times_a_second, time_off, amp, frequency) \
-const Note name = {SINE, (float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second), ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * (time_off), (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
+#define DEFINE_NOTE(name, type, times_a_second, time_off, amp, frequency) \
+const Note name = {type, (float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second), ((float)PCM_SAMPLES_PER_SECOND / (float)times_a_second) * (time_off), (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
 
 #define SETUP_NOTE(note, times_a_second, time_off, amp, frequency) \
 {\
@@ -36,7 +36,7 @@ typedef struct {
     int time;
 } Context;
 
-DEFINE_NOTE(base, 8.0, 0.25, 2048, 200);
+DEFINE_NOTE(default_note, SINE, 8.0, 0.25, 2048, 200);
 Context context = {{}, 0, 0};
 
 void soundCallback(void *buffer_data, unsigned int frames) {
@@ -115,7 +115,7 @@ int main() {
     Wavetype wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
 
     for(int i = 0; i < 32; i++) {
-        context.notes[i] = base;
+        context.notes[i] = default_note;
         context.notes[i].type = wave_types[i % 4];
         context.notes[i].period = (float)PCM_SAMPLES_PER_SECOND / (250 * (i / 4 + 1));
     }
