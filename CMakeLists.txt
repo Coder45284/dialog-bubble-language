@@ -26,6 +26,7 @@ endif()
 # Our Project
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 file(GLOB SOURCE_FILES src/*.c )
 
