@@ -16,14 +16,16 @@ typedef struct {
     int  on_period;
     int off_period;
     int period;
-    PCM_SAMPLE_TYPE amplitude;
+
+    PCM_SAMPLE_TYPE max_amplitude;
+    PCM_SAMPLE_TYPE min_amplitude;
 } Note;
 
 #define TIMES_A_SECOND( times_a_second ) ((float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second))
 #define FREQUENCY_TO_PERIOD( frequency ) ((float)PCM_SAMPLES_PER_SECOND / ((float)frequency))
 
-#define DEFINE_NOTE(name, type, times_a_second, time_off, amp, frequency) \
-const Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(frequency), amp}
+#define DEFINE_NOTE(name, type, times_a_second, time_off, frequency, max_amp, min_amp) \
+Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(frequency), max_amp, min_amp}
 
 typedef struct {
     Note notes[32];
@@ -31,7 +33,7 @@ typedef struct {
     int time;
 } Context;
 
-DEFINE_NOTE(default_note, SINE, 8.0, 0.25, 2048, 200);
+const DEFINE_NOTE(default_note, SINE, 8.0, 0.25, 200, 2048, 1024);
 Context context = {{}, 0, 0};
 
 void soundCallback(void *buffer_data, unsigned int frames) {
@@ -49,15 +51,15 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         switch(note_r->type) {
             case SINE:
             {
-                *current_frame_r = (double)note_r->amplitude * sin(2. * M_PI * (context.time % note_r->period) / (double)note_r->period);
+                *current_frame_r = (double)note_r->max_amplitude * sin(2. * M_PI * (context.time % note_r->period) / (double)note_r->period);
                 break;
             }
             case SQUARE:
             {
                 if(context.time % note_r->period > (note_r->period / 2))
-                    *current_frame_r =  note_r->amplitude;
+                    *current_frame_r =  note_r->max_amplitude;
                 else
-                    *current_frame_r = -note_r->amplitude;
+                    *current_frame_r = -note_r->max_amplitude;
                 break;
             }
             case TRIANGLE:
@@ -65,9 +67,9 @@ void soundCallback(void *buffer_data, unsigned int frames) {
                 double time = ((context.time + note_r->period / 4) % note_r->period) / (double)note_r->period;
 
                 if(time > 0.5)
-                    *current_frame_r =  note_r->amplitude - 4.* (time - 0.5) * note_r->amplitude;
+                    *current_frame_r =  note_r->max_amplitude - 4.* (time - 0.5) * note_r->max_amplitude;
                 else
-                    *current_frame_r = -note_r->amplitude + 4. * time * note_r->amplitude;
+                    *current_frame_r = -note_r->max_amplitude + 4. * time * note_r->max_amplitude;
 
                 break;
             }
@@ -75,10 +77,10 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             {
                 double time = (context.time % note_r->period) / (double)note_r->period;
 
-                double displace = 2. * time * note_r->amplitude;
+                double displace = 2. * time * note_r->max_amplitude;
 
-                if(displace > note_r->amplitude)
-                    *current_frame_r = displace - 2. * note_r->amplitude;
+                if(displace > note_r->max_amplitude)
+                    *current_frame_r = displace - 2. * note_r->max_amplitude;
 
                 break;
             }
