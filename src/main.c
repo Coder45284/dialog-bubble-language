@@ -39,13 +39,13 @@ Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second
 
 typedef struct {
     Note notes[32];
+    unsigned int note_amount;
     unsigned int note_index;
 
     NoteState note_state;
 } Context;
 
-const DEFINE_NOTE(default_note, SINE, 8.0, 0.25, 200, 2048, 1024);
-Context context = {{}, 0, 0};
+Context context = {{}, 32, 0, 0};
 
 void soundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
@@ -58,6 +58,12 @@ void soundCallback(void *buffer_data, unsigned int frames) {
 
     for( unsigned int f = 0; f < frames; f++ ) {
         current_frame_r = &frame_data[f];
+
+        {
+            double time = (note_r->time % note_r->off_period) / (double)note_r->off_period;
+
+            note_r->current_amplitude = context.notes[context.note_index].max_amplitude * (1.0 - time) + context.notes[context.note_index].min_amplitude * time;
+        }
 
         switch(note_r->type) {
             case SINE:
@@ -105,7 +111,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         if(note_r->time >= note_r->on_period) {
             context.note_index++;
 
-            if(context.note_index >= 32) {
+            if(context.note_index >= context.note_amount) {
                 context.note_index = 0;
 
                 true_off_period = note_r->off_period / note_r->period;
@@ -126,11 +132,20 @@ void soundCallback(void *buffer_data, unsigned int frames) {
 
 int main() {
     Wavetype wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
+    const DEFINE_NOTE(default_note_0, SINE, 8.0, 0.50, 1000, 2048, 2048);
+    const DEFINE_NOTE(default_note_1, SINE, 8.0, 0.50, 1000, 2048,    0);
+    const DEFINE_NOTE(default_note_2, SINE, 8.0, 0.50, 1000,    0, 2048);
 
-    for(int i = 0; i < 32; i++) {
-        context.notes[i] = default_note;
-        context.notes[i].type = wave_types[i % 4];
-        context.notes[i].period = (float)PCM_SAMPLES_PER_SECOND / (250 * (i / 4 + 1));
+    const Note notes[3] = {default_note_0, default_note_1, default_note_2};
+
+    context.note_amount = 0;
+
+    for(int t = 0; t < 4; t++) {
+        for(int i = 0; i < 3; i++) {
+            context.notes[context.note_amount] = notes[i];
+            context.notes[context.note_amount].type = wave_types[t];
+            context.note_amount++;
+        }
     }
 
     context.note_state.type = context.notes[context.note_index].type;
