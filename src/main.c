@@ -3,17 +3,35 @@
 
 #include "constants.h"
 
-PCM_SAMPLE_TYPE max_amplitude = 512 * 4;
+typedef struct {
+    unsigned int  on_period;
+    unsigned int off_period;
+    PCM_SAMPLE_TYPE amplitude;
 
-void soundCallback(void *bufferData, unsigned int frames) {
-    PCM_SAMPLE_TYPE *frameData = (PCM_SAMPLE_TYPE*)bufferData;
+} Note;
+
+typedef struct {
+    const Note *const note_r;
+    unsigned int period;
+} Context;
+
+Note note = {(float)PCM_SAMPLES_PER_SECOND / 4.0, (float)PCM_SAMPLES_PER_SECOND / 4.0 - (float)PCM_SAMPLES_PER_SECOND / 8.0, 2048};
+Context context = {&note, 0};
+
+void soundCallback(void *buffer_data, unsigned int frames) {
+    PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
 
     for( unsigned int f = 0; f < frames; f++ ) {
-        if( f % 256 > 128 ) {
-            frameData[f] = max_amplitude;
+        if(context.period % 256 > 128) {
+            frame_data[f] =  context.note_r->amplitude;
         }
         else
-            frameData[f] = -max_amplitude;
+            frame_data[f] = -context.note_r->amplitude;
+
+        context.period++;
+
+        if(context.period >= 256)
+            context.period = 0;
     }
 }
 
