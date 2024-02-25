@@ -6,7 +6,9 @@
 
 typedef enum {
     SINE,
-    SQUARE
+    SQUARE,
+    TRIANGLE,
+    SAWTOOTH
 } Wavetype;
 
 typedef struct {
@@ -46,6 +48,11 @@ void soundCallback(void *buffer_data, unsigned int frames) {
 
     for( unsigned int f = 0; f < frames; f++ ) {
         switch( context.notes[context.note_index].type) {
+            case SINE:
+            {
+                frame_data[f] = (double)context.notes[context.note_index].amplitude * sin(2. * M_PI * (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period);
+                break;
+            }
             case SQUARE:
             {
                 if(context.time % context.notes[context.note_index].period > (context.notes[context.note_index].period / 2))
@@ -54,9 +61,26 @@ void soundCallback(void *buffer_data, unsigned int frames) {
                     frame_data[f] = -context.notes[context.note_index].amplitude;
                 break;
             }
-            case SINE:
+            case TRIANGLE:
             {
-                frame_data[f] = (double)context.notes[context.note_index].amplitude * sin(2. * M_PI * (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period);
+                double time = ((context.time + context.notes[context.note_index].period / 4) % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period;
+
+                if(time > 0.5)
+                    frame_data[f] =  context.notes[context.note_index].amplitude - 4.* (time - 0.5) * context.notes[context.note_index].amplitude;
+                else
+                    frame_data[f] = -context.notes[context.note_index].amplitude + 4. * time * context.notes[context.note_index].amplitude;
+
+                break;
+            }
+            case SAWTOOTH:
+            {
+                double time = (context.time % context.notes[context.note_index].period) / (double)context.notes[context.note_index].period;
+
+                double displace = 2. * time * context.notes[context.note_index].amplitude;
+
+                if(displace > context.notes[context.note_index].amplitude)
+                    frame_data[f] = displace - 2. * context.notes[context.note_index].amplitude;
+
                 break;
             }
         }
@@ -82,12 +106,12 @@ void soundCallback(void *buffer_data, unsigned int frames) {
 }
 
 int main() {
-    Wavetype wave_types[2] = {SINE, SQUARE};
+    Wavetype wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
 
     for(int i = 0; i < 32; i++) {
         context.notes[i] = base;
-        context.notes[i].type = wave_types[i % 2];
-        context.notes[i].period = (float)PCM_SAMPLES_PER_SECOND / (250 * (i / 2 + 1));
+        context.notes[i].type = wave_types[i % 4];
+        context.notes[i].period = (float)PCM_SAMPLES_PER_SECOND / (250 * (i / 4 + 1));
     }
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
