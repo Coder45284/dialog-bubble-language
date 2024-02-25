@@ -20,17 +20,16 @@ typedef struct {
 } Note;
 
 #define TIMES_A_SECOND( times_a_second ) ((float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second))
+#define FREQUENCY_TO_PERIOD( frequency ) ((float)PCM_SAMPLES_PER_SECOND / ((float)frequency))
 
 #define DEFINE_NOTE(name, type, times_a_second, time_off, amp, frequency) \
-const Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), (float)PCM_SAMPLES_PER_SECOND / (frequency), amp}
+const Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(frequency), amp}
 
 #define SETUP_NOTE(note, times_a_second, time_off, amp, frequency) \
-{\
-    note.on_period  = TIMES_A_SECOND(times_a_second); \
-    note.off_period = TIMES_A_SECOND(times_a_second) * (time_off); \
-    note.period = (float)PCM_SAMPLES_PER_SECOND / (frequency); \
-    note.amplitude = amp; \
-}
+note.on_period  = TIMES_A_SECOND(times_a_second); \
+note.off_period = TIMES_A_SECOND(times_a_second) * (time_off); \
+note.period = FREQUENCY_TO_PERIOD(frequency); \
+note.amplitude = amp;
 
 typedef struct {
     Note notes[32];
