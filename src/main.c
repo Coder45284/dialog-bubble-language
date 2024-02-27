@@ -87,6 +87,9 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             {
                 double time = ((note_r->time + 3 * note_r->period / 4) % note_r->period) / (double)note_r->period;
 
+                if( time > 1.0 )
+                    time = 1.0;
+
                 if(time > 0.5)
                     *current_frame_r =  note_r->current_amplitude - 4.* (time - 0.5) * note_r->current_amplitude;
                 else
@@ -98,10 +101,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             {
                 double time = (note_r->time % note_r->period) / (double)note_r->period;
 
-                double displace = 2. * time * note_r->current_amplitude;
-
-                if(displace > note_r->current_amplitude)
-                    *current_frame_r = displace - 2. * note_r->current_amplitude;
+                *current_frame_r = -note_r->current_amplitude + 2.0 * note_r->current_amplitude * time;
 
                 break;
             }
