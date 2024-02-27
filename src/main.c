@@ -63,7 +63,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             if( time > 1.0 )
                 time = 1.0;
 
-            note_r->current_period = context.notes[context.note_index].start_period;
+            note_r->current_period = context.notes[context.note_index].start_period * (1.0 - time) + context.notes[context.note_index].end_period * time;
             note_r->current_amplitude = context.notes[context.note_index].start_amp * (1.0 - time) + context.notes[context.note_index].end_amp * time;
         }
 
@@ -152,13 +152,17 @@ int main() {
     const DEFINE_NOTE(default_note_0, SINE, 8.0, 0.50, 1000, 1000, 2048, 2048);
     const DEFINE_NOTE(default_note_1, SINE, 8.0, 0.50, 1000, 1000, 2048,    0);
     const DEFINE_NOTE(default_note_2, SINE, 8.0, 0.50, 1000, 1000,    0, 2048);
+    const DEFINE_NOTE(default_note_3, SINE, 8.0, 0.50, 1000, 1500, 2048, 2048);
+    const DEFINE_NOTE(default_note_4, SINE, 8.0, 0.50, 1500, 1000, 2048, 2048);
+    const DEFINE_NOTE(default_note_5, SINE, 8.0, 0.50, 1000,  500, 2048, 2048);
+    const DEFINE_NOTE(default_note_6, SINE, 8.0, 0.50,  500, 1000, 2048, 2048);
 
-    const Note notes[3] = {default_note_0, default_note_1, default_note_2};
+    const Note notes[7] = {default_note_0, default_note_1, default_note_2, default_note_3, default_note_4, default_note_5, default_note_6};
 
     context.note_amount = 0;
 
     for(int t = 0; t < 4; t++) {
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 7; i++) {
             context.notes[context.note_amount] = notes[i];
             context.notes[context.note_amount].type = wave_types[t];
             context.note_amount++;
@@ -171,7 +175,7 @@ int main() {
     context.note_state.current_period = context.notes[context.note_index].start_period;
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
 
-    // exportWAV("exp.wav");
+    exportWAV("exp.wav");
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
 
