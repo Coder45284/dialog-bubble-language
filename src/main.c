@@ -177,7 +177,7 @@ int main() {
     context.note_state.period = context.notes[context.note_index].period;
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
 
-    exportWAV("exp.wav");
+    // exportWAV("exp.wav");
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
 
