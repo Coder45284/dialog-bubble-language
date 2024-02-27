@@ -61,7 +61,10 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         current_frame_r = &frame_data[f];
 
         {
-            double time = (note_r->time % note_r->off_period) / (double)note_r->off_period;
+            double time = note_r->time / (double)note_r->off_period;
+
+            if( time > 1.0 )
+                time = 1.0;
 
             note_r->current_amplitude = context.notes[context.note_index].start_amp * (1.0 - time) + context.notes[context.note_index].end_amp * time;
         }
