@@ -17,8 +17,8 @@ typedef struct {
     int off_period;
     int period;
 
-    PCM_SAMPLE_TYPE max_amplitude;
-    PCM_SAMPLE_TYPE min_amplitude;
+    PCM_SAMPLE_TYPE start_amp;
+    PCM_SAMPLE_TYPE   end_amp;
 } Note;
 
 typedef struct {
@@ -62,7 +62,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         {
             double time = (note_r->time % note_r->off_period) / (double)note_r->off_period;
 
-            note_r->current_amplitude = context.notes[context.note_index].max_amplitude * (1.0 - time) + context.notes[context.note_index].min_amplitude * time;
+            note_r->current_amplitude = context.notes[context.note_index].start_amp * (1.0 - time) + context.notes[context.note_index].end_amp * time;
         }
 
         switch(note_r->type) {
@@ -123,7 +123,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             note_r->on_period = context.notes[context.note_index].on_period;
             note_r->off_period = context.notes[context.note_index].off_period;
             note_r->period = context.notes[context.note_index].period;
-            note_r->current_amplitude = context.notes[context.note_index].max_amplitude;
+            note_r->current_amplitude = context.notes[context.note_index].start_amp;
 
             note_r->time = 0;
         }
@@ -152,7 +152,7 @@ int main() {
     context.note_state.on_period = context.notes[context.note_index].on_period;
     context.note_state.off_period = context.notes[context.note_index].off_period;
     context.note_state.period = context.notes[context.note_index].period;
-    context.note_state.current_amplitude = context.notes[context.note_index].max_amplitude;
+    context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
 
