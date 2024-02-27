@@ -14,7 +14,7 @@ typedef enum {
 
 typedef struct {
     Wavetype type;
-    int  on_period;
+    int  total_time;
     int off_period;
     int period;
 
@@ -24,7 +24,7 @@ typedef struct {
 
 typedef struct {
     Wavetype type;
-    int  on_period;
+    int  total_time;
     int off_period;
     int period;
     int time;
@@ -109,7 +109,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
 
         note_r->time++;
 
-        if(note_r->time >= note_r->on_period) {
+        if(note_r->time >= note_r->total_time) {
             context.note_index++;
 
             if(context.note_index >= context.note_amount) {
@@ -121,7 +121,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             }
 
             note_r->type = context.notes[context.note_index].type;
-            note_r->on_period = context.notes[context.note_index].on_period;
+            note_r->total_time = context.notes[context.note_index].total_time;
             note_r->off_period = context.notes[context.note_index].off_period;
             note_r->period = context.notes[context.note_index].period;
             note_r->current_amplitude = context.notes[context.note_index].start_amp;
@@ -140,7 +140,7 @@ int exportWAV(const char *file_path) {
     wav.channels   = 1;
 
     for(unsigned int n = 0; n < context.note_amount; n++) {
-        wav.frameCount += context.notes[n].on_period;
+        wav.frameCount += context.notes[n].total_time;
     }
 
     wav.data = malloc(wav.frameCount * sizeof(PCM_SAMPLE_TYPE));
@@ -172,7 +172,7 @@ int main() {
     }
 
     context.note_state.type = context.notes[context.note_index].type;
-    context.note_state.on_period = context.notes[context.note_index].on_period;
+    context.note_state.total_time = context.notes[context.note_index].total_time;
     context.note_state.off_period = context.notes[context.note_index].off_period;
     context.note_state.period = context.notes[context.note_index].period;
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
