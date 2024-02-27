@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include "constants.h"
 
@@ -56,7 +57,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
     true_off_period += (note_r->off_period % note_r->period) != 0;
     true_off_period *= note_r->period;
 
-    for( unsigned int f = 0; f < frames; f++ ) {
+    for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
 
         {
@@ -130,6 +131,28 @@ void soundCallback(void *buffer_data, unsigned int frames) {
     }
 }
 
+int exportWAV(const char *file_path) {
+    Wave wav;
+
+    wav.frameCount = 0; // This will be found later.
+    wav.sampleRate = PCM_SAMPLES_PER_SECOND;
+    wav.sampleSize = PCM_SAMPLE_BITS;
+    wav.channels   = 1;
+
+    for(unsigned int n = 0; n < context.note_amount; n++) {
+        wav.frameCount += context.notes[n].on_period;
+    }
+
+    wav.data = malloc(wav.frameCount * sizeof(PCM_SAMPLE_TYPE));
+
+    soundCallback(wav.data, wav.frameCount);
+    bool result = ExportWave(wav, file_path);
+
+    free(wav.data);
+
+    return result;
+}
+
 int main() {
     Wavetype wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
     const DEFINE_NOTE(default_note_0, SINE, 8.0, 0.50, 1000, 2048, 2048);
@@ -153,6 +176,8 @@ int main() {
     context.note_state.off_period = context.notes[context.note_index].off_period;
     context.note_state.period = context.notes[context.note_index].period;
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
+
+    exportWAV("exp.wav");
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
 
