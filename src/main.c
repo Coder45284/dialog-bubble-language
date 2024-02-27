@@ -15,7 +15,7 @@ typedef enum {
 typedef struct {
     Wavetype type;
     int  total_time;
-    int off_period;
+    int sound_time;
     int period;
 
     PCM_SAMPLE_TYPE start_amp;
@@ -25,7 +25,7 @@ typedef struct {
 typedef struct {
     Wavetype type;
     int  total_time;
-    int off_period;
+    int sound_time;
     int period;
     int time;
 
@@ -53,15 +53,15 @@ void soundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *current_frame_r;
     NoteState *note_r = &context.note_state;
 
-    int true_off_period = note_r->off_period / note_r->period;
-    true_off_period += (note_r->off_period % note_r->period) != 0;
-    true_off_period *= note_r->period;
+    int true_sound_time = note_r->sound_time / note_r->period;
+    true_sound_time += (note_r->sound_time % note_r->period) != 0;
+    true_sound_time *= note_r->period;
 
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
 
         {
-            double time = note_r->time / (double)note_r->off_period;
+            double time = note_r->time / (double)note_r->sound_time;
 
             if( time > 1.0 )
                 time = 1.0;
@@ -104,7 +104,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             }
         }
 
-        if(note_r->time > true_off_period)
+        if(note_r->time > true_sound_time)
             *current_frame_r = 0;
 
         note_r->time++;
@@ -115,14 +115,14 @@ void soundCallback(void *buffer_data, unsigned int frames) {
             if(context.note_index >= context.note_amount) {
                 context.note_index = 0;
 
-                true_off_period = note_r->off_period / note_r->period;
-                true_off_period += (note_r->off_period % note_r->period) != 0;
-                true_off_period *= note_r->period;
+                true_sound_time = note_r->sound_time / note_r->period;
+                true_sound_time += (note_r->sound_time % note_r->period) != 0;
+                true_sound_time *= note_r->period;
             }
 
             note_r->type = context.notes[context.note_index].type;
             note_r->total_time = context.notes[context.note_index].total_time;
-            note_r->off_period = context.notes[context.note_index].off_period;
+            note_r->sound_time = context.notes[context.note_index].sound_time;
             note_r->period = context.notes[context.note_index].period;
             note_r->current_amplitude = context.notes[context.note_index].start_amp;
 
@@ -173,7 +173,7 @@ int main() {
 
     context.note_state.type = context.notes[context.note_index].type;
     context.note_state.total_time = context.notes[context.note_index].total_time;
-    context.note_state.off_period = context.notes[context.note_index].off_period;
+    context.note_state.sound_time = context.notes[context.note_index].sound_time;
     context.note_state.period = context.notes[context.note_index].period;
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
 
