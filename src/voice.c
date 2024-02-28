@@ -6,6 +6,19 @@
 
 Context context = {{}, 128, 0, 0};
 
+void setupContext() {
+    if(context.note_index >= context.note_amount)
+        context.note_index = 0;
+
+    context.note_state.type = context.notes[context.note_index].type;
+    context.note_state.total_time = context.notes[context.note_index].total_time;
+    context.note_state.sound_time = context.notes[context.note_index].sound_time;
+    context.note_state.time = 0;
+    context.note_state.period_begin = 0;
+    context.note_state.current_period = context.notes[context.note_index].start_period;
+    context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
+}
+
 void soundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
@@ -80,18 +93,7 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         if(note_r->time >= note_r->total_time) {
             context.note_index++;
 
-            if(context.note_index >= context.note_amount) {
-                context.note_index = 0;
-            }
-
-            note_r->type = context.notes[context.note_index].type;
-            note_r->total_time = context.notes[context.note_index].total_time;
-            note_r->sound_time = context.notes[context.note_index].sound_time;
-            note_r->period_begin = 0;
-            note_r->current_period = context.notes[context.note_index].start_period;
-            note_r->current_amplitude = context.notes[context.note_index].start_amp;
-
-            note_r->time = 0;
+            setupContext();
         }
     }
 }

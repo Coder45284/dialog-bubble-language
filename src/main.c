@@ -28,12 +28,7 @@ int main() {
         }
     }
 
-    context.note_state.type = context.notes[context.note_index].type;
-    context.note_state.total_time = context.notes[context.note_index].total_time;
-    context.note_state.sound_time = context.notes[context.note_index].sound_time;
-    context.note_state.period_begin = 0;
-    context.note_state.current_period = context.notes[context.note_index].start_period;
-    context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
+    setupContext();
 
     // exportWAV("exp.wav");
 
