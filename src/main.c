@@ -58,23 +58,30 @@ void soundCallback(void *buffer_data, unsigned int frames) {
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
 
-        if(note_r->time - note_r->period_begin >= note_r->current_period ){
+        if(note_r->time - note_r->period_begin >= note_r->current_period ) {
             double time = note_r->time / (double)note_r->sound_time;
 
             if( time > 1.0 )
                 time = 1.0;
 
-            if(context.notes[context.note_index].start_period != context.notes[context.note_index].end_period)
-                note_r->current_period = context.notes[context.note_index].start_period * (1.0 - time) + context.notes[context.note_index].end_period * time;
-            else
-                note_r->current_period = context.notes[context.note_index].start_period;
-
-            if(context.notes[context.note_index].start_amp != context.notes[context.note_index].end_amp)
-                note_r->current_amplitude = context.notes[context.note_index].start_amp * (1.0 - time) + context.notes[context.note_index].end_amp * time;
-            else
-                note_r->current_amplitude = context.notes[context.note_index].start_amp;
-
             note_r->period_begin = note_r->time;
+
+            // Silince the note.
+            if(note_r->time >= note_r->sound_time) {
+                note_r->current_period = note_r->total_time - note_r->period_begin;
+                note_r->current_amplitude = 0;
+            }
+            else {
+                if(context.notes[context.note_index].start_period != context.notes[context.note_index].end_period)
+                    note_r->current_period = context.notes[context.note_index].start_period * (1.0 - time) + context.notes[context.note_index].end_period * time;
+                else
+                    note_r->current_period = context.notes[context.note_index].start_period;
+
+                if(context.notes[context.note_index].start_amp != context.notes[context.note_index].end_amp)
+                    note_r->current_amplitude = context.notes[context.note_index].start_amp * (1.0 - time) + context.notes[context.note_index].end_amp * time;
+                else
+                    note_r->current_amplitude = context.notes[context.note_index].start_amp;
+            }
         }
 
         switch(note_r->type) {
@@ -111,9 +118,6 @@ void soundCallback(void *buffer_data, unsigned int frames) {
                 break;
             }
         }
-
-        if(note_r->time > note_r->sound_time)
-            *current_frame_r = 0;
 
         note_r->time++;
 
