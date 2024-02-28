@@ -21,7 +21,14 @@ void setupContext() {
 }
 
 int inputPhonemic(const char *const string) {
-    for(int i = 0; i < 3; i++) {
+    if(string[0] == '\0') {
+        const DEFINE_NOTE(default_note, SQUARE, 8.0, 0.50, 60, 60, 0, 0);
+        context.notes[context.note_amount] = default_note;
+        context.note_amount++;
+        return true;
+    }
+
+    for(int i = 1; i < 3; i++) {
         if(string[i] == '\0')
             return false;
     }

@@ -7,7 +7,15 @@
 #include "voice.h"
 
 int main() {
-    generateAllPhonemics();
+    // generateAllPhonemics();
+
+    context.note_amount = 0;
+
+    // This is saying 'we'
+    inputPhonemic("sih"); // 1st person
+    // inputPhonemic("see"); // Optional gender marker.
+    inputPhonemic("soh"); // plural
+    inputPhonemic("");
 
     setupContext();
 
