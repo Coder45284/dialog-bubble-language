@@ -33,7 +33,7 @@ typedef struct {
 } NoteState;
 
 typedef struct {
-    Note notes[32];
+    Note notes[128];
     unsigned int note_amount;
     unsigned int note_index;
 

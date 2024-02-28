@@ -4,7 +4,7 @@
 
 #include "voice.h"
 
-Context context = {{}, 32, 0, 0};
+Context context = {{}, 128, 0, 0};
 
 void soundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
