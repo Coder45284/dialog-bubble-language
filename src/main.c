@@ -7,30 +7,11 @@
 #include "voice.h"
 
 int main() {
-    Wavetype wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
-
-    unsigned int   base_frequency = 1000;
-    unsigned int   frequencies[3] = {base_frequency, 500, 1500};
-
-    const int volume = 16384;
-    unsigned int start_volumes[3] = {volume, volume, 0};
-    unsigned int   end_volumes[3] = {volume,      0, volume};
-
-    context.note_amount = 0;
-
-    for(int w = 0; w < 4; w++) {
-        for(int f = 0; f < 3; f++) {
-            for(int v = 0; v < 3; v++) {
-                const DEFINE_NOTE(default_note, wave_types[w], 8.0, 0.50, base_frequency, frequencies[f], start_volumes[v], end_volumes[v]);
-                context.notes[context.note_amount] = default_note;
-                context.note_amount++;
-            }
-        }
-    }
+    generateAllPhonemics();
 
     setupContext();
 
-    // exportWAV("exp.wav");
+    // exportWAV("new.wav");
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
 

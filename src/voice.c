@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <math.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "voice.h"
 
@@ -17,6 +18,75 @@ void setupContext() {
     context.note_state.period_begin = 0;
     context.note_state.current_period = context.notes[context.note_index].start_period;
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
+}
+
+int inputPhonemic(const char *const string) {
+    for(int i = 0; i < 3; i++) {
+        if(string[i] == '\0')
+            return false;
+    }
+
+    const Wavetype  wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
+    const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
+
+    const int                    volume = 16384;
+    const unsigned int start_volumes[3] = {volume, volume, 0};
+    const unsigned int   end_volumes[3] = {volume,      0, volume};
+    const char         volumes_chars[3] = {   'e',    'o', 'i'};
+
+    const unsigned int   base_frequency = 1000;
+    const unsigned int   frequencies[3] = {base_frequency, 500, 1500};
+    const char       frequency_chars[3] = {           'e', 'h', 'l'};
+
+    Wavetype         wave_type = SINE;
+    unsigned int  start_volume = volume;
+    unsigned int    end_volume = volume;
+    unsigned int end_frequency = base_frequency;
+
+    for(int w = 0; w < 4; w++) {
+        if(wave_type_chars[w] == tolower(string[0]) )
+            wave_type = wave_types[w];
+    }
+
+    for(int v = 0; v < 3; v++) {
+        if(volumes_chars[v] == tolower(string[1]) ) {
+            start_volume = start_volumes[v];
+            end_volume   =   end_volumes[v];
+        }
+    }
+
+    for(int f = 0; f < 3; f++) {
+        if(frequency_chars[f] == tolower(string[2]) )
+            end_frequency = frequencies[f];
+    }
+
+    const DEFINE_NOTE(default_note, wave_type, 8.0, 0.50, base_frequency, end_frequency, start_volume, end_volume);
+    context.notes[context.note_amount] = default_note;
+    context.note_amount++;
+
+    return true;
+}
+
+void generateAllPhonemics() {
+    const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
+    const char   volumes_chars[3] = {'e', 'o', 'i'};
+    const char frequency_chars[3] = {'e', 'h', 'l'};
+
+    char phonem[4] = "see";
+
+    context.note_amount = 0;
+
+    for(int w = 0; w < 4; w++) {
+        for(int f = 0; f < 3; f++) {
+            for(int v = 0; v < 3; v++) {
+                phonem[0] = wave_type_chars[w];
+                phonem[1] =   volumes_chars[v];
+                phonem[2] = frequency_chars[f];
+
+                inputPhonemic(phonem);
+            }
+        }
+    }
 }
 
 void soundCallback(void *buffer_data, unsigned int frames) {
