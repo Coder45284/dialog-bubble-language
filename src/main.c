@@ -160,13 +160,16 @@ int exportWAV(const char *file_path) {
 
 int main() {
     Wavetype wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
-    const DEFINE_NOTE(default_note_0, SINE, 8.0, 0.50, 1000, 1000, 2048, 2048);
-    const DEFINE_NOTE(default_note_1, SINE, 8.0, 0.50, 1000, 1000, 2048,    0);
-    const DEFINE_NOTE(default_note_2, SINE, 8.0, 0.50, 1000, 1000,    0, 2048);
-    const DEFINE_NOTE(default_note_3, SINE, 8.0, 0.50, 1000, 1500, 2048, 2048);
-    const DEFINE_NOTE(default_note_4, SINE, 8.0, 0.50, 1500, 1000, 2048, 2048);
-    const DEFINE_NOTE(default_note_5, SINE, 8.0, 0.50, 1000,  500, 2048, 2048);
-    const DEFINE_NOTE(default_note_6, SINE, 8.0, 0.50,  500, 1000, 2048, 2048);
+
+    const int volume = 16384;
+
+    const DEFINE_NOTE(default_note_0, SINE, 8.0, 0.50, 1000, 1000, volume, volume);
+    const DEFINE_NOTE(default_note_1, SINE, 8.0, 0.50, 1000, 1000, volume,      0);
+    const DEFINE_NOTE(default_note_2, SINE, 8.0, 0.50, 1000, 1000,      0, volume);
+    const DEFINE_NOTE(default_note_3, SINE, 8.0, 0.50, 1000, 1500, volume, volume);
+    const DEFINE_NOTE(default_note_4, SINE, 8.0, 0.50, 1000,  500, volume, volume);
+    const DEFINE_NOTE(default_note_5, SINE, 8.0, 0.50, 1000, 1500, volume,      0);
+    const DEFINE_NOTE(default_note_6, SINE, 8.0, 0.50, 1000,  500, volume,      0);
 
     const Note notes[7] = {default_note_0, default_note_1, default_note_2, default_note_3, default_note_4, default_note_5, default_note_6};
 
