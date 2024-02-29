@@ -5,7 +5,7 @@
 
 #include "voice.h"
 
-Context context = {{}, 128, 0, 0};
+Context context = {{}, NOTE_LIMIT, 0, 0};
 
 void setupContext() {
     if(context.note_index >= context.note_amount)

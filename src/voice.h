@@ -32,8 +32,10 @@ typedef struct {
     PCM_SAMPLE_TYPE current_amplitude;
 } NoteState;
 
+#define NOTE_LIMIT 512
+
 typedef struct {
-    Note notes[128];
+    Note notes[NOTE_LIMIT];
     unsigned int note_amount;
     unsigned int note_index;
 
