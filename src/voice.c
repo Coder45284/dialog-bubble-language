@@ -26,11 +26,11 @@ void voiceReadyContext(VoiceContext *context) {
     context->note_state.current_amplitude = context->notes[context->note_index].start_amp;
 }
 
-int voiceInputPhonemic(const char *const string) {
+int voiceInputPhonemic(VoiceContext *context, const char *const string) {
     if(string[0] == '\0') {
         const DEFINE_NOTE(default_note, SQUARE, 8.0, 0.50, 60, 60, 0, 0);
-        voiceContext.notes[voiceContext.note_amount] = default_note;
-        voiceContext.note_amount++;
+        context->notes[context->note_amount] = default_note;
+        context->note_amount++;
         return true;
     }
 
@@ -74,20 +74,20 @@ int voiceInputPhonemic(const char *const string) {
     }
 
     const DEFINE_NOTE(default_note, wave_type, 8.0, 0.50, base_frequency, end_frequency, start_volume, end_volume);
-    voiceContext.notes[voiceContext.note_amount] = default_note;
-    voiceContext.note_amount++;
+    context->notes[context->note_amount] = default_note;
+    context->note_amount++;
 
     return true;
 }
 
-void voiceGenerateAllPhonemics() {
+void voiceGenerateAllPhonemics(VoiceContext *context) {
     const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
     const char   volumes_chars[3] = {'e', 'o', 'i'};
     const char frequency_chars[3] = {'e', 'h', 'l'};
 
     char phonem[4] = "see";
 
-    voiceContext.note_amount = 0;
+    context->note_amount = 0;
 
     for(int w = 0; w < 4; w++) {
         for(int f = 0; f < 3; f++) {
@@ -96,7 +96,7 @@ void voiceGenerateAllPhonemics() {
                 phonem[1] =   volumes_chars[v];
                 phonem[2] = frequency_chars[f];
 
-                voiceInputPhonemic(phonem);
+                voiceInputPhonemic(context, phonem);
             }
         }
     }

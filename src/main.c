@@ -228,7 +228,7 @@ static void ButtonGeneratorWordReplace()
 }
 static void ButtonVoiceNoiseTest()
 {
-    voiceGenerateAllPhonemics();
+    voiceGenerateAllPhonemics(&voiceContext);
 
     voiceReadyContext(&voiceContext);
 
@@ -256,25 +256,25 @@ static void ButtonLanguageSound()
                     single_phonem[0] = person[p];
                     single_phonem[1] = 'i';
                     single_phonem[2] = 'h';
-                    voiceInputPhonemic(single_phonem);
+                    voiceInputPhonemic(&voiceContext, single_phonem);
 
                     if(gender[g] != '\0') {
                         single_phonem[0] = gender[g];
                         single_phonem[1] = 'e';
                         single_phonem[2] = 'e';
-                        voiceInputPhonemic(single_phonem);
+                        voiceInputPhonemic(&voiceContext, single_phonem);
                     }
 
                     single_phonem[0] = owner[o];
                     single_phonem[1] = 'o';
                     single_phonem[2] = plural[r];
-                    voiceInputPhonemic(single_phonem);
+                    voiceInputPhonemic(&voiceContext, single_phonem);
 
                     // Insert space
-                    voiceInputPhonemic("");
+                    voiceInputPhonemic(&voiceContext, "");
 
                     if(gender[g] == '\0')
-                        voiceInputPhonemic("");
+                        voiceInputPhonemic(&voiceContext, "");
                 }
             }
         }
