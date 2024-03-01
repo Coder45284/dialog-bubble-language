@@ -50,15 +50,11 @@ extern Context context;
 #define DEFINE_NOTE(name, type, times_a_second, time_off, start_freq, end_freq, start_amp, end_amp) \
 Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(start_freq), FREQUENCY_TO_PERIOD(end_freq), start_amp, end_amp}
 
-void setupContext();
-
-int inputPhonemic(const char *const string);
-
-void generateAllPhonemics();
-
-void soundCallback(void *buffer_data, unsigned int frames);
-
-int exportWAV(const char *file_path);
+void voiceReadyContext();
+int voiceInputPhonemic(const char *const string);
+void voiceGenerateAllPhonemics();
+void voiceSoundCallback(void *buffer_data, unsigned int frames);
+int voiceExportWAV(const char *file_path);
 
 #endif // VOICE_DTLWS
 

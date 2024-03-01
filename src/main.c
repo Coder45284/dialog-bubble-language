@@ -43,7 +43,7 @@ int main()
 
     voice = LoadAudioStream(PCM_SAMPLES_PER_SECOND, PCM_SAMPLE_BITS, 1);
 
-    SetAudioStreamCallback(voice, soundCallback);
+    SetAudioStreamCallback(voice, voiceSoundCallback);
 
     // language_builder: controls initialization
     //----------------------------------------------------------------------------------
@@ -228,9 +228,9 @@ static void ButtonGeneratorWordReplace()
 }
 static void ButtonVoiceNoiseTest()
 {
-    generateAllPhonemics();
+    voiceGenerateAllPhonemics();
 
-    setupContext();
+    voiceReadyContext();
 
     PlayAudioStream(voice);
 }
@@ -256,31 +256,31 @@ static void ButtonLanguageSound()
                     single_phonem[0] = person[p];
                     single_phonem[1] = 'i';
                     single_phonem[2] = 'h';
-                    inputPhonemic(single_phonem);
+                    voiceInputPhonemic(single_phonem);
 
                     if(gender[g] != '\0') {
                         single_phonem[0] = gender[g];
                         single_phonem[1] = 'e';
                         single_phonem[2] = 'e';
-                        inputPhonemic(single_phonem);
+                        voiceInputPhonemic(single_phonem);
                     }
 
                     single_phonem[0] = owner[o];
                     single_phonem[1] = 'o';
                     single_phonem[2] = plural[r];
-                    inputPhonemic(single_phonem);
+                    voiceInputPhonemic(single_phonem);
 
                     // Insert space
-                    inputPhonemic("");
+                    voiceInputPhonemic("");
 
                     if(gender[g] == '\0')
-                        inputPhonemic("");
+                        voiceInputPhonemic("");
                 }
             }
         }
     }
 
-    setupContext();
+    voiceReadyContext();
 
     PlayAudioStream(voice);
 }

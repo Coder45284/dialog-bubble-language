@@ -7,7 +7,7 @@
 
 Context context = {{}, NOTE_LIMIT, 0, 0};
 
-void setupContext() {
+void voiceReadyContext() {
     if(context.note_index >= context.note_amount)
         context.note_index = 0;
 
@@ -20,7 +20,7 @@ void setupContext() {
     context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
 }
 
-int inputPhonemic(const char *const string) {
+int voiceInputPhonemic(const char *const string) {
     if(string[0] == '\0') {
         const DEFINE_NOTE(default_note, SQUARE, 8.0, 0.50, 60, 60, 0, 0);
         context.notes[context.note_amount] = default_note;
@@ -74,7 +74,7 @@ int inputPhonemic(const char *const string) {
     return true;
 }
 
-void generateAllPhonemics() {
+void voiceGenerateAllPhonemics() {
     const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
     const char   volumes_chars[3] = {'e', 'o', 'i'};
     const char frequency_chars[3] = {'e', 'h', 'l'};
@@ -90,13 +90,13 @@ void generateAllPhonemics() {
                 phonem[1] =   volumes_chars[v];
                 phonem[2] = frequency_chars[f];
 
-                inputPhonemic(phonem);
+                voiceInputPhonemic(phonem);
             }
         }
     }
 }
 
-void soundCallback(void *buffer_data, unsigned int frames) {
+void voiceSoundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
     NoteState *note_r = &context.note_state;
@@ -179,12 +179,12 @@ void soundCallback(void *buffer_data, unsigned int frames) {
                 context.notes[context.note_index].end_amp = 0;
             }
 
-            setupContext();
+            voiceReadyContext();
         }
     }
 }
 
-int exportWAV(const char *file_path) {
+int voiceExportWAV(const char *file_path) {
     Wave wav;
 
     wav.frameCount = 0; // This will be found later.
@@ -198,7 +198,7 @@ int exportWAV(const char *file_path) {
 
     wav.data = malloc(wav.frameCount * sizeof(PCM_SAMPLE_TYPE));
 
-    soundCallback(wav.data, wav.frameCount);
+    voiceSoundCallback(wav.data, wav.frameCount);
     bool result = ExportWave(wav, file_path);
 
     free(wav.data);
