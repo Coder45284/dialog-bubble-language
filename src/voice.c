@@ -170,6 +170,15 @@ void soundCallback(void *buffer_data, unsigned int frames) {
         if(note_r->time >= note_r->total_time) {
             context.note_index++;
 
+            if(context.note_index == context.note_amount) {
+                context.note_index = 0;
+                context.note_amount = 1;
+
+                context.notes[context.note_index].type = SQUARE;
+                context.notes[context.note_index].start_amp = 0;
+                context.notes[context.note_index].end_amp = 0;
+            }
+
             setupContext();
         }
     }
