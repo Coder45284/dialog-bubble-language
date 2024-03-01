@@ -102,10 +102,10 @@ void voiceGenerateAllPhonemics(VoiceContext *context) {
     }
 }
 
-void voiceSoundCallback(void *buffer_data, unsigned int frames) {
+void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
-    VoiceNoteState *note_r = &voiceContext.note_state;
+    VoiceNoteState *note_r = &context->note_state;
 
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
@@ -124,15 +124,15 @@ void voiceSoundCallback(void *buffer_data, unsigned int frames) {
                 note_r->current_amplitude = 0;
             }
             else {
-                if(voiceContext.notes[voiceContext.note_index].start_period != voiceContext.notes[voiceContext.note_index].end_period)
-                    note_r->current_period = voiceContext.notes[voiceContext.note_index].start_period * (1.0 - time) + voiceContext.notes[voiceContext.note_index].end_period * time;
+                if(context->notes[context->note_index].start_period != context->notes[context->note_index].end_period)
+                    note_r->current_period = context->notes[context->note_index].start_period * (1.0 - time) + context->notes[context->note_index].end_period * time;
                 else
-                    note_r->current_period = voiceContext.notes[voiceContext.note_index].start_period;
+                    note_r->current_period = context->notes[context->note_index].start_period;
 
-                if(voiceContext.notes[voiceContext.note_index].start_amp != voiceContext.notes[voiceContext.note_index].end_amp)
-                    note_r->current_amplitude = voiceContext.notes[voiceContext.note_index].start_amp * (1.0 - time) + voiceContext.notes[voiceContext.note_index].end_amp * time;
+                if(context->notes[context->note_index].start_amp != context->notes[context->note_index].end_amp)
+                    note_r->current_amplitude = context->notes[context->note_index].start_amp * (1.0 - time) + context->notes[context->note_index].end_amp * time;
                 else
-                    note_r->current_amplitude = voiceContext.notes[voiceContext.note_index].start_amp;
+                    note_r->current_amplitude = context->notes[context->note_index].start_amp;
             }
         }
 
@@ -174,20 +174,24 @@ void voiceSoundCallback(void *buffer_data, unsigned int frames) {
         note_r->time++;
 
         if(note_r->time >= note_r->total_time) {
-            voiceContext.note_index++;
+            context->note_index++;
 
-            if(voiceContext.note_index == voiceContext.note_amount) {
-                voiceContext.note_index = 0;
-                voiceContext.note_amount = 1;
+            if(context->note_index == context->note_amount) {
+                context->note_index = 0;
+                context->note_amount = 1;
 
-                voiceContext.notes[voiceContext.note_index].type = SQUARE;
-                voiceContext.notes[voiceContext.note_index].start_amp = 0;
-                voiceContext.notes[voiceContext.note_index].end_amp = 0;
+                context->notes[context->note_index].type = SQUARE;
+                context->notes[context->note_index].start_amp = 0;
+                context->notes[context->note_index].end_amp = 0;
             }
 
-            voiceReadyContext(&voiceContext);
+            voiceReadyContext(context);
         }
     }
+}
+
+void voiceSoundCallback(void *buffer_data, unsigned int frames) {
+    voiceWriteToSoundBuffer(&voiceContext, buffer_data, frames);
 }
 
 int voiceExportWAV(const char *file_path) {
