@@ -13,17 +13,17 @@ Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second
 
 Context voiceContext = {{}, NOTE_LIMIT, 0, 0};
 
-void voiceReadyContext() {
-    if(voiceContext.note_index >= voiceContext.note_amount)
-        voiceContext.note_index = 0;
+void voiceReadyContext(Context *context) {
+    if(context->note_index >= context->note_amount)
+        context->note_index = 0;
 
-    voiceContext.note_state.type = voiceContext.notes[voiceContext.note_index].type;
-    voiceContext.note_state.total_time = voiceContext.notes[voiceContext.note_index].total_time;
-    voiceContext.note_state.sound_time = voiceContext.notes[voiceContext.note_index].sound_time;
-    voiceContext.note_state.time = 0;
-    voiceContext.note_state.period_begin = 0;
-    voiceContext.note_state.current_period = voiceContext.notes[voiceContext.note_index].start_period;
-    voiceContext.note_state.current_amplitude = voiceContext.notes[voiceContext.note_index].start_amp;
+    context->note_state.type = context->notes[context->note_index].type;
+    context->note_state.total_time = context->notes[context->note_index].total_time;
+    context->note_state.sound_time = context->notes[context->note_index].sound_time;
+    context->note_state.time = 0;
+    context->note_state.period_begin = 0;
+    context->note_state.current_period = context->notes[context->note_index].start_period;
+    context->note_state.current_amplitude = context->notes[context->note_index].start_amp;
 }
 
 int voiceInputPhonemic(const char *const string) {
@@ -185,7 +185,7 @@ void voiceSoundCallback(void *buffer_data, unsigned int frames) {
                 voiceContext.notes[voiceContext.note_index].end_amp = 0;
             }
 
-            voiceReadyContext();
+            voiceReadyContext(&voiceContext);
         }
     }
 }

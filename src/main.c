@@ -230,7 +230,7 @@ static void ButtonVoiceNoiseTest()
 {
     voiceGenerateAllPhonemics();
 
-    voiceReadyContext();
+    voiceReadyContext(&voiceContext);
 
     PlayAudioStream(voice);
 }
@@ -280,7 +280,7 @@ static void ButtonLanguageSound()
         }
     }
 
-    voiceReadyContext();
+    voiceReadyContext(&voiceContext);
 
     PlayAudioStream(voice);
 }
