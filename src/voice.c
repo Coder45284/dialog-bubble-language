@@ -39,7 +39,7 @@ int voiceInputPhonemic(const char *const string) {
             return false;
     }
 
-    const Wavetype  wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
+    const VoiceWaveType  wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
     const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
 
     const int                    volume = 16384;
@@ -51,7 +51,7 @@ int voiceInputPhonemic(const char *const string) {
     const unsigned int   frequencies[3] = {base_frequency, 500, 1500};
     const char       frequency_chars[3] = {           'e', 'h', 'l'};
 
-    Wavetype         wave_type = SINE;
+    VoiceWaveType    wave_type = SINE;
     unsigned int  start_volume = volume;
     unsigned int    end_volume = volume;
     unsigned int end_frequency = base_frequency;

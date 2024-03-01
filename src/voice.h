@@ -8,10 +8,10 @@ typedef enum {
     SQUARE,
     TRIANGLE,
     SAWTOOTH
-} Wavetype;
+} VoiceWaveType;
 
 typedef struct {
-    Wavetype  type;
+    VoiceWaveType type;
     int total_time;
     int sound_time;
 
@@ -22,7 +22,7 @@ typedef struct {
 } Note;
 
 typedef struct {
-    Wavetype   type;
+    VoiceWaveType type;
     int  total_time;
     int  sound_time;
     int        time;
