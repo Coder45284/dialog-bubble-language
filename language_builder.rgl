@@ -1,0 +1,56 @@
+#
+# rgl layout text file (v4.0) - raygui layout file generated using a text editor
+#
+# Number of controls:     40
+#
+# Ref. window:    r <x> <y> <width> <height>
+# Anchor info:    a <id> <name> <posx> <posy> <enabled>
+# Control info:   c <id> <type> <name> <rectangle> <anchor_id> <text>
+#
+r 0 40 -1 -1
+a 001 AnchorWordSearch 0 8 1
+c 000 1 GroupBoxWordSearch 0 0 216 256 1 Word Search
+c 002 12 TextBoxWordSearch 24 16 168 24 1 Enter Word Here
+c 001 4 LabelWordSearch 24 64 168 24 1 English or Language
+c 003 5 ButtonWordSearchEnglish 24 88 72 24 1 English
+c 004 5 ButtonWordSearchLanguage 120 88 72 24 1 Language
+c 005 20 ScrollPanelWordSearchQuery 24 136 168 96 1 Query
+a 002 AnchorDictionary 216 8 1
+c 006 1 GroupBoxDictionary 0 0 456 256 2 Dictionary
+c 007 4 LabelDictionaryLWord 24 16 96 24 2 Language Word:
+c 008 12 TextBoxDictionaryLWord 120 16 312 24 2 Enter Word Here
+c 009 4 LabelDictionaryEWord 24 40 96 24 2 English Keyword:
+c 010 12 TextBoxDictionaryEWord 120 40 312 24 2 Enter English Keyword Here
+c 011 4 LabelDictionaryPOS 24 64 96 24 2 Parts of Speech:
+c 012 12 TextBoxDictionaryPOS 120 64 312 24 2 Enter Parts of Speech Here
+c 013 4 LabelDictionaryEDescription 24 88 120 24 2 English Definition:
+c 014 12 TextBoxDictionaryEDescription 24 112 408 72 2 Enter Defintion Here
+c 015 5 ButtonDictionaryUpdateEntry 24 208 120 24 2 Update
+c 016 5 ButtonDictionaryDeleteEntry 168 208 120 24 2 Delete
+c 017 5 ButtonDictionaryPlaySound 312 208 120 24 2 Play Sound
+a 003 AnchorWordGenerator 672 8 1
+c 018 1 GroupBoxWordGenerator 0 0 120 256 3 Word Generator
+c 019 4 LabelWordGeneratorPOS 16 16 88 24 3 Parts of Speech
+c 020 11 DropDownBoxWordGeneratorType 24 40 72 24 3 NOUN;ADJECTIVE;VERB;ADVERB;OTHER
+c 021 5 ButtonWordGeneratorGenerate 24 96 72 24 3 Generate
+c 022 4 LabelWordGeneratorWordSelection 24 136 72 24 3 Word Options
+c 023 11 DropDownBoxGeneratorWordSelection 24 160 72 24 3 ONE;TWO;THREE
+c 024 4 LabelGeneratorWordPlacement 8 192 104 24 3 Place Into Language
+c 025 5 ButtonGeneratorWordReplace 16 216 88 24 3 Replace Word
+a 004 AnchorVoice 0 272 1
+c 026 1 GroupBoxVoice 0 0 216 208 4 Voice Options
+c 027 14 ValueBoxVoiceVolume 104 16 88 24 4 Peak Volume
+c 028 14 ValueBoxVoiceFreq 104 40 88 24 4 Frequency(Hz)
+c 029 14 ValueBoxVoiceFreqPlus 104 64 88 24 4 Plus(Hz)
+c 030 14 ValueBoxVoiceNoiseVolume 104 88 88 24 4 Noise Volume
+c 031 4 LabelVoiceNoiseType 40 112 64 24 4 Noise Type
+c 032 11 DropDownBoxVoiceNoiseType 104 112 88 24 4 WHITE;PINK;BROWN;BLUE
+c 033 5 ButtonVoiceNoiseTest 24 160 168 24 4 Test Every Note
+a 005 AnchorLanguage 216 272 1
+c 034 1 GroupBoxLanguage 0 0 576 208 5 Language Snippit Editor
+c 035 12 TextBoxLanguageEntry 24 16 528 120 5 Enter Language Text Here
+c 036 5 ButtonGrammer 24 160 96 24 5 Check Grammer
+c 037 5 ButtonLanguageSound 144 160 96 24 5 Play Sound
+c 038 11 DropDownBoxLanguageSoundFormat 312 160 120 24 5 WAV;FLAC;OGG;VOA;TRAC
+c 039 5 ButtonLanguageSoundExport 456 160 96 24 5 Export Sound
+
