@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 #define VOICE_BUFFER_SIZE 8192
 
 #define PCM_SAMPLE_TYPE int16_t
