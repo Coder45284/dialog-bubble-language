@@ -240,7 +240,7 @@ static void ButtonGrammer()
 }
 static void ButtonLanguageSound()
 {
-    context.note_amount = 0;
+    voiceContext.note_amount = 0;
 
     const char person[] = {'s','q','t','w'};
     const char gender[] = {'s','q', '\0'};

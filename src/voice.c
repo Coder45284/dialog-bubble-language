@@ -5,26 +5,26 @@
 
 #include "voice.h"
 
-Context context = {{}, NOTE_LIMIT, 0, 0};
+Context voiceContext = {{}, NOTE_LIMIT, 0, 0};
 
 void voiceReadyContext() {
-    if(context.note_index >= context.note_amount)
-        context.note_index = 0;
+    if(voiceContext.note_index >= voiceContext.note_amount)
+        voiceContext.note_index = 0;
 
-    context.note_state.type = context.notes[context.note_index].type;
-    context.note_state.total_time = context.notes[context.note_index].total_time;
-    context.note_state.sound_time = context.notes[context.note_index].sound_time;
-    context.note_state.time = 0;
-    context.note_state.period_begin = 0;
-    context.note_state.current_period = context.notes[context.note_index].start_period;
-    context.note_state.current_amplitude = context.notes[context.note_index].start_amp;
+    voiceContext.note_state.type = voiceContext.notes[voiceContext.note_index].type;
+    voiceContext.note_state.total_time = voiceContext.notes[voiceContext.note_index].total_time;
+    voiceContext.note_state.sound_time = voiceContext.notes[voiceContext.note_index].sound_time;
+    voiceContext.note_state.time = 0;
+    voiceContext.note_state.period_begin = 0;
+    voiceContext.note_state.current_period = voiceContext.notes[voiceContext.note_index].start_period;
+    voiceContext.note_state.current_amplitude = voiceContext.notes[voiceContext.note_index].start_amp;
 }
 
 int voiceInputPhonemic(const char *const string) {
     if(string[0] == '\0') {
         const DEFINE_NOTE(default_note, SQUARE, 8.0, 0.50, 60, 60, 0, 0);
-        context.notes[context.note_amount] = default_note;
-        context.note_amount++;
+        voiceContext.notes[voiceContext.note_amount] = default_note;
+        voiceContext.note_amount++;
         return true;
     }
 
@@ -68,8 +68,8 @@ int voiceInputPhonemic(const char *const string) {
     }
 
     const DEFINE_NOTE(default_note, wave_type, 8.0, 0.50, base_frequency, end_frequency, start_volume, end_volume);
-    context.notes[context.note_amount] = default_note;
-    context.note_amount++;
+    voiceContext.notes[voiceContext.note_amount] = default_note;
+    voiceContext.note_amount++;
 
     return true;
 }
@@ -81,7 +81,7 @@ void voiceGenerateAllPhonemics() {
 
     char phonem[4] = "see";
 
-    context.note_amount = 0;
+    voiceContext.note_amount = 0;
 
     for(int w = 0; w < 4; w++) {
         for(int f = 0; f < 3; f++) {
@@ -99,7 +99,7 @@ void voiceGenerateAllPhonemics() {
 void voiceSoundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
-    NoteState *note_r = &context.note_state;
+    NoteState *note_r = &voiceContext.note_state;
 
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
@@ -118,15 +118,15 @@ void voiceSoundCallback(void *buffer_data, unsigned int frames) {
                 note_r->current_amplitude = 0;
             }
             else {
-                if(context.notes[context.note_index].start_period != context.notes[context.note_index].end_period)
-                    note_r->current_period = context.notes[context.note_index].start_period * (1.0 - time) + context.notes[context.note_index].end_period * time;
+                if(voiceContext.notes[voiceContext.note_index].start_period != voiceContext.notes[voiceContext.note_index].end_period)
+                    note_r->current_period = voiceContext.notes[voiceContext.note_index].start_period * (1.0 - time) + voiceContext.notes[voiceContext.note_index].end_period * time;
                 else
-                    note_r->current_period = context.notes[context.note_index].start_period;
+                    note_r->current_period = voiceContext.notes[voiceContext.note_index].start_period;
 
-                if(context.notes[context.note_index].start_amp != context.notes[context.note_index].end_amp)
-                    note_r->current_amplitude = context.notes[context.note_index].start_amp * (1.0 - time) + context.notes[context.note_index].end_amp * time;
+                if(voiceContext.notes[voiceContext.note_index].start_amp != voiceContext.notes[voiceContext.note_index].end_amp)
+                    note_r->current_amplitude = voiceContext.notes[voiceContext.note_index].start_amp * (1.0 - time) + voiceContext.notes[voiceContext.note_index].end_amp * time;
                 else
-                    note_r->current_amplitude = context.notes[context.note_index].start_amp;
+                    note_r->current_amplitude = voiceContext.notes[voiceContext.note_index].start_amp;
             }
         }
 
@@ -168,15 +168,15 @@ void voiceSoundCallback(void *buffer_data, unsigned int frames) {
         note_r->time++;
 
         if(note_r->time >= note_r->total_time) {
-            context.note_index++;
+            voiceContext.note_index++;
 
-            if(context.note_index == context.note_amount) {
-                context.note_index = 0;
-                context.note_amount = 1;
+            if(voiceContext.note_index == voiceContext.note_amount) {
+                voiceContext.note_index = 0;
+                voiceContext.note_amount = 1;
 
-                context.notes[context.note_index].type = SQUARE;
-                context.notes[context.note_index].start_amp = 0;
-                context.notes[context.note_index].end_amp = 0;
+                voiceContext.notes[voiceContext.note_index].type = SQUARE;
+                voiceContext.notes[voiceContext.note_index].start_amp = 0;
+                voiceContext.notes[voiceContext.note_index].end_amp = 0;
             }
 
             voiceReadyContext();
@@ -192,8 +192,8 @@ int voiceExportWAV(const char *file_path) {
     wav.sampleSize = PCM_SAMPLE_BITS;
     wav.channels   = 1;
 
-    for(unsigned int n = 0; n < context.note_amount; n++) {
-        wav.frameCount += context.notes[n].total_time;
+    for(unsigned int n = 0; n < voiceContext.note_amount; n++) {
+        wav.frameCount += voiceContext.notes[n].total_time;
     }
 
     wav.data = malloc(wav.frameCount * sizeof(PCM_SAMPLE_TYPE));

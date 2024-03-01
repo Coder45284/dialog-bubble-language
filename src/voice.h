@@ -42,7 +42,7 @@ typedef struct {
     NoteState note_state;
 } Context;
 
-extern Context context;
+extern Context voiceContext;
 
 #define TIMES_A_SECOND( times_a_second ) ((float)PCM_SAMPLES_PER_SECOND / ((float)times_a_second))
 #define FREQUENCY_TO_PERIOD( frequency ) ((float)PCM_SAMPLES_PER_SECOND / ((float)frequency))
