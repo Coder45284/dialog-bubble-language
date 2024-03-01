@@ -194,7 +194,8 @@ void voiceSoundCallback(void *buffer_data, unsigned int frames) {
     voiceWriteToSoundBuffer(&voiceContext, buffer_data, frames);
 }
 
-int voiceExportWAV(const char *file_path) {
+int voiceExportWAV(const char *file_path, unsigned int note_amount, VoiceNote *notes) {
+    VoiceContext context;
     Wave wav;
 
     wav.frameCount = 0; // This will be found later.
@@ -202,13 +203,30 @@ int voiceExportWAV(const char *file_path) {
     wav.sampleSize = PCM_SAMPLE_BITS;
     wav.channels   = 1;
 
-    for(unsigned int n = 0; n < voiceContext.note_amount; n++) {
-        wav.frameCount += voiceContext.notes[n].total_time;
+    // Memory safety.
+    if(note_amount >= NOTE_LIMIT)
+        note_amount = NOTE_LIMIT;
+
+    // There is no note to write.
+    if(note_amount == 0)
+        return false;
+
+    context.note_amount = note_amount;
+
+    for(unsigned int n = 0; n < note_amount; n++) {
+        wav.frameCount += notes[n].total_time; // Count the frames here.
+        context.notes[n] = notes[n];
     }
+
+    // No frames to write.
+    if(wav.frameCount == 0)
+        return false;
+
+    voiceReadyContext(&context);
 
     wav.data = malloc(wav.frameCount * sizeof(PCM_SAMPLE_TYPE));
 
-    voiceSoundCallback(wav.data, wav.frameCount);
+    voiceWriteToSoundBuffer(&context, wav.data, wav.frameCount);
     bool result = ExportWave(wav, file_path);
 
     free(wav.data);

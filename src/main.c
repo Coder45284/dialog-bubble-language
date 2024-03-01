@@ -286,6 +286,12 @@ static void ButtonLanguageSound()
 }
 static void ButtonLanguageSoundExport()
 {
-    // TODO: Implement control logic
+    VoiceContext context;
+
+    voiceGenerateAllPhonemics(&context);
+
+    voiceReadyContext(&context);
+
+    voiceExportWAV("export.wav", context.note_amount, context.notes);
 }
 
