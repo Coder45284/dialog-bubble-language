@@ -19,7 +19,7 @@ typedef struct {
     unsigned int      end_period;
     PCM_SAMPLE_TYPE start_amp;
     PCM_SAMPLE_TYPE   end_amp;
-} Note;
+} VoiceNote;
 
 typedef struct {
     VoiceWaveType type;
@@ -30,16 +30,16 @@ typedef struct {
     int                  period_begin;
     int                current_period;
     PCM_SAMPLE_TYPE current_amplitude;
-} NoteState;
+} VoiceNoteState;
 
 #define NOTE_LIMIT 512
 
 typedef struct {
-    Note notes[NOTE_LIMIT];
+    VoiceNote notes[NOTE_LIMIT];
     unsigned int note_amount;
     unsigned int note_index;
 
-    NoteState note_state;
+    VoiceNoteState note_state;
 } Context;
 
 extern Context voiceContext;

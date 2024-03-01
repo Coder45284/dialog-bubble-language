@@ -9,7 +9,7 @@
 #define FREQUENCY_TO_PERIOD( frequency ) ((float)PCM_SAMPLES_PER_SECOND / ((float)frequency))
 
 #define DEFINE_NOTE(name, type, times_a_second, time_off, start_freq, end_freq, start_amp, end_amp) \
-Note name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(start_freq), FREQUENCY_TO_PERIOD(end_freq), start_amp, end_amp}
+VoiceNote name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(start_freq), FREQUENCY_TO_PERIOD(end_freq), start_amp, end_amp}
 
 Context voiceContext = {{}, NOTE_LIMIT, 0, 0};
 
@@ -105,7 +105,7 @@ void voiceGenerateAllPhonemics() {
 void voiceSoundCallback(void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
-    NoteState *note_r = &voiceContext.note_state;
+    VoiceNoteState *note_r = &voiceContext.note_state;
 
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
