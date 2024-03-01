@@ -40,11 +40,11 @@ typedef struct {
     unsigned int note_index;
 
     VoiceNoteState note_state;
-} Context;
+} VoiceContext;
 
-extern Context voiceContext;
+extern VoiceContext voiceContext;
 
-void voiceReadyContext(Context *context);
+void voiceReadyContext(VoiceContext *context);
 int voiceInputPhonemic(const char *const string);
 void voiceGenerateAllPhonemics();
 void voiceSoundCallback(void *buffer_data, unsigned int frames);

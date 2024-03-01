@@ -11,9 +11,9 @@
 #define DEFINE_NOTE(name, type, times_a_second, time_off, start_freq, end_freq, start_amp, end_amp) \
 VoiceNote name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(start_freq), FREQUENCY_TO_PERIOD(end_freq), start_amp, end_amp}
 
-Context voiceContext = {{}, NOTE_LIMIT, 0, 0};
+VoiceContext voiceContext = {{}, NOTE_LIMIT, 0, 0};
 
-void voiceReadyContext(Context *context) {
+void voiceReadyContext(VoiceContext *context) {
     if(context->note_index >= context->note_amount)
         context->note_index = 0;
 
