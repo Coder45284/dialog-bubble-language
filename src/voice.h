@@ -46,7 +46,7 @@ extern VoiceContext voiceContext;
 
 void voiceReadyContext(VoiceContext *context);
 int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency);
-void voiceGenerateAllPhonemics(VoiceContext *context);
+void voiceGenerateAllPhonemics(VoiceContext *context, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency);
 void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned int frames);
 void voiceSoundCallback(void *buffer_data, unsigned int frames);
 int voiceExportWAV(const char *file_path, unsigned int note_amount, VoiceNote *notes);

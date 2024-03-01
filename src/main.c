@@ -228,7 +228,7 @@ static void ButtonGeneratorWordReplace()
 }
 static void ButtonVoiceNoiseTest()
 {
-    voiceGenerateAllPhonemics(&voiceContext);
+    voiceGenerateAllPhonemics(&voiceContext, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
     voiceReadyContext(&voiceContext);
 
@@ -288,7 +288,7 @@ static void ButtonLanguageSoundExport()
 {
     VoiceContext context;
 
-    voiceGenerateAllPhonemics(&context);
+    voiceGenerateAllPhonemics(&context, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
     voiceReadyContext(&context);
 
