@@ -29,6 +29,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 file(GLOB SOURCE_FILES src/*.c )
+include_directories( "${CMAKE_SOURCE_DIR}/header-onlys/" )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 #set(raylib_VERBOSE 1)
