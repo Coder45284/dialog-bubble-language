@@ -118,6 +118,11 @@ int main()
     const char *ButtonLanguageSoundText = "Play Sound";
     const char *DropDownBoxLanguageSoundFormatText = "WAV;FLAC;OGG;VOA;TRAC";
     const char *ButtonLanguageSoundExportText = "Export Sound";
+    const char *ScrollPanelWordSearchQueryText = "Query";
+    const char *ValueBoxVoiceVolumeText = "Peak Volume";
+    const char *ValueBoxVoiceFreqText = "Frequency(Hz)";
+    const char *ValueBoxVoiceFreqPlusText = "Plus(Hz)";
+    const char *ValueBoxVoiceNoiseVolumeText = "Noise Volume";
     
     bool TextBoxWordSearchEditMode = false;
     char TextBoxWordSearchText[128] = "Enter Word Here";
