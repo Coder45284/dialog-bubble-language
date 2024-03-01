@@ -26,6 +26,9 @@ static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
 AudioStream voice;
+int ValueBoxVoiceVolumeValue  = 16384;
+int ValueBoxVoiceFreqValue      = 500;
+int ValueBoxVoiceFreqPlusValue = 1000;
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -100,11 +103,8 @@ int main()
     bool DropDownBoxGeneratorWordSelectionEditMode = false;
     int DropDownBoxGeneratorWordSelectionActive = 0;
     bool ValueBoxVoiceVolumeEditMode = false;
-    int ValueBoxVoiceVolumeValue = 0;
     bool ValueBoxVoiceFreqEditMode = false;
-    int ValueBoxVoiceFreqValue = 0;
     bool ValueBoxVoiceFreqPlusEditMode = false;
-    int ValueBoxVoiceFreqPlusValue = 0;
     bool ValueBoxVoiceNoiseVolumeEditMode = false;
     int ValueBoxVoiceNoiseVolumeValue = 0;
     bool DropDownBoxVoiceNoiseTypeEditMode = false;
@@ -161,9 +161,9 @@ int main()
             GuiLabel((Rectangle){ 680, 200, 104, 24 }, LabelGeneratorWordPlacementText);
             if (GuiButton((Rectangle){ 688, 224, 88, 24 }, ButtonGeneratorWordReplaceText)) ButtonGeneratorWordReplace(); 
             GuiGroupBox((Rectangle){ 0, 272, 216, 208 }, GroupBoxVoiceText);
-            if (GuiValueBox((Rectangle){ 104, 288, 88, 24 }, ValueBoxVoiceVolumeText, &ValueBoxVoiceVolumeValue, 0, 100, ValueBoxVoiceVolumeEditMode)) ValueBoxVoiceVolumeEditMode = !ValueBoxVoiceVolumeEditMode;
-            if (GuiValueBox((Rectangle){ 104, 312, 88, 24 }, ValueBoxVoiceFreqText, &ValueBoxVoiceFreqValue, 0, 100, ValueBoxVoiceFreqEditMode)) ValueBoxVoiceFreqEditMode = !ValueBoxVoiceFreqEditMode;
-            if (GuiValueBox((Rectangle){ 104, 336, 88, 24 }, ValueBoxVoiceFreqPlusText, &ValueBoxVoiceFreqPlusValue, 0, 100, ValueBoxVoiceFreqPlusEditMode)) ValueBoxVoiceFreqPlusEditMode = !ValueBoxVoiceFreqPlusEditMode;
+            if (GuiValueBox((Rectangle){ 104, 288, 88, 24 }, ValueBoxVoiceVolumeText, &ValueBoxVoiceVolumeValue, 0, 0x7FFF, ValueBoxVoiceVolumeEditMode)) ValueBoxVoiceVolumeEditMode = !ValueBoxVoiceVolumeEditMode;
+            if (GuiValueBox((Rectangle){ 104, 312, 88, 24 }, ValueBoxVoiceFreqText, &ValueBoxVoiceFreqValue, 60, 6000, ValueBoxVoiceFreqEditMode)) ValueBoxVoiceFreqEditMode = !ValueBoxVoiceFreqEditMode;
+            if (GuiValueBox((Rectangle){ 104, 336, 88, 24 }, ValueBoxVoiceFreqPlusText, &ValueBoxVoiceFreqPlusValue, 60, 2000, ValueBoxVoiceFreqPlusEditMode)) ValueBoxVoiceFreqPlusEditMode = !ValueBoxVoiceFreqPlusEditMode;
             if (GuiValueBox((Rectangle){ 104, 360, 88, 24 }, ValueBoxVoiceNoiseVolumeText, &ValueBoxVoiceNoiseVolumeValue, 0, 100, ValueBoxVoiceNoiseVolumeEditMode)) ValueBoxVoiceNoiseVolumeEditMode = !ValueBoxVoiceNoiseVolumeEditMode;
             GuiLabel((Rectangle){ 40, 384, 64, 24 }, LabelVoiceNoiseTypeText);
             if (GuiButton((Rectangle){ 24, 432, 168, 24 }, ButtonVoiceNoiseTestText)) ButtonVoiceNoiseTest(); 
@@ -256,25 +256,25 @@ static void ButtonLanguageSound()
                     single_phonem[0] = person[p];
                     single_phonem[1] = 'i';
                     single_phonem[2] = 'h';
-                    voiceInputPhonemic(&voiceContext, single_phonem);
+                    voiceInputPhonemic(&voiceContext, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
                     if(gender[g] != '\0') {
                         single_phonem[0] = gender[g];
                         single_phonem[1] = 'e';
                         single_phonem[2] = 'e';
-                        voiceInputPhonemic(&voiceContext, single_phonem);
+                        voiceInputPhonemic(&voiceContext, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
                     }
 
                     single_phonem[0] = owner[o];
                     single_phonem[1] = 'o';
                     single_phonem[2] = plural[r];
-                    voiceInputPhonemic(&voiceContext, single_phonem);
+                    voiceInputPhonemic(&voiceContext, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
                     // Insert space
-                    voiceInputPhonemic(&voiceContext, "");
+                    voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
                     if(gender[g] == '\0')
-                        voiceInputPhonemic(&voiceContext, "");
+                        voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
                 }
             }
         }

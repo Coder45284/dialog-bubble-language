@@ -26,7 +26,7 @@ void voiceReadyContext(VoiceContext *context) {
     context->note_state.current_amplitude = context->notes[context->note_index].start_amp;
 }
 
-int voiceInputPhonemic(VoiceContext *context, const char *const string) {
+int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency) {
     if(string[0] == '\0') {
         const DEFINE_NOTE(default_note, SQUARE, 8.0, 0.50, 60, 60, 0, 0);
         context->notes[context->note_amount] = default_note;
@@ -42,13 +42,12 @@ int voiceInputPhonemic(VoiceContext *context, const char *const string) {
     const VoiceWaveType  wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
     const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
 
-    const int                    volume = 16384;
     const unsigned int start_volumes[3] = {volume, volume, 0};
     const unsigned int   end_volumes[3] = {volume,      0, volume};
     const char         volumes_chars[3] = {   'e',    'o', 'i'};
 
-    const unsigned int   base_frequency = 1000;
-    const unsigned int   frequencies[3] = {base_frequency, 500, 1500};
+    const unsigned int   base_frequency = min_frequency + add_frequency / 2;
+    const unsigned int   frequencies[3] = {base_frequency, min_frequency, min_frequency + add_frequency};
     const char       frequency_chars[3] = {           'e', 'h', 'l'};
 
     VoiceWaveType    wave_type = SINE;
@@ -96,7 +95,7 @@ void voiceGenerateAllPhonemics(VoiceContext *context) {
                 phonem[1] =   volumes_chars[v];
                 phonem[2] = frequency_chars[f];
 
-                voiceInputPhonemic(context, phonem);
+                voiceInputPhonemic(context, phonem, 16384, 500, 1000);
             }
         }
     }

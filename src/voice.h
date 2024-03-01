@@ -45,7 +45,7 @@ typedef struct {
 extern VoiceContext voiceContext;
 
 void voiceReadyContext(VoiceContext *context);
-int voiceInputPhonemic(VoiceContext *context, const char *const string);
+int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency);
 void voiceGenerateAllPhonemics(VoiceContext *context);
 void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned int frames);
 void voiceSoundCallback(void *buffer_data, unsigned int frames);
