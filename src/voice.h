@@ -32,10 +32,10 @@ typedef struct {
     PCM_SAMPLE_TYPE current_amplitude;
 } VoiceNoteState;
 
-#define NOTE_LIMIT 512
+#define VOICE_NOTE_LIMIT 512
 
 typedef struct {
-    VoiceNote notes[NOTE_LIMIT];
+    VoiceNote notes[VOICE_NOTE_LIMIT];
     unsigned int note_amount;
     unsigned int note_index;
 
