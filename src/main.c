@@ -286,41 +286,56 @@ static void ButtonGrammer()
 }
 static void ButtonLanguageSound()
 {
+    unsigned int length = 0;
+
     if(TextBoxLanguageEntryText[0] != '\0') {
         char cleanup[128] = "";
         unsigned int n = 0;
-        unsigned int m = 0;
 
         while(isspace(TextBoxLanguageEntryText[n]))
             n++;
 
         while(TextBoxLanguageEntryText[n] != '\0') {
-            cleanup[m] = tolower(TextBoxLanguageEntryText[n]);
+            cleanup[length] = tolower(TextBoxLanguageEntryText[n]);
 
             n++;
 
             if(isspace(TextBoxLanguageEntryText[n]))
-                cleanup[++m] = ' ';
+                cleanup[++length] = ' ';
 
             while(isspace(TextBoxLanguageEntryText[n]))
                 n++;
 
-            m++;
+            length++;
         }
 
-        if(m != 0 && cleanup[m - 1] == ' ') {
-            cleanup[m - 1] = '\0';
-            m--;
+        if(length != 0 && cleanup[length - 1] == ' ') {
+            cleanup[length - 1] = '\0';
+            length--;
         }
 
-        for(m = 0; cleanup[m] != '\0'; m++) {
-            TextBoxLanguageEntryText[m] = cleanup[m];
-        }
+        for(length = 0; cleanup[length] != '\0'; length++)
+            TextBoxLanguageEntryText[length] = cleanup[length];
 
-        TextBoxLanguageEntryText[m] = cleanup[m];
+        TextBoxLanguageEntryText[length] = cleanup[length];
     }
 
     voiceContext.note_amount = 0;
+
+    for(unsigned int n = 0; TextBoxLanguageEntryText[n] != '\0';) {
+        if(TextBoxLanguageEntryText[n] == ' ') {
+            voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+            n++;
+        }
+        else {
+            voiceInputPhonemic(&voiceContext, TextBoxLanguageEntryText + n, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+
+            n += 3;
+
+            if(n > length)
+                n = length;
+        }
+    }
 
     voiceReadyContext(&voiceContext);
 
