@@ -291,6 +291,7 @@ static void ButtonLanguageSound()
     if(TextBoxLanguageEntryText[0] != '\0') {
         char cleanup[128] = "";
         unsigned int n = 0;
+        unsigned int c = 0;
 
         while(isspace(TextBoxLanguageEntryText[n]))
             n++;
@@ -298,7 +299,7 @@ static void ButtonLanguageSound()
         while(TextBoxLanguageEntryText[n] != '\0') {
             cleanup[length] = tolower(TextBoxLanguageEntryText[n]);
 
-            if(length == 0 || cleanup[length - 1] == ' ')
+            if(c % 3 == 0)
                 cleanup[length] = toupper(cleanup[length]);
 
             n++;
@@ -308,6 +309,11 @@ static void ButtonLanguageSound()
 
             while(isspace(TextBoxLanguageEntryText[n]))
                 n++;
+
+            if(cleanup[length] == ' ')
+                c = 0;
+            else
+                c++;
 
             length++;
         }
