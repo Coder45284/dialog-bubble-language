@@ -286,9 +286,8 @@ static void ButtonGrammer()
 }
 static void ButtonLanguageSound()
 {
-    char cleanup[128] = "";
-
-    {
+    if(TextBoxLanguageEntryText[0] != '\0') {
+        char cleanup[128] = "";
         unsigned int n = 0;
         unsigned int m = 0;
 
@@ -309,13 +308,17 @@ static void ButtonLanguageSound()
             m++;
         }
 
-        if(cleanup[m - 1] == ' ') {
+        if(m != 0 && cleanup[m - 1] == ' ') {
             cleanup[m - 1] = '\0';
             m--;
         }
-    }
 
-    printf("%s\n", cleanup);
+        for(m = 0; cleanup[m] != '\0'; m++) {
+            TextBoxLanguageEntryText[m] = cleanup[m];
+        }
+
+        TextBoxLanguageEntryText[m] = cleanup[m];
+    }
 
     voiceContext.note_amount = 0;
 
