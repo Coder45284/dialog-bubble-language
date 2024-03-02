@@ -298,6 +298,9 @@ static void ButtonLanguageSound()
         while(TextBoxLanguageEntryText[n] != '\0') {
             cleanup[length] = tolower(TextBoxLanguageEntryText[n]);
 
+            if(length == 0 || cleanup[length - 1] == ' ')
+                cleanup[length] = toupper(cleanup[length]);
+
             n++;
 
             if(isspace(TextBoxLanguageEntryText[n]))
