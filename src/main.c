@@ -86,18 +86,18 @@ int main()
     const char *ValueBoxVoiceNoiseVolumeText = "Noise Volume";
     
     bool TextBoxWordSearchEditMode = false;
-    char TextBoxWordSearchText[128] = "Enter Word Here";
+    char TextBoxWordSearchText[128] = "";
     Rectangle ScrollPanelWordSearchQueryScrollView = { 0, 0, 0, 0 };
     Vector2 ScrollPanelWordSearchQueryScrollOffset = { 0, 0 };
     Vector2 ScrollPanelWordSearchQueryBoundsOffset = { 0, 0 };
     bool TextBoxDictionaryLWordEditMode = false;
-    char TextBoxDictionaryLWordText[128] = "Enter Word Here";
+    char TextBoxDictionaryLWordText[128] = "";
     bool TextBoxDictionaryEWordEditMode = false;
-    char TextBoxDictionaryEWordText[128] = "Enter English Keyword Here";
+    char TextBoxDictionaryEWordText[128] = "";
     bool TextBoxDictionaryPOSEditMode = false;
-    char TextBoxDictionaryPOSText[128] = "Enter Parts of Speech Here";
+    char TextBoxDictionaryPOSText[128] = "";
     bool TextBoxDictionaryEDescriptionEditMode = false;
-    char TextBoxDictionaryEDescriptionText[128] = "Enter Defintion Here";
+    char TextBoxDictionaryEDescriptionText[128] = "";
     bool DropDownBoxWordGeneratorTypeEditMode = false;
     int DropDownBoxWordGeneratorTypeActive = 0;
     bool DropDownBoxGeneratorWordSelectionEditMode = false;
@@ -110,7 +110,7 @@ int main()
     bool DropDownBoxVoiceNoiseTypeEditMode = false;
     int DropDownBoxVoiceNoiseTypeActive = 0;
     bool TextBoxLanguageEntryEditMode = false;
-    char TextBoxLanguageEntryText[128] = "Enter Language Text Here";
+    char TextBoxLanguageEntryText[128] = "";
     bool DropDownBoxLanguageSoundFormatEditMode = false;
     int DropDownBoxLanguageSoundFormatActive = 0;
     //----------------------------------------------------------------------------------
