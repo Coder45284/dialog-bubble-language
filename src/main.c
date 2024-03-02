@@ -331,7 +331,7 @@ static void ButtonLanguageSound()
 
     voiceContext.note_amount = 0;
 
-    for(unsigned int n = 0; TextBoxLanguageEntryText[n] != '\0';) {
+    for(unsigned int n = 0; n != length;) {
         if(TextBoxLanguageEntryText[n] == ' ') {
             voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
             n++;
