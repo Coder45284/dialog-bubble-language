@@ -6,9 +6,10 @@
 #include "constants.h"
 #include "voice.h"
 
+#include <ctype.h>
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
+#include <math.h>
 
 //----------------------------------------------------------------------------------
 // Controls Functions Declaration
@@ -26,9 +27,12 @@ static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
 AudioStream voice;
+
 int ValueBoxVoiceVolumeValue  = 16384;
 int ValueBoxVoiceFreqValue      = 500;
 int ValueBoxVoiceFreqPlusValue = 1000;
+
+char TextBoxLanguageEntryText[128] = "";
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -110,7 +114,6 @@ int main()
     bool DropDownBoxVoiceNoiseTypeEditMode = false;
     int DropDownBoxVoiceNoiseTypeActive = 0;
     bool TextBoxLanguageEntryEditMode = false;
-    char TextBoxLanguageEntryText[128] = "";
     bool DropDownBoxLanguageSoundFormatEditMode = false;
     int DropDownBoxLanguageSoundFormatActive = 0;
     //----------------------------------------------------------------------------------
@@ -168,7 +171,8 @@ int main()
             GuiLabel((Rectangle){ 40, 384, 64, 24 }, LabelVoiceNoiseTypeText);
             if (GuiButton((Rectangle){ 24, 432, 168, 24 }, ButtonVoiceNoiseTestText)) ButtonVoiceNoiseTest(); 
             GuiGroupBox((Rectangle){ 216, 272, 576, 208 }, GroupBoxLanguageText);
-            if (GuiTextBox((Rectangle){ 240, 288, 528, 120 }, TextBoxLanguageEntryText, 128, TextBoxLanguageEntryEditMode)) TextBoxLanguageEntryEditMode = !TextBoxLanguageEntryEditMode;
+            GuiLabel((Rectangle){ 240, 288, 64, 24 }, "Word Input:");
+            if (GuiTextBox((Rectangle){ 240, 312, 528, 24 }, TextBoxLanguageEntryText, 128, TextBoxLanguageEntryEditMode)) TextBoxLanguageEntryEditMode = !TextBoxLanguageEntryEditMode;
             if (GuiButton((Rectangle){ 240, 432, 96, 24 }, ButtonGrammerText)) ButtonGrammer();
             if (GuiButton((Rectangle){ 360, 432, 96, 24 }, ButtonLanguageSoundText)) ButtonLanguageSound();
             if (GuiButton((Rectangle){ 672, 432, 96, 24 }, ButtonLanguageSoundExportText)) ButtonLanguageSoundExport();
@@ -216,30 +220,6 @@ static void ButtonDictionaryDeleteEntry()
 }
 static void ButtonDictionaryPlaySound()
 {
-    // TODO: Implement control logic
-}
-static void ButtonWordGeneratorGenerate()
-{
-    // TODO: Implement control logic
-}
-static void ButtonGeneratorWordReplace()
-{
-    // TODO: Implement control logic
-}
-static void ButtonVoiceNoiseTest()
-{
-    voiceGenerateAllPhonemics(&voiceContext, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
-
-    voiceReadyContext(&voiceContext);
-
-    PlayAudioStream(voice);
-}
-static void ButtonGrammer()
-{
-    // TODO: Implement control logic
-}
-static void ButtonLanguageSound()
-{
     voiceContext.note_amount = 0;
 
     const char person[] = {'s','q','t','w'};
@@ -279,6 +259,65 @@ static void ButtonLanguageSound()
             }
         }
     }
+
+    voiceReadyContext(&voiceContext);
+
+    PlayAudioStream(voice);
+}
+static void ButtonWordGeneratorGenerate()
+{
+    // TODO: Implement control logic
+}
+static void ButtonGeneratorWordReplace()
+{
+    // TODO: Implement control logic
+}
+static void ButtonVoiceNoiseTest()
+{
+    voiceGenerateAllPhonemics(&voiceContext, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+
+    voiceReadyContext(&voiceContext);
+
+    PlayAudioStream(voice);
+}
+static void ButtonGrammer()
+{
+    // TODO: Implement control logic
+}
+static void ButtonLanguageSound()
+{
+    char cleanup[128] = "";
+
+    {
+        unsigned int n = 0;
+        unsigned int m = 0;
+
+        while(isspace(TextBoxLanguageEntryText[n]))
+            n++;
+
+        while(TextBoxLanguageEntryText[n] != '\0') {
+            cleanup[m] = tolower(TextBoxLanguageEntryText[n]);
+
+            n++;
+
+            if(isspace(TextBoxLanguageEntryText[n]))
+                cleanup[++m] = ' ';
+
+            while(isspace(TextBoxLanguageEntryText[n]))
+                n++;
+
+            m++;
+        }
+
+        if(cleanup[m - 1] == ' ') {
+            cleanup[m - 1] = '\0';
+            m--;
+        }
+    }
+
+    printf("%s\n", cleanup);
+
+    voiceContext.note_amount = 0;
 
     voiceReadyContext(&voiceContext);
 
