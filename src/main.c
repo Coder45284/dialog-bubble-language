@@ -259,7 +259,7 @@ static void ButtonDictionaryPlaySound()
 
     voiceReadyContext(&audio_context);
 
-    PlayAudioStream(audio_stream);
+    audioPlay();
 }
 static void ButtonWordGeneratorGenerate()
 {
@@ -275,7 +275,7 @@ static void ButtonVoiceNoiseTest()
 
     voiceReadyContext(&audio_context);
 
-    PlayAudioStream(audio_stream);
+    audioPlay();
 }
 static void ButtonGrammer()
 {
@@ -345,7 +345,7 @@ static void ButtonLanguageSound()
 
     voiceReadyContext(&audio_context);
 
-    PlayAudioStream(audio_stream);
+    audioPlay();
 }
 static void ButtonLanguageSoundExport()
 {

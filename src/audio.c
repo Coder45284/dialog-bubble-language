@@ -1,7 +1,9 @@
 #include "audio.h"
 
+#include "raylib.h"
+
 VoiceContext audio_context = {{}, VOICE_NOTE_LIMIT, 0, 0};
-AudioStream audio_stream;
+static AudioStream audio_stream;
 
 static void audioSoundCallback(void *buffer_data, unsigned int frames) {
     voiceWriteToSoundBuffer(&audio_context, buffer_data, frames);
@@ -14,4 +16,20 @@ void audioInit() {
 
 void audioDeinit() {
     UnloadAudioStream(audio_stream); // Unload the voice data.
+}
+
+void audioPlay() {
+    PlayAudioStream(audio_stream);
+}
+
+void audioResume() {
+    ResumeAudioStream(audio_stream);
+}
+
+void audioPause() {
+    PauseAudioStream(audio_stream);
+}
+
+void audioStop() {
+    StopAudioStream(audio_stream);
 }
