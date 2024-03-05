@@ -34,11 +34,34 @@ def addPronouns(keywords : {}):
 
                     keywords[pronoun] = description
 
+def addDelimiters(keywords : {}):
+    delimiter = []
+    delimiter.append(("Sel", "OR Conjunction"))
+    delimiter.append(("See", "end of sentence"))
+    delimiter.append(("Seh", "AND Conjunction"))
+    delimiter.append(("Qee", "end of sentence with Yes/No?"))
+    delimiter.append(("Tie", "if <sentences>"))
+    delimiter.append(("Tel", "Because Conjunction"))
+    delimiter.append(("Toe", "end if <sentences>"))
+    delimiter.append(("Weh", "So Conjunction"))
+    delimiter.append(("Tee", "else"))
+    delimiter.append(("Sie", "group begin"))
+    delimiter.append(("Soe", "group end"))
+    delimiter.append(("Teh", "else if"))
+
+    for d in delimiter:
+        if d[0] in keywords:
+            print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+        keywords[d[0]] = d[1]
+
 
 keywords = {}
 
 addPronouns(keywords)
+addDelimiters(keywords)
 
+print(len(keywords))
 for key in keywords:
     print(key, ": ", keywords[key])
 
