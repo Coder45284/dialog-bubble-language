@@ -55,11 +55,76 @@ def addDelimiters(keywords : {}):
 
         keywords[d[0]] = d[1]
 
+def addNumbers(keywords : {}):
+    one   = "Se"
+    two   = "Qe"
+    three = "Te"
+    four  = "We"
+
+    kind = {("e", "first place"), ("l", "second place"), ("h", "third place")}
+
+    for k in kind:
+        for x in range(0, 16):
+            number = ""
+            description = ""
+
+            if x == 0:
+                if k[0] == "e":
+                    number += "SeeWee" # Zero marker
+                else:
+                    continue
+
+            if (x & 0b1000) != 0:
+                number += four + k[0]
+            if (x & 0b0100) != 0:
+                number += three + k[0]
+            if (x & 0b0010) != 0:
+                number += two + k[0]
+            if (x & 0b0001) != 0:
+                number += one + k[0]
+
+            description = "Number {} in the {}".format(x,k[1])
+
+            number += "Tee"
+
+            if number in keywords:
+                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+            keywords[number] = description
+
+    kind = {("l", "before decimal"), ("h", "after decimal")}
+
+    for k in kind:
+        for x in range(0, 16):
+            number = ""
+            description = ""
+
+            if x == 0:
+                continue
+
+            if (x & 0b1000) != 0:
+                number += four + "e"
+            if (x & 0b0100) != 0:
+                number += three + "e"
+            if (x & 0b0010) != 0:
+                number += two + "e"
+            if (x & 0b0001) != 0:
+                number += one + "e"
+
+            description = "Number {} in {}".format(x,k[1])
+
+            number += "Te" + k[0]
+
+            if number in keywords:
+                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+            keywords[number] = description
 
 keywords = {}
 
 addPronouns(keywords)
 addDelimiters(keywords)
+addNumbers(keywords)
 
 print(len(keywords))
 for key in keywords:
