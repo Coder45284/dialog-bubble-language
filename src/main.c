@@ -5,6 +5,7 @@
 
 #include "constants.h"
 #include "voice.h"
+#include "audio.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -26,8 +27,6 @@ static void ButtonGrammer();
 static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
-AudioStream voice;
-
 int ValueBoxVoiceVolumeValue  = 16384;
 int ValueBoxVoiceFreqValue      = 500;
 int ValueBoxVoiceFreqPlusValue = 1000;
@@ -48,9 +47,7 @@ int main()
     InitAudioDevice();
     SetAudioStreamBufferSizeDefault(VOICE_BUFFER_SIZE);
 
-    voice = LoadAudioStream(PCM_SAMPLES_PER_SECOND, PCM_SAMPLE_BITS, 1);
-
-    SetAudioStreamCallback(voice, voiceSoundCallback);
+    audioInit();
 
     // language_builder: controls initialization
     //----------------------------------------------------------------------------------
@@ -191,7 +188,7 @@ int main()
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    UnloadAudioStream(voice); // Unload the voice data.
+    audioDeinit();
     CloseAudioDevice();       // Close sound and sound context
     CloseWindow();            // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
@@ -220,7 +217,7 @@ static void ButtonDictionaryDeleteEntry()
 }
 static void ButtonDictionaryPlaySound()
 {
-    voiceContext.note_amount = 0;
+    audio_context.note_amount = 0;
 
     const char person[] = {'s','q','t','w'};
     const char gender[] = {'s','q', '\0'};
@@ -236,33 +233,33 @@ static void ButtonDictionaryPlaySound()
                     single_phonem[0] = person[p];
                     single_phonem[1] = 'i';
                     single_phonem[2] = 'h';
-                    voiceInputPhonemic(&voiceContext, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+                    voiceInputPhonemic(&audio_context, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
                     if(gender[g] != '\0') {
                         single_phonem[0] = gender[g];
                         single_phonem[1] = 'e';
                         single_phonem[2] = 'e';
-                        voiceInputPhonemic(&voiceContext, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+                        voiceInputPhonemic(&audio_context, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
                     }
 
                     single_phonem[0] = owner[o];
                     single_phonem[1] = 'o';
                     single_phonem[2] = plural[r];
-                    voiceInputPhonemic(&voiceContext, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+                    voiceInputPhonemic(&audio_context, single_phonem, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
                     // Insert space
-                    voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+                    voiceInputPhonemic(&audio_context, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
                     if(gender[g] == '\0')
-                        voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+                        voiceInputPhonemic(&audio_context, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
                 }
             }
         }
     }
 
-    voiceReadyContext(&voiceContext);
+    voiceReadyContext(&audio_context);
 
-    PlayAudioStream(voice);
+    PlayAudioStream(audio_stream);
 }
 static void ButtonWordGeneratorGenerate()
 {
@@ -274,11 +271,11 @@ static void ButtonGeneratorWordReplace()
 }
 static void ButtonVoiceNoiseTest()
 {
-    voiceGenerateAllPhonemics(&voiceContext, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+    voiceGenerateAllPhonemics(&audio_context, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
-    voiceReadyContext(&voiceContext);
+    voiceReadyContext(&audio_context);
 
-    PlayAudioStream(voice);
+    PlayAudioStream(audio_stream);
 }
 static void ButtonGrammer()
 {
@@ -329,15 +326,15 @@ static void ButtonLanguageSound()
         TextBoxLanguageEntryText[length] = cleanup[length];
     }
 
-    voiceContext.note_amount = 0;
+    audio_context.note_amount = 0;
 
     for(unsigned int n = 0; n != length;) {
         if(TextBoxLanguageEntryText[n] == ' ') {
-            voiceInputPhonemic(&voiceContext, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+            voiceInputPhonemic(&audio_context, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
             n++;
         }
         else {
-            voiceInputPhonemic(&voiceContext, TextBoxLanguageEntryText + n, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+            voiceInputPhonemic(&audio_context, TextBoxLanguageEntryText + n, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
             n += 3;
 
@@ -346,9 +343,9 @@ static void ButtonLanguageSound()
         }
     }
 
-    voiceReadyContext(&voiceContext);
+    voiceReadyContext(&audio_context);
 
-    PlayAudioStream(voice);
+    PlayAudioStream(audio_stream);
 }
 static void ButtonLanguageSoundExport()
 {
