@@ -35,25 +35,48 @@ def addPronouns(keywords : {}):
                     keywords[pronoun] = description
 
 def addDelimiters(keywords : {}):
-    delimiter = []
-    delimiter.append(("Sel", "OR Conjunction"))
-    delimiter.append(("See", "end of sentence"))
-    delimiter.append(("Seh", "AND Conjunction"))
-    delimiter.append(("Qee", "end of sentence with Yes/No?"))
-    delimiter.append(("Tie", "if <sentences>"))
-    delimiter.append(("Tel", "Because Conjunction"))
-    delimiter.append(("Toe", "end if <sentences>"))
-    delimiter.append(("Weh", "So Conjunction"))
-    delimiter.append(("Tee", "else"))
-    delimiter.append(("Sie", "group begin"))
-    delimiter.append(("Soe", "group end"))
-    delimiter.append(("Teh", "else if"))
+    delimiters = []
+    delimiters.append(("Sel", "Or conjunction"))
+    delimiters.append(("See", "End of sentence"))
+    delimiters.append(("Seh", "And conjunction"))
+    delimiters.append(("Qee", "End of sentence with Yes/No?"))
+    delimiters.append(("Tie", "If <sentences>"))
+    delimiters.append(("Tel", "Because conjunction"))
+    delimiters.append(("Toe", "End if <sentences>"))
+    delimiters.append(("Weh", "So conjunction"))
+    delimiters.append(("Tee", "Else"))
+    delimiters.append(("Sie", "Group begin"))
+    delimiters.append(("Soe", "Group end"))
+    delimiters.append(("Teh", "Else if"))
 
-    for d in delimiter:
+    for d in delimiters:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
         keywords[d[0]] = d[1]
+
+def addPrepositions(keywords : {}):
+    # These where influnced from Toki Pona.
+    # I had divided there meanings from Toki Pona and came up with 10 prepositions.
+    # Esperanto has over 20 prepositions, so I decided it would be easier to to use Toki Pona's instead.
+    prepositions = []
+    prepositions.append(("SelSel", "Preposition: 'similar to' noun"))
+    prepositions.append(("TelSeh", "Preposition: because noun"))
+    prepositions.append(("TeeWel", "Preposition: 'using' noun"))
+    prepositions.append(("QeeTelQee", "Preposition: to noun"))
+    prepositions.append(("TelQeeTel", "Preposition: from noun"))
+    prepositions.append(("QehTel", "Preposition: 'on|at' noun"))
+    prepositions.append(("QelSee", "Preposition: 'in/inside of' noun"))
+    prepositions.append(("WelQeeQee", "Preposition: 'for' noun"))
+    prepositions.append(("SehWee", "Preposition: 'because of' noun"))
+    prepositions.append(("SeeSee", "Preposition: 'of' noun"))
+
+    for d in prepositions:
+        if d[0] in keywords:
+            print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+        keywords[d[0]] = d[1]
+
 
 def addNumbers(keywords : {}):
     one   = "Se"
@@ -133,15 +156,15 @@ def addCorrelatives(keywords : {}):
 
             keywords[correlative] = t[1] + " " + k[1]
 
-
 keywords = {}
 
 addPronouns(keywords)
 addDelimiters(keywords)
+addPrepositions(keywords)
 addNumbers(keywords)
 addCorrelatives(keywords)
 
-print(len(keywords))
+print("Keywords amount is ", len(keywords))
 for key in keywords:
     print(key, ": ", keywords[key])
 
