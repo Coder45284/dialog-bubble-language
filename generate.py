@@ -88,7 +88,7 @@ def addNumbers(keywords : {}):
             number += "Tee"
 
             if number in keywords:
-                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(number))
 
             keywords[number] = description
 
@@ -116,7 +116,7 @@ def addNumbers(keywords : {}):
             number += "Te" + k[0]
 
             if number in keywords:
-                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(number))
 
             keywords[number] = description
 
