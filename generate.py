@@ -120,11 +120,26 @@ def addNumbers(keywords : {}):
 
             keywords[number] = description
 
+def addCorrelatives(keywords : {}):
+    types = [("QieQelQoe", "None"), ("Seh", "Every"), ("Sel", "Some"), ("Teh", "What"), ("Weh", "That")]
+    kinds = [("SeeWeh", "Time"), ("SeeTel", "Reason"), ("SeeQolTeh", "Amount"), ("SeeWoe", "Demonstrative"),  ("SeeQel", "Place")]
+
+    for t in types:
+        for k in kinds:
+            correlative = t[0] + k[0]
+
+            if correlative in keywords:
+                print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(correlative))
+
+            keywords[correlative] = t[1] + " " + k[1]
+
+
 keywords = {}
 
 addPronouns(keywords)
 addDelimiters(keywords)
 addNumbers(keywords)
+addCorrelatives(keywords)
 
 print(len(keywords))
 for key in keywords:
