@@ -97,6 +97,6 @@ int grammerParse(const char *string) {
 }
 
 int main() {
-     // return grammerParse("if g_begin caro reda manoa ba 10s thousand of seno na ba noa 1s thousand isas veno ia ria 10s 1s thousand of manos losta dama isasa 100s 1s thousand and mio isas goldo end g_end then g_begin mano itas bono end if g_begin mio isas galdo end g_end then g_begin mio isas note rico end g_end g_end mario isas greeno of legondo 1s thousand end END");
+     // return grammerParse("if g_begin caro reda manoa ba 10s 1000s of seno na ba noa 1s 1000s isas veno ia ria 10s 1s 1000s of manos losta dama isasa 100s 1s 1000s and mio isas goldo end g_end then g_begin mano itas bono end if g_begin mio isas galdo end g_end then g_begin mio isas note rico end g_end g_end mario isas greeno of legondo 1s 1000s end END");
      return yyparse();
 }

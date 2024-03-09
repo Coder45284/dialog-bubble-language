@@ -29,10 +29,10 @@ they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
 [A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
 [A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
 [A-Za-z]+e { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
-thousand { LOG_DEBUG("NUMBER_PLACE"); yylval.number = 1; return NUMBER_PLACE; }
-100s { LOG_DEBUG("NUMBER_100"); yylval.number = 100; return NUMBER_100; }
-10s { LOG_DEBUG("NUMBER_10"); yylval.number = 10; return NUMBER_10; }
-1s { LOG_DEBUG("NUMBER_1"); yylval.number = 1; return NUMBER_1; }
+[1-9]000s { LOG_DEBUG("NUMBER_PLACE"); yylval.number = yytext[0] - '0'; return NUMBER_PLACE; }
+[1-9]00s { LOG_DEBUG("NUMBER_100"); yylval.number = yytext[0] - '0'; return NUMBER_100; }
+[1-9]0s { LOG_DEBUG("NUMBER_10"); yylval.number = yytext[0] - '0'; return NUMBER_10; }
+[1-9]s { LOG_DEBUG("NUMBER_1"); yylval.number = yytext[0] - '0'; return NUMBER_1; }
 \n { lex_line++; }
 [[:space:]]+ ; /* Do nothing */
 [^[:space:]]+  { printf("Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); exit(1); }
