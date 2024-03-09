@@ -3,16 +3,22 @@
 #include <stdio.h>
 %}
 
+%start choose
+
+%union {
+     char *word;
+     char delimiter;
+     int number;
+}
+
 %token GROUP_BEGIN GROUP_END
 %token IF ELIF ELSE THEN
 
-%token DELIMITER CONJUNCTION PROPOSITION
+%token <delimiter> DELIMITER CONJUNCTION PROPOSITION
 
-%token PRONOUN NOUN ADJECTIVE
+%token <word> PRONOUN NOUN ADJECTIVE VERB ADVERB
 
-%token VERB ADVERB
-
-%token NUMBER_PLACE NUMBER_100 NUMBER_10 NUMBER_1
+%token <number> NUMBER_PLACE NUMBER_100 NUMBER_10 NUMBER_1
 
 %%
 choose:
