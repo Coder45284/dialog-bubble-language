@@ -24,6 +24,7 @@ thousand { yylval.number = 1; return NUMBER_PLACE; }
 10s { yylval.number = 10; return NUMBER_10; }
 1s { yylval.number = 1; return NUMBER_1; }
 [[:space:]]+ ; /* Do nothing */
+.+  { printf("Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, yylineno); exit(1); }
 %%
 
 int yywrap() {
