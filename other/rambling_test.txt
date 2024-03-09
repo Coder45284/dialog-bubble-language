@@ -1,0 +1,11 @@
+ if g_begin
+ caro reda manoa ba 10s thousand of seno na ba noa 1s thousand isas veno ia ria 10s 1s thousand of manos losta dama isasa 100s 1s thousand
+ and
+ mio isas goldo end
+ g_end
+ then
+ g_begin
+ mano itas bono end
+ g_end
+ mario isas greeno of legondo 1s thousand
+ end

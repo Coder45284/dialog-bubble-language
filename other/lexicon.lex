@@ -2,29 +2,36 @@
 #include <stdio.h>
 #include "y.tab.h"
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
+
+#ifdef ENABLE_LEX_TRACE
+#define LOG_DEBUG(DATA) printf("%s: \"%s\"\n", DATA, yytext)
+#else
+#define LOG_DEBUG(DATA)
+#endif
+
 %}
 
 %%
-gb { return GROUP_BEGIN; }
-ge { return GROUP_END; }
-if { return IF; }
-elif { return ELIF; }
-else { return ELSE; }
-then { return THEN; }
-end { ENTER_WORD_IN; return DELIMITER; }
-and  { ENTER_WORD_IN; return CONJUNCTION; }
-of   { ENTER_WORD_IN; return PROPOSITION; }
-they { ENTER_WORD_IN; return PRONOUN; }
-[A-Za-z]+o[s]? { ENTER_WORD_IN; return NOUN; }
-[A-Za-z]+a { ENTER_WORD_IN; return ADJECTIVE; }
-[A-Za-z]+as { ENTER_WORD_IN; return VERB; }
-[A-Za-z]+e { ENTER_WORD_IN; return ADVERB; }
-thousand { yylval.number = 1; return NUMBER_PLACE; }
-100s { yylval.number = 100; return NUMBER_100; }
-10s { yylval.number = 10; return NUMBER_10; }
-1s { yylval.number = 1; return NUMBER_1; }
+g_begin { LOG_DEBUG("GROUP_BEGIN"); return GROUP_BEGIN; }
+g_end { LOG_DEBUG("GROUP_END"); return GROUP_END; }
+if { LOG_DEBUG("IF"); return IF; }
+elif { LOG_DEBUG("ELIF"); return ELIF; }
+else { LOG_DEBUG("ELSE"); return ELSE; }
+then { LOG_DEBUG("THEN"); return THEN; }
+end { LOG_DEBUG("DELIMITER"); ENTER_WORD_IN; return DELIMITER; }
+and  { LOG_DEBUG("CONJUNCTION"); ENTER_WORD_IN; return CONJUNCTION; }
+of   { LOG_DEBUG("PROPOSITION"); ENTER_WORD_IN; return PROPOSITION; }
+they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
+[A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
+[A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
+[A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
+[A-Za-z]+e { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
+thousand { LOG_DEBUG("NUMBER_PLACE"); yylval.number = 1; return NUMBER_PLACE; }
+100s { LOG_DEBUG("NUMBER_100"); yylval.number = 100; return NUMBER_100; }
+10s { LOG_DEBUG("NUMBER_10"); yylval.number = 10; return NUMBER_10; }
+1s { LOG_DEBUG("NUMBER_1"); yylval.number = 1; return NUMBER_1; }
 [[:space:]]+ ; /* Do nothing */
-.+  { printf("Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, yylineno); exit(1); }
+[^[:space:]]+  { printf("Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, yylineno); exit(1); }
 %%
 
 int yywrap() {
