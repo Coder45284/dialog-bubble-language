@@ -24,3 +24,7 @@ thousand { yylval.number = 1; return NUMBER_PLACE; }
 10s { yylval.number = 10; return NUMBER_10; }
 1s { yylval.number = 1; return NUMBER_1; }
 %%
+
+int yywrap() {
+    return 1;
+}
