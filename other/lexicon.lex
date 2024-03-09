@@ -21,6 +21,7 @@ elif { LOG_DEBUG("ELIF"); return ELIF; }
 else { LOG_DEBUG("ELSE"); return ELSE; }
 then { LOG_DEBUG("THEN"); return THEN; }
 end { LOG_DEBUG("DELIMITER"); ENTER_WORD_IN; return DELIMITER; }
+END { LOG_DEBUG("END"); ENTER_WORD_IN; return END; }
 and  { LOG_DEBUG("CONJUNCTION"); ENTER_WORD_IN; return CONJUNCTION; }
 of   { LOG_DEBUG("PROPOSITION"); ENTER_WORD_IN; return PROPOSITION; }
 they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
