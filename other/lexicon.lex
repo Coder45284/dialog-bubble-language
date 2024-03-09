@@ -23,6 +23,7 @@ thousand { yylval.number = 1; return NUMBER_PLACE; }
 100s { yylval.number = 100; return NUMBER_100; }
 10s { yylval.number = 10; return NUMBER_10; }
 1s { yylval.number = 1; return NUMBER_1; }
+[^ \n\t]+  { /* Do nothing */ }
 %%
 
 int yywrap() {
