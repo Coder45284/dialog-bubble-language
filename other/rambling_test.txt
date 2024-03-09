@@ -5,7 +5,17 @@ mio isas goldo end
 g_end
 then
 g_begin
+
 mano itas bono end
+
+if g_begin
+mio isas galdo end
+g_end
+then
+g_begin
+mio isas note rico end
+g_end
+
 g_end
 mario isas greeno of legondo 1s thousand
 end

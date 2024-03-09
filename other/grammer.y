@@ -38,7 +38,8 @@ condition_words:
 words:
      sentence CONJUNCTION words
     |sentence DELIMITER words
-    |sentence DELIMITER;
+    |IF if_group words
+    |;
 sentence:
      noun_phrase verb_phrase end_phrase;
 verb_phrase:
