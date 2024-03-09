@@ -34,7 +34,7 @@ thousand { LOG_DEBUG("NUMBER_PLACE"); yylval.number = 1; return NUMBER_PLACE; }
 1s { LOG_DEBUG("NUMBER_1"); yylval.number = 1; return NUMBER_1; }
 \n { lex_line++; }
 [[:space:]]+ ; /* Do nothing */
-[^[:space:]]+  { printf("Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); exit(1); }
+[^[:space:]]+  { printf("Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); exit(1); }
 %%
 
 int yywrap() {
