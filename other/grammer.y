@@ -6,15 +6,14 @@
 %start choose
 
 %union {
-     char *word;
-     char delimiter;
+     char word[128];
      int number;
 }
 
 %token GROUP_BEGIN GROUP_END
 %token IF ELIF ELSE THEN
 
-%token <delimiter> DELIMITER CONJUNCTION PROPOSITION
+%token <word> DELIMITER CONJUNCTION PROPOSITION
 
 %token <word> PRONOUN NOUN ADJECTIVE VERB ADVERB
 
