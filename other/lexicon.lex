@@ -5,13 +5,13 @@
 %}
 
 %%
-'\[' { return GROUP_BEGIN; }
-'\]' { return GROUP_END; }
+gb { return GROUP_BEGIN; }
+ge { return GROUP_END; }
 if { return IF; }
 elif { return ELIF; }
 else { return ELSE; }
 then { return THEN; }
-'\;' { ENTER_WORD_IN; return DELIMITER; }
+end { ENTER_WORD_IN; return DELIMITER; }
 and  { ENTER_WORD_IN; return CONJUNCTION; }
 of   { ENTER_WORD_IN; return PROPOSITION; }
 they { ENTER_WORD_IN; return PRONOUN; }
