@@ -9,6 +9,8 @@
 #define LOG_DEBUG(DATA)
 #endif
 
+int lex_line = 1;
+
 %}
 
 %%
@@ -30,8 +32,9 @@ thousand { LOG_DEBUG("NUMBER_PLACE"); yylval.number = 1; return NUMBER_PLACE; }
 100s { LOG_DEBUG("NUMBER_100"); yylval.number = 100; return NUMBER_100; }
 10s { LOG_DEBUG("NUMBER_10"); yylval.number = 10; return NUMBER_10; }
 1s { LOG_DEBUG("NUMBER_1"); yylval.number = 1; return NUMBER_1; }
+\n { lex_line++; }
 [[:space:]]+ ; /* Do nothing */
-[^[:space:]]+  { printf("Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, yylineno); exit(1); }
+[^[:space:]]+  { printf("Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); exit(1); }
 %%
 
 int yywrap() {
