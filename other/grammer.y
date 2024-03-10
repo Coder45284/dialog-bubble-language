@@ -26,7 +26,7 @@ extern int lex_line;
 
 %token <word> PRONOUN NOUN ADJECTIVE VERB ADVERB
 
-%token <number> NUMBER_PLACE NUMBER_100 NUMBER_10 NUMBER_1
+%token <number> NUMBER_SIGN NUMBER_PLACE NUMBER_100 NUMBER_10 NUMBER_1
 
 %%
 choose:
@@ -70,16 +70,20 @@ preposition_phrase:
 noun:
      NOUN | PRONOUN;
 number:
-     NUMBER_100 number_10 number
-    |NUMBER_10 number_1 number
-    |NUMBER_1 NUMBER_PLACE number
+     NUMBER_SIGN number_place //{$$ = $1;}
     |;
+number_place:
+     NUMBER_PLACE number_100 number_place //{$$ = $1 * $2 + $3;}
+    | ;//{$$ = 0;};
+number_100:
+     NUMBER_100 number_10 // {$$ = 100 * $1 + $2;}
+    |number_10 ;//{$$ = $1;};
 number_10:
-     NUMBER_10 number_1
-    |number_1;
+     NUMBER_10 number_1 // {$$ = 10 * $1 + $2;}
+    |number_1 ;// {$$ = $1;};
 number_1:
-     NUMBER_1 NUMBER_PLACE
-    |NUMBER_PLACE;
+     NUMBER_1 // {$$ = $1;}
+    |; // {$$ = 0;};
 %%
 
 int yyerror(char *why) {

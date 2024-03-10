@@ -29,6 +29,8 @@ they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
 [A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
 [A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
 [A-Za-z]+e { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
+\+ { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; return NUMBER_SIGN; }
+\- { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 [1-9]000s { LOG_DEBUG("NUMBER_PLACE"); yylval.number = yytext[0] - '0'; return NUMBER_PLACE; }
 [1-9]00s { LOG_DEBUG("NUMBER_100"); yylval.number = yytext[0] - '0'; return NUMBER_100; }
 [1-9]0s { LOG_DEBUG("NUMBER_10"); yylval.number = yytext[0] - '0'; return NUMBER_10; }
