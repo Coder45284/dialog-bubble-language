@@ -15,7 +15,7 @@ def addPronouns(keywords : {}):
         person = "{}ie".format(a[0])
         person_description = a[1]
 
-        c_header += "\n    { \\\\ " + "{}\n".format(person_description)
+        c_header += "\n    { // " + "{}\n".format(person_description)
 
         for b in B:
             gender = ""
@@ -25,13 +25,13 @@ def addPronouns(keywords : {}):
                 gender = "{}el".format(b[0])
                 gender_description = b[1]
 
-            c_header += "\n        { \\\\ " + "{}\n".format(gender_description)
+            c_header += "\n        { // " + "{}".format(gender_description)
 
             for c in C:
                 status = "{}oe".format(c[0])
                 status_description = c[1]
 
-                c_header += "\n            { \\\\ " + "{}\n".format(status_description)
+                c_header += "\n            \"BLANK\""
 
                 pronoun = person+gender+status
                 description = "Pronoun: " + person_description + "; " +  gender_description + "; " + status_description
@@ -42,9 +42,10 @@ def addPronouns(keywords : {}):
                 keywords[pronoun] = description
 
                 if c != C[-1]:
-                    c_header += "            },"
+                    c_header += ", // {}".format(status_description)
                 else:
-                    c_header += "            }\n"
+                    c_header += "  // {}\n".format(status_description)
+
             if b != B[-1]:
                 c_header += "        },"
             else:
