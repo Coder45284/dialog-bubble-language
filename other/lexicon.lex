@@ -11,6 +11,8 @@
 
 int lex_line = 1;
 
+int translateNumberWord(const char *word, char *prefix);
+
 %}
 
 %%
@@ -39,6 +41,15 @@ SehWee { LOG_DEBUG("PROPOSITION 'because of'"); ENTER_WORD_IN; return PROPOSITIO
 SeeSee { LOG_DEBUG("PROPOSITION 'of'"); ENTER_WORD_IN; return PROPOSITION; }
 TeeWelTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; return NUMBER_SIGN; }
 SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
+(Wee)?(Tee)?(Qee)?(See)?Te[lh] {
+    LOG_DEBUG("NUMBER_PLACE");
+
+    char postfix = '\0';
+
+    int number = translateNumberWord(yytext, &postfix);
+
+    printf("Numberic %d %c\n", number, postfix);
+}
 [0-9][bl] {
     LOG_DEBUG("NUMBER_PLACE");
 
@@ -87,4 +98,39 @@ they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
 
 int yywrap() {
     return 1;
+}
+
+int translateNumberWord(const char *word, char *prefix) {
+    int number = 0;
+    const char *word_head = word;
+    const int PREFIXES[4] = {'W', 'T', 'Q', 'S'};
+    const int NUMBERS[4]  = { 8,   4,   2,   1 };
+
+    if(word_head[0] == '\0')
+        return -1;
+
+    for(int pre = 0; pre < 4; pre++) {
+        if(word_head[0] == PREFIXES[pre]) {
+            for(int i = 0; i < 3; i++) {
+                word_head++;
+                if(word_head[0] == '\0')
+                    return -1;
+            }
+
+            number += NUMBERS[pre];
+        }
+    }
+
+    if(word_head[0] != 'T')
+        return -1;
+    word_head++;
+    if(word_head[0] != 'e')
+        return -1;
+    word_head++;
+    if(word_head[0] == '\0')
+        return -1;
+
+    *prefix = word_head[0];
+
+    return number;
 }
