@@ -1,5 +1,20 @@
 if g_begin
-caro reda manoa ba + 1000s 20s of seno na ba noa - 1000s 8s isas veno ia ria - 1000s 30s 7s of manos losta dama isasa + 1000s 100s 3s
+caro reda manoa ba
+
++ 0b b0s
+
+of seno na ba noa
+
+- 2b 900s 60s as 1b 800s 10s cs 0b 300s 50s bs
+
+isas veno ia ria
+
+- 0b 70s fs
+
+of manos losta dama isasa
+
++ 0b c00s 2s
+
 and
 mio isas goldo end
 g_end
@@ -17,6 +32,9 @@ mio isas note rico end
 g_end
 
 g_end
-mario isas greeno of legondo - 1000s 5s
+mario isas greeno of legondo
+
+- 0b 5s
+
 end
 END

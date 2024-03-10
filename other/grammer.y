@@ -16,7 +16,7 @@ extern int lex_line;
 
 %union {
      char word[128];
-     int number;
+     long long int number;
 }
 
 %token GROUP_BEGIN GROUP_END END
@@ -72,16 +72,26 @@ preposition_phrase:
 noun:
      NOUN | PRONOUN;
 number:
-     NUMBER_SIGN number_place { printf("Number: %d\n", $1 * ($2)); }
+     NUMBER_SIGN number_place {
+          long long int number = $1 * ($2);
+          char space = ' ';
+
+          if( number < 0 ) {
+               space = '-';
+               number = -number;
+          }
+
+          printf("Adjective Number (hex): %c%lx\n", space, number);
+     }
     |;
 number_place:
-     NUMBER_PLACE number_100 number_place {$$ = $1 * ($2) + $3;}
+     NUMBER_PLACE number_100 number_place {$$ = (($2) << ($1 * 12)) + ($3);}
     | {$$ = 0;};
 number_100:
-     NUMBER_100 number_10 {$$ = 100 * $1 + $2;}
+     NUMBER_100 number_10 {$$ = ((($1) << 8) + $2);}
     |number_10 {$$ = $1;};
 number_10:
-     NUMBER_10 number_1 {$$ = 10 * $1 + $2;}
+     NUMBER_10 number_1 {$$ = ((($1) << 4) + $2);}
     |number_1 {$$ = $1;};
 number_1:
      NUMBER_1 {$$ = $1;}
