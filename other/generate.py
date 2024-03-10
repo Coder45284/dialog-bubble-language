@@ -25,15 +25,19 @@ def addPronouns(keywords : {}):
 
             if b != '\0':
                 gender = "{}el".format(b[0])
-                gender_description = "; " + b[1]
+                gender_description = b[1]
+
+            c_header += "\n        { \\\\ " + "{}\n".format(gender_description)
 
             for c in C:
                 status = "{}oe".format(c[0])
                 status_description = c[1]
 
+                c_header += "\n            { \\\\ " + "{}\n".format(status_description)
+
                 for d in D:
                     pronoun = person+gender+status
-                    description = "Pronoun: " + person_description + gender_description + "; " + status_description
+                    description = "Pronoun: " + person_description + "; " +  gender_description + "; " + status_description
 
                     if d != '\0':
                         pronoun += "{}oe".format(d[0])
@@ -45,6 +49,15 @@ def addPronouns(keywords : {}):
                         print("Error: There should be no duplicate pronouns. '{}' has been declared before.".format(pronoun))
 
                     keywords[pronoun] = description
+
+                if c != C[-1]:
+                    c_header += "            },"
+                else:
+                    c_header += "            }\n"
+            if b != B[-1]:
+                c_header += "        },"
+            else:
+                c_header += "        }\n"
 
         if a != A[-1]:
             c_header += "    },"
