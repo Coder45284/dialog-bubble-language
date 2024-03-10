@@ -3,7 +3,7 @@
 #include "y.tab.h"
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
 
-#ifdef ENABLE_LEX_TRACE
+#ifndef ENABLE_LEX_TRACE
 #define LOG_DEBUG(DATA) printf("%s: \"%s\"\n", DATA, yytext)
 #else
 #define LOG_DEBUG(DATA)
@@ -14,16 +14,17 @@ int lex_line = 1;
 %}
 
 %%
-g_begin { LOG_DEBUG("GROUP_BEGIN"); return GROUP_BEGIN; }
-g_end { LOG_DEBUG("GROUP_END"); return GROUP_END; }
-if { LOG_DEBUG("IF"); return IF; }
-elif { LOG_DEBUG("ELIF"); return ELIF; }
-else { LOG_DEBUG("ELSE"); return ELSE; }
-then { LOG_DEBUG("THEN"); return THEN; }
-end { LOG_DEBUG("DELIMITER"); ENTER_WORD_IN; return DELIMITER; }
+Sie { LOG_DEBUG("GROUP_BEGIN"); return GROUP_BEGIN; }
+Soe { LOG_DEBUG("GROUP_END"); return GROUP_END; }
+Tie { LOG_DEBUG("IF"); return IF; }
+Teh { LOG_DEBUG("ELIF"); return ELIF; }
+Tee { LOG_DEBUG("ELSE"); return ELSE; }
+Toe { LOG_DEBUG("THEN"); return THEN; }
+See { LOG_DEBUG("DELIMITER END"); ENTER_WORD_IN; return DELIMITER; }
+Qee { LOG_DEBUG("DELIMITER END | Yes/No Question"); ENTER_WORD_IN; return DELIMITER; }
 END { LOG_DEBUG("END"); ENTER_WORD_IN; return END; }
 and  { LOG_DEBUG("CONJUNCTION"); ENTER_WORD_IN; return CONJUNCTION; }
-of   { LOG_DEBUG("PROPOSITION"); ENTER_WORD_IN; return PROPOSITION; }
+of   { LOG_DEBUG("PROPOSITION 'of'"); ENTER_WORD_IN; return PROPOSITION; }
 they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
 [A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
 [A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }

@@ -52,6 +52,7 @@ def addIfElses(keywords : {}):
     delimiters.append(("Tie", "If <sentences>"))
     delimiters.append(("Teh", "Else if"))
     delimiters.append(("Tee", "Else"))
+    delimiters.append(("Toe", "Then"))
     delimiters.append(("Sie", "Group begin"))
     delimiters.append(("Soe", "Group end"))
 
