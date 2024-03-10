@@ -28,12 +28,12 @@ const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYP
         },
         { // Neuter
             { // Noun
-                "I/Me (item)", // Singular
-                "We/Us (item)" // Plural
+                "I/Me (neuter)", // Singular
+                "We/Us (neuter)" // Plural
             },
             { // Adjective
-                "My (item)", // Singular
-                "Our (item)" // Plural
+                "My (neuter)", // Singular
+                "Our (neuter)" // Plural
             }
         },
         { // Male
@@ -81,12 +81,12 @@ const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYP
         },
         { // Neuter
             { // Noun
-                "I/Me (item), not you", // Singular
-                "We/Us (item), not you" // Plural
+                "I/Me (neuter), not you", // Singular
+                "We/Us (neuter), not you" // Plural
             },
             { // Adjective
-                "My (item), not you", // Singular
-                "Our (item), not you" // Plural
+                "My (neuter), not you", // Singular
+                "Our (neuter), not you" // Plural
             }
         },
         { // Male
@@ -114,52 +114,52 @@ const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYP
 
         { // Unspecified
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "They (singular)", // Singular
+                "They"             // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Their (singular)", // Singular
+                "Their"             // Plural
             }
         },
         { // Female
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "She",              // Singular
+                "They (all-female)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Her",               // Singular
+                "Their (all-female)" // Plural
             }
         },
         { // Neuter
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "It",               // Singular
+                "They (all-neuter)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Its",               // Singular
+                "Their (all-neuter)" // Plural
             }
         },
         { // Male
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "He",             // Singular
+                "They (all-male)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "His",             // Singular
+                "Their (all-male)" // Plural
             }
         },
         { // Genderless
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "They (singular,all-non-binary)", // Singular
+                "They (plural,all-non-binary)"    // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Their (singular,all-non-binary)", // Singular
+                "Their (plural,all-non-binary)"    // Plural
             }
         }
     },
@@ -167,52 +167,52 @@ const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYP
 
         { // Unspecified
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "You (singular)",  // Singular
+                "You all (plural)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Your (singular)",   // Singular
+                "You all's (plural)" // Plural
             }
         },
         { // Female
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "You (female,singular)",  // Singular
+                "You all (female,plural)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Your (female,singular)",   // Singular
+                "You all's (female,plural)" // Plural
             }
         },
         { // Neuter
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "You (neuter,singular)",  // Singular
+                "You all (neuter,plural)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Your (neuter,singular)",   // Singular
+                "You all's (neuter,plural)" // Plural
             }
         },
         { // Male
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "You (male,singular)",  // Singular
+                "You all (male,plural)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Your (male,singular)",   // Singular
+                "You all's (male,plural)" // Plural
             }
         },
         { // Genderless
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "You (non-binary,singular)",  // Singular
+                "You all (non-binary,plural)" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "Your (non-binary,singular)",   // Singular
+                "You all's (non-binary,plural)" // Plural
             }
         }
     }
