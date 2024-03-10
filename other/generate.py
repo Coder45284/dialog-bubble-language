@@ -1,5 +1,5 @@
 def addPronouns(keywords : {}):
-    A = [('S','1st Person'), ('Q','2nd Person'), ('T','3rd Person')]
+    A = [('S','1st Person'), ('W','1st Person Exclusionary'), ('Q','2nd Person'), ('T','3rd Person')]
     B = ['\0', ('W','Neuter'), ('Q','Genderless'), ('S','Female'), ('T', 'Male')]
     C = [('S', 'Noun'), ('W','Adjective')]
     D = ['\0', 'T']
