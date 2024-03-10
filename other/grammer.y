@@ -32,7 +32,7 @@ extern int lex_line;
 choose:
      IF if_group choose
     |noun_phrase verb_phrase end_phrase DELIMITER choose
-    |END;
+    |END { printf("Grammer has passed without problems.\n"); };
 if_group:
      GROUP_BEGIN condition_words GROUP_END then elif;
 then:
