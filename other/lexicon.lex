@@ -65,12 +65,12 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
         yylval.number = (yytext[0] - '0');
     return NUMBER_100;
 }
-[1-9a-f]0s {
+(Wel)?(Tel)?(Qel)?(Sel)?Tee {
     LOG_DEBUG("NUMBER_10");
-    if(yytext[0] >= 'a')
-        yylval.number = (yytext[0] - 'a') + 10;
-    else
-        yylval.number = (yytext[0] - '0');
+
+    char postfix = '@';
+    yylval.number = translateNumberWord(yytext, &postfix);
+
     return NUMBER_10;
 }
 (Wee)?(Tee)?(Qee)?(See)?Tee {
