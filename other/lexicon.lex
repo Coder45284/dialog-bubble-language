@@ -37,11 +37,6 @@ QelSee { LOG_DEBUG("PROPOSITION 'in/inside of'"); ENTER_WORD_IN; return PROPOSIT
 WelQeeQee { LOG_DEBUG("PROPOSITION 'for'"); ENTER_WORD_IN; return PROPOSITION; }
 SehWee { LOG_DEBUG("PROPOSITION 'because of'"); ENTER_WORD_IN; return PROPOSITION; }
 SeeSee { LOG_DEBUG("PROPOSITION 'of'"); ENTER_WORD_IN; return PROPOSITION; }
-they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
-[A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
-[A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
-[A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
-[A-Za-z]+e { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
 \+ { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; return NUMBER_SIGN; }
 \- { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 [0-9][bl] {
@@ -80,6 +75,11 @@ they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
         yylval.number = (yytext[0] - '0');
     return NUMBER_1;
 }
+they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
+[A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
+[A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
+[A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
+[A-Za-z]+e { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
 \n { lex_line++; }
 [[:space:]]+ ; /* Do nothing */
 [^[:space:]]+  { printf("Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); exit(1); }
