@@ -3,7 +3,7 @@ caro reda manoa ba
 
 + 0b b0s
 
-of seno na ba noa
+SeeSee seno na ba noa
 
 - 2b 900s 60s as 1b 800s 10s cs 0b 300s 50s bs
 
@@ -11,7 +11,7 @@ isas veno ia ria
 
 - 0b 70s fs
 
-of manos losta dama isasa
+SeeSee manos losta dama isasa
 
 + 0b c00s 2s 0l f00s f0s fs
 
@@ -32,7 +32,7 @@ mio isas note rico See
 Soe
 
 Soe
-mario isas greeno of legondo
+mario isas greeno SeeSee legondo
 
 - 0b 5s
 
