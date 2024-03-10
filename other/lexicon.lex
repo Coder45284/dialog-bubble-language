@@ -73,12 +73,12 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
         yylval.number = (yytext[0] - '0');
     return NUMBER_10;
 }
-[0-9a-f]s {
+(Wee)?(Tee)?(Qee)?(See)?Tee {
     LOG_DEBUG("NUMBER_1");
-    if(yytext[0] >= 'a')
-        yylval.number = (yytext[0] - 'a') + 10;
-    else
-        yylval.number = (yytext[0] - '0');
+
+    char postfix = '@';
+    yylval.number = translateNumberWord(yytext, &postfix);
+
     return NUMBER_1;
 }
 they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
