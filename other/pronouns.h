@@ -61,52 +61,52 @@ const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYP
 
         { // Unspecified
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "I/Me, not you", // Singular
+                "We/Us, not you" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "My, not you", // Singular
+                "Our, not you" // Plural
             }
         },
         { // Female
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "I/Me (female), not you", // Singular
+                "We/Us (female), not you" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "My (female), not you", // Singular
+                "Our (female), not you" // Plural
             }
         },
         { // Neuter
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "I/Me (item), not you", // Singular
+                "We/Us (item), not you" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "My (item), not you", // Singular
+                "Our (item), not you" // Plural
             }
         },
         { // Male
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "I/Me (male), not you", // Singular
+                "We/Us (male), not you" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "My (male), not you", // Singular
+                "Our (male), not you" // Plural
             }
         },
         { // Genderless
             { // Noun
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "I/Me (non-binary), not you", // Singular
+                "We/Us (non-binary), not you" // Plural
             },
             { // Adjective
-                "BLANK", // Singular
-                "BLANK"  // Plural
+                "My (non-binary), not you", // Singular
+                "Our (non-binary), not you" // Plural
             }
         }
     },
