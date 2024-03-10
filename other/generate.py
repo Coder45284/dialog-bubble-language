@@ -34,20 +34,37 @@ def addPronouns(keywords : {}):
 
                     keywords[pronoun] = description
 
-def addDelimiters(keywords : {}):
+def addConjunctions(keywords : {}):
+    conjunctions = []
+    conjunctions.append(("Seh", "And conjunction"))
+    conjunctions.append(("Sel", "Or conjunction"))
+    conjunctions.append(("Tel", "Because conjunction"))
+    conjunctions.append(("Weh", "So conjunction"))
+
+    for d in conjunctions:
+        if d[0] in keywords:
+            print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+        keywords[d[0]] = d[1]
+
+def addIfElses(keywords : {}):
     delimiters = []
-    delimiters.append(("Sel", "Or conjunction"))
-    delimiters.append(("See", "End of sentence"))
-    delimiters.append(("Seh", "And conjunction"))
-    delimiters.append(("Qee", "End of sentence with Yes/No?"))
     delimiters.append(("Tie", "If <sentences>"))
-    delimiters.append(("Tel", "Because conjunction"))
-    delimiters.append(("Toe", "End if <sentences>"))
-    delimiters.append(("Weh", "So conjunction"))
+    delimiters.append(("Teh", "Else if"))
     delimiters.append(("Tee", "Else"))
     delimiters.append(("Sie", "Group begin"))
     delimiters.append(("Soe", "Group end"))
-    delimiters.append(("Teh", "Else if"))
+
+    for d in delimiters:
+        if d[0] in keywords:
+            print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+        keywords[d[0]] = d[1]
+
+def addDelimiters(keywords : {}):
+    delimiters = []
+    delimiters.append(("See", "End of sentence"))
+    delimiters.append(("Qee", "End of sentence with Yes/No?"))
 
     for d in delimiters:
         if d[0] in keywords:
@@ -159,6 +176,8 @@ def addCorrelatives(keywords : {}):
 keywords = {}
 
 addPronouns(keywords)
+addConjunctions(keywords)
+addIfElses(keywords)
 addDelimiters(keywords)
 addPrepositions(keywords)
 addNumbers(keywords)
