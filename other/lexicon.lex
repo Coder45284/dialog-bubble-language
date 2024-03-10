@@ -81,7 +81,11 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 
     return NUMBER_1;
 }
-they { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
+[SWQT]ie([WQST]el)?[SW]oe(Toe)? {
+    LOG_DEBUG("PRONOUN");
+    ENTER_WORD_IN;
+    return NOUN;
+}
 [A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
 [A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
 [A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
