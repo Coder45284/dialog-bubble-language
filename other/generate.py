@@ -110,10 +110,7 @@ def addNumbers(keywords : {}):
             description = ""
 
             if x == 0:
-                if k[0] == "e":
-                    number += "SeeWee" # Zero marker
-                else:
-                    continue
+                continue
 
             if (x & 0b1000) != 0:
                 number += four + k[0]
