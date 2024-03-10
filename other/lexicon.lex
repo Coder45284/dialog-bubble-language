@@ -13,6 +13,8 @@ int lex_line = 1;
 
 int translateNumberWord(const char *word, char *prefix);
 
+#include "pronouns.h"
+
 %}
 
 %%
@@ -81,9 +83,16 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 
     return NUMBER_1;
 }
-[SWQT]ie([WQST]el)?[SW]oe(Toe)? {
+[SWQT]ie([SWQT]el)?[SW]oe(Toe)? {
     LOG_DEBUG("PRONOUN");
+
+    int person; // 4 possibilities
+    int gender = 0; // 0 for unspecified. 5 possibilities.
+    int type; // 2 possibilities
+    int plurality = 0; // 0 for singlular, and 1 for plural.
+
     ENTER_WORD_IN;
+
     return NOUN;
 }
 [A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
