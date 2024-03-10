@@ -83,7 +83,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 
     return NUMBER_1;
 }
-[STWQ]ie([STWQ]el)?[STW]oe {
+[STWQ]ie([STWQ]el)?[SW]oe(Toe)? {
     LOG_DEBUG("PRONOUN");
 
     int person; // 4 possibilities

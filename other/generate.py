@@ -1,15 +1,17 @@
 def addPronouns(keywords : {}):
-    A = [('S','1st Person'), ('T','3rd Person'), ('W','1st Person Exclusionary'), ('Q','2nd Person')]
-    B = ['\0', ('S','Female'), ('T', 'Male'), ('W','Neuter'), ('Q','Genderless')]
-    C = [('S', 'Singular Noun'), ('T', 'Plural Noun'), ('W','Adjective')]
+    A = [('S','1st Person'), ('W','1st Person Exclusionary'), ('T','3rd Person'), ('Q','2nd Person')]
+    B = ['\0', ('S','Female'), ('W','Neuter'), ('T', 'Male'), ('Q','Genderless')]
+    C = [('S', 'Noun'), ('W','Adjective')]
+    D = ['\0', 'T']
 
     c_header = ""
 
-    c_header += "#define MAX_PRONOUN_PERSON {}\n".format(len(A))
-    c_header += "#define MAX_PRONOUN_GENDER {}\n".format(len(B))
-    c_header += "#define MAX_PRONOUN_TYPES  {}\n".format(len(C))
+    c_header += "#define MAX_PRONOUN_PERSON  {}\n".format(len(A))
+    c_header += "#define MAX_PRONOUN_GENDER  {}\n".format(len(B))
+    c_header += "#define MAX_PRONOUN_TYPES   {}\n".format(len(C))
+    c_header += "#define MAX_PRONOUN_PLURALS {}\n".format(len(D))
     c_header += "\n"
-    c_header += "const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYPES][32] = {"
+    c_header += "const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYPES][MAX_PRONOUN_PLURALS][32] = {"
 
     for a in A:
         person = "{}ie".format(a[0])
@@ -31,20 +33,32 @@ def addPronouns(keywords : {}):
                 status = "{}oe".format(c[0])
                 status_description = c[1]
 
-                c_header += "\n            \"BLANK\""
+                c_header += "\n            { // " + "{}\n".format(status_description)
 
-                pronoun = person+gender+status
-                description = "Pronoun: " + person_description + "; " +  gender_description + "; " + status_description
+                for d in D:
+                    pronoun = person+gender+status
+                    description = "Pronoun: " + person_description + "; " +  gender_description + "; " + status_description
 
-                if pronoun in keywords:
-                    print("Error: There should be no duplicate pronouns. '{}' has been declared before.".format(pronoun))
+                    if d != '\0':
+                        pronoun += "{}oe".format(d[0])
+                        description += "; Plural"
+                    else:
+                        description += "; Singular"
 
-                keywords[pronoun] = description
+                    if pronoun in keywords:
+                        print("Error: There should be no duplicate pronouns. '{}' has been declared before.".format(pronoun))
+
+                    if d != D[-1]:
+                        c_header += "                \"BLANK\", // {}\n".format("Singular")
+                    else:
+                        c_header += "                \"BLANK\"  // {}\n".format("Plural")
+
+                    keywords[pronoun] = description
 
                 if c != C[-1]:
-                    c_header += ", // {}".format(status_description)
+                    c_header += "            },"
                 else:
-                    c_header += "  // {}\n".format(status_description)
+                    c_header += "            }\n"
 
             if b != B[-1]:
                 c_header += "        },"
