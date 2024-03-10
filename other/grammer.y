@@ -17,6 +17,7 @@ extern int lex_line;
 %union {
      char word[128];
      long long int number;
+     double real_number;
 }
 
 %token GROUP_BEGIN GROUP_END END
@@ -26,9 +27,11 @@ extern int lex_line;
 
 %token <word> PRONOUN NOUN ADJECTIVE VERB ADVERB
 
-%token <number> NUMBER_SIGN NUMBER_PLACE NUMBER_100 NUMBER_10 NUMBER_1
+%token <number> NUMBER_SIGN NUMBER_100 NUMBER_10 NUMBER_1
+%token <real_number> NUMBER_PLACE
 
-%type <number> number_place number_100 number_10 number_1
+%type <number> number_100 number_10 number_1
+%type <real_number> number_place
 
 %%
 choose:
@@ -73,19 +76,17 @@ noun:
      NOUN | PRONOUN;
 number:
      NUMBER_SIGN number_place {
-          long long int number = $1 * ($2);
+          double number = $2;
           char space = ' ';
 
-          if( number < 0 ) {
+          if($1 < 0)
                space = '-';
-               number = -number;
-          }
 
-          printf("Adjective Number (hex): %c%lx\n", space, number);
+          printf("Adjective Number (Approximatly): %c%lf\n", space, number);
      }
     |;
 number_place:
-     NUMBER_PLACE number_100 number_place {$$ = (($2) << ($1 * 12)) + ($3);}
+     NUMBER_PLACE number_100 number_place {$$ = (($2) * $1) + ($3);}
     | {$$ = 0;};
 number_100:
      NUMBER_100 number_10 {$$ = ((($1) << 8) + $2);}

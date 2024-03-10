@@ -33,9 +33,14 @@ they { LOG_DEBUG("PRONOUN"); ENTER_WORD_IN; return PRONOUN; }
 \- { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 [0-9][bl] {
     LOG_DEBUG("NUMBER_PLACE");
-    yylval.number = yytext[0] - '0';
-    if(yytext[0] == 'l')
-        yylval.number = -yylval.number;
+
+    int number = yytext[0] - '0';
+
+    if(yytext[1] == 'b')
+        yylval.real_number = ((long long int)1 << (number * 12));
+    else
+        yylval.real_number = 1. / ((long long int)1 << ((number + 1) * 12));
+
     return NUMBER_PLACE;
 }
 [1-9a-f]00s {
