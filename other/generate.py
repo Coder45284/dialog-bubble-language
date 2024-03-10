@@ -158,6 +158,16 @@ def addNumbers(keywords : {}):
 
             keywords[number] = description
 
+    number_starts = []
+    number_starts.append(("TeeWelTee", "Positive number beginning"))
+    number_starts.append(("SeeWehTee", "Negative number beginning"))
+
+    for d in number_starts:
+        if d[0] in keywords:
+            print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+        keywords[d[0]] = d[1]
+
 def addCorrelatives(keywords : {}):
     types = [("QieQelQoe", "None"), ("Seh", "Every"), ("Sel", "Some"), ("Teh", "What"), ("Weh", "That")]
     kinds = [("SeeWeh", "Time"), ("SeeTel", "Reason"), ("SeeQolTeh", "Amount"), ("SeeWoe", "Demonstrative"),  ("SeeQel", "Place")]

@@ -37,8 +37,8 @@ QelSee { LOG_DEBUG("PROPOSITION 'in/inside of'"); ENTER_WORD_IN; return PROPOSIT
 WelQeeQee { LOG_DEBUG("PROPOSITION 'for'"); ENTER_WORD_IN; return PROPOSITION; }
 SehWee { LOG_DEBUG("PROPOSITION 'because of'"); ENTER_WORD_IN; return PROPOSITION; }
 SeeSee { LOG_DEBUG("PROPOSITION 'of'"); ENTER_WORD_IN; return PROPOSITION; }
-\+ { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; return NUMBER_SIGN; }
-\- { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
+TeeWelTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; return NUMBER_SIGN; }
+SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 [0-9][bl] {
     LOG_DEBUG("NUMBER_PLACE");
 
