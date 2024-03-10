@@ -5,8 +5,10 @@
 
 #ifndef ENABLE_LEX_TRACE
 #define LOG_DEBUG(DATA) printf("%s: \"%s\"\n", DATA, yytext)
+#define LOG_DEBUG_EXT(DATA, TRANSLATE) printf("%s: \"%s\" which is \"%s\"\n", DATA, yytext, TRANSLATE)
 #else
 #define LOG_DEBUG(DATA)
+#define LOG_DEBUG_EXT(DATA, TRANSLATE)
 #endif
 
 int lex_line = 1;
@@ -83,17 +85,56 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 
     return NUMBER_1;
 }
-[STWQ]ie([STWQ]el)?[SW]oe(Toe)? {
-    LOG_DEBUG("PRONOUN");
-
+[SWTQ]ie([SWTQ]el)?[SW]oe(Toe)? {
     int person; // 4 possibilities
     int gender = 0; // 0 for unspecified. 5 possibilities.
     int type; // 2 possibilities
     int plurality = 0; // 0 for singlular, and 1 for plural.
 
-    ENTER_WORD_IN;
+    const char TABLE[] = "SWTQ";
 
-    return NOUN;
+    char *head = yytext;
+
+    // Choose person. 1st person, 1st person exclusionary, 2nd person, 3rd person.
+    for(int i = 0; TABLE[i] != '\0'; i++) {
+        if(head[0] == TABLE[i])
+            person = i;
+    }
+
+    head += 3; // Advance reading head.
+
+    // If gender is specified.
+    if(head[1] == 'e' && head[2] == 'l') {
+        // Choose gender
+        for(int i = 0; TABLE[i] != '\0'; i++) {
+            if(head[0] == TABLE[i])
+                gender = i;
+        }
+
+        gender++;
+
+        head += 3; // Advance reading head.
+    }
+
+    // Choose either noun or possessive adjective
+    for(int i = 0; TABLE[i] != '\0'; i++) {
+        if(head[0] == TABLE[i])
+            type = i;
+    }
+
+    head += 3; // Advance reading head.
+
+    if(head[0] != '\0')
+        plurality = 1;
+
+    LOG_DEBUG_EXT("PRONOUN", PRONOUN_TABLE[person][gender][type][plurality]);
+
+    snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", PRONOUN_TABLE[person][gender][type][plurality]);
+
+    if(type == 0)
+        return NOUN;
+    else
+        return ADJECTIVE;
 }
 [A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
 [A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
