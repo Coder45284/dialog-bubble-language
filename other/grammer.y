@@ -25,7 +25,7 @@ extern int lex_line;
 
 %token <word> DELIMITER CONJUNCTION PROPOSITION
 
-%token <word> PRONOUN NOUN ADJECTIVE VERB ADVERB
+%token <word> NOUN ADJECTIVE VERB ADVERB
 
 %token <number> NUMBER_SIGN NUMBER_100 NUMBER_10 NUMBER_1
 %token <real_number> NUMBER_PLACE
@@ -68,12 +68,10 @@ end_phrase:
     noun_phrase
     |;
 noun_phrase:
-     noun adjectives number preposition_phrase;
+     NOUN adjectives number preposition_phrase;
 preposition_phrase:
-     PROPOSITION noun adjectives number
+     PROPOSITION NOUN adjectives number
     |;
-noun:
-     NOUN | PRONOUN;
 number:
      NUMBER_SIGN number_place {
           double number = $2;
