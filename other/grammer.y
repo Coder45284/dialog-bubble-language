@@ -28,6 +28,8 @@ extern int lex_line;
 
 %token <number> NUMBER_SIGN NUMBER_PLACE NUMBER_100 NUMBER_10 NUMBER_1
 
+%type <number> number_place number_100 number_10 number_1
+
 %%
 choose:
      IF if_group choose
@@ -70,20 +72,20 @@ preposition_phrase:
 noun:
      NOUN | PRONOUN;
 number:
-     NUMBER_SIGN number_place //{$$ = $1;}
+     NUMBER_SIGN number_place { printf("Number: %d\n", $1 * ($2)); }
     |;
 number_place:
-     NUMBER_PLACE number_100 number_place //{$$ = $1 * $2 + $3;}
-    | ;//{$$ = 0;};
+     NUMBER_PLACE number_100 number_place {$$ = $1 * ($2) + $3;}
+    | {$$ = 0;};
 number_100:
-     NUMBER_100 number_10 // {$$ = 100 * $1 + $2;}
-    |number_10 ;//{$$ = $1;};
+     NUMBER_100 number_10 {$$ = 100 * $1 + $2;}
+    |number_10 {$$ = $1;};
 number_10:
-     NUMBER_10 number_1 // {$$ = 10 * $1 + $2;}
-    |number_1 ;// {$$ = $1;};
+     NUMBER_10 number_1 {$$ = 10 * $1 + $2;}
+    |number_1 {$$ = $1;};
 number_1:
-     NUMBER_1 // {$$ = $1;}
-    |; // {$$ = 0;};
+     NUMBER_1 {$$ = $1;}
+    | {$$ = 0;};
 %%
 
 int yyerror(char *why) {
