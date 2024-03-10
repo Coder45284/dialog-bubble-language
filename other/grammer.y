@@ -17,7 +17,7 @@ extern int lex_line;
 %union {
      char word[128];
      long long int number;
-     double real_number;
+     long double real_number;
 }
 
 %token GROUP_BEGIN GROUP_END END
