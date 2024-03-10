@@ -4,9 +4,21 @@ def addPronouns(keywords : {}):
     C = [('S', 'Noun'), ('W','Adjective')]
     D = ['\0', 'T']
 
+    c_header = ""
+
+    c_header += "#define MAX_PRONOUN_PERSON  {}\n".format(len(A))
+    c_header += "#define MAX_PRONOUN_GENDER  {}\n".format(len(B))
+    c_header += "#define MAX_PRONOUN_TYPES   {}\n".format(len(C))
+    c_header += "#define MAX_PRONOUN_PLURALS {}\n".format(len(D))
+    c_header += "\n"
+    c_header += "const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYPES][MAX_PRONOUN_PLURALS][32] = {"
+
     for a in A:
         person = "{}ie".format(a[0])
         person_description = a[1]
+
+        c_header += "\n    { \\\\ " + "{}\n".format(person_description)
+
         for b in B:
             gender = ""
             gender_description = ""
@@ -33,6 +45,15 @@ def addPronouns(keywords : {}):
                         print("Error: There should be no duplicate pronouns. '{}' has been declared before.".format(pronoun))
 
                     keywords[pronoun] = description
+
+        if a != A[-1]:
+            c_header += "    },"
+        else:
+            c_header += "    }\n"
+
+    c_header += "};\n"
+
+    print(c_header)
 
 def addConjunctions(keywords : {}):
     conjunctions = []
