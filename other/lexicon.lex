@@ -57,12 +57,12 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 
     return NUMBER_PLACE;
 }
-[1-9a-f]00s {
+(Weh)?(Teh)?(Qeh)?(Seh)?Tee {
     LOG_DEBUG("NUMBER_100");
-    if(yytext[0] >= 'a')
-        yylval.number = (yytext[0] - 'a') + 10;
-    else
-        yylval.number = (yytext[0] - '0');
+
+    char postfix = '@';
+    yylval.number = translateNumberWord(yytext, &postfix);
+
     return NUMBER_100;
 }
 (Wel)?(Tel)?(Qel)?(Sel)?Tee {
