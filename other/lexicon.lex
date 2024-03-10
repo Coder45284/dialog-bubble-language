@@ -44,21 +44,16 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 (Wee)?(Tee)?(Qee)?(See)?Te[lh] {
     LOG_DEBUG("NUMBER_PLACE");
 
-    char postfix = '\0';
-
+    char postfix = '@';
     int number = translateNumberWord(yytext, &postfix);
+    double real_number;
 
-    printf("Numberic %d %c\n", number, postfix);
-}
-[0-9][bl] {
-    LOG_DEBUG("NUMBER_PLACE");
-
-    int number = yytext[0] - '0';
-
-    if(yytext[1] == 'b')
-        yylval.real_number = ((long long int)1 << (number * 12));
+    if(postfix == 'h')
+        real_number = (double)((long long int)1 << ((number - 1) * 12));
     else
-        yylval.real_number = 1. / ((long long int)1 << ((number + 1) * 12));
+        real_number = 1. / ((long long int)1 << (number * 12));
+
+    yylval.real_number = real_number;
 
     return NUMBER_PLACE;
 }

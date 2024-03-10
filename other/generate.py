@@ -130,7 +130,7 @@ def addNumbers(keywords : {}):
 
             keywords[number] = description
 
-    kind = {("l", "before decimal"), ("h", "after decimal")}
+    kind = {("l", "lower from decimal"), ("h", "higher from decimal")}
 
     for k in kind:
         for x in range(0, 16):

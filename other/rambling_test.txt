@@ -1,19 +1,19 @@
 Tie Sie
 caro reda manoa ba
 
-TeeWelTee 0b
+TeeWelTee SeeTeh
 
 SeeSee seno na ba noa
 
-SeeWehTee 2b 900s 60s as 1b 800s 10s cs 0b 300s 50s bs QeeSeeTeh
+SeeWehTee QeeSeeTeh 900s 60s as QeeTeh 800s 10s cs SeeTeh 300s 50s bs
 
 isas veno ia ria
 
-SeeWehTee 0b 70s fs
+SeeWehTee SeeTeh 70s fs
 
 SeeSee manos losta dama isasa
 
-TeeWelTee 0b c00s 2s 0l f00s f0s fs
+TeeWelTee SeeTeh c00s 2s SeeTel f00s f0s fs
 
 Seh
 mio isas goldo See
@@ -34,7 +34,7 @@ Soe
 Soe
 mario isas greeno SeeSee legondo
 
-SeeWehTee 0b 5s
+SeeWehTee SeeTeh 5s
 
 Qee
 END
