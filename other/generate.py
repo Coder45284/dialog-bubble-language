@@ -210,7 +210,7 @@ def addNumbers(keywords : {}):
 
 def addCorrelatives(keywords : {}):
     types = [("QieQelQoe", "None"), ("Seh", "Every"), ("Sel", "Some"), ("Teh", "What"), ("Weh", "That")]
-    kinds = [('SeeQel', 'Place'), ('SeeQolTeh', 'Amount'), ('SeeTel', 'Reason'), ('SeeTel', 'Time'), ('SeeWoe', 'Demonstrative')]
+    kinds = [('SeeQel', 'Place'), ('SeeQolTeh', 'Amount'), ('SeeTel', 'Reason'), ('SeeWeh', 'Time'), ('SeeWoe', 'Demonstrative')]
 
     c_header = ""
 
