@@ -72,7 +72,7 @@ def addPronouns(keywords : {}):
 
     c_header += "};\n"
 
-    print(c_header)
+    # print(c_header)
 
 def addConjunctions(keywords : {}):
     conjunctions = []
