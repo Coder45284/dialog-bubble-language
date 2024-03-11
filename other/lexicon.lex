@@ -15,6 +15,7 @@ int lex_line = 1;
 
 int translateNumberWord(const char *word, char *prefix);
 
+#include "correlatives.h"
 #include "pronouns.h"
 
 %}
