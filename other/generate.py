@@ -210,16 +210,45 @@ def addNumbers(keywords : {}):
 
 def addCorrelatives(keywords : {}):
     types = [("QieQelQoe", "None"), ("Seh", "Every"), ("Sel", "Some"), ("Teh", "What"), ("Weh", "That")]
-    kinds = [("SeeWeh", "Time"), ("SeeTel", "Reason"), ("SeeQolTeh", "Amount"), ("SeeWoe", "Demonstrative"),  ("SeeQel", "Place")]
+    kinds = [('SeeQel', 'Place'), ('SeeQolTeh', 'Amount'), ('SeeTel', 'Reason'), ('SeeTel', 'Time'), ('SeeWoe', 'Demonstrative')]
 
-    for t in types:
-        for k in kinds:
+    c_header = ""
+
+    c_header += "#define MAX_CORRELATIVE_TYPES {}\n".format(len(types))
+    c_header += "#define MAX_CORRELATIVE_KINDS {}\n".format(len(kinds))
+    c_header += "\n"
+    c_header += "const char CORRELATIVE_TYPE_TABLE[MAX_CORRELATIVE_TYPES][12] = {\n"
+    c_header += "    \"QieQelQoe\", \"Seh\", \"Sel\", \"Teh\", \"Weh\"};\n"
+    c_header += "//   None         Every  Some   What   That\n\n"
+    c_header += "const char CORRELATIVE_KINDS_TABLE[MAX_CORRELATIVE_KINDS][12] = {\n"
+    c_header += "    \"SeeQel\", \"SeeQolTeh\", \"SeeTel\", \"SeeTel\", \"SeeWoe\"};\n"
+    c_header += "//   Place     Amount       Reason    Time      Demonstrative\n\n"
+    c_header += "const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][32] = {"
+
+    for k in kinds:
+        c_header += "\n    {" + " // {}\n".format(k[1])
+
+        for t in types:
             correlative = t[0] + k[0]
 
             if correlative in keywords:
                 print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(correlative))
 
             keywords[correlative] = t[1] + " " + k[1]
+
+            if t != types[-1]:
+                c_header += "        \"BLANK\", // {}\n".format(t[1])
+            else:
+                c_header += "        \"BLANK\"  // {}\n".format(t[1])
+
+        if k != kinds[-1]:
+            c_header += "    },"
+        else:
+            c_header += "    }\n"
+
+    c_header += "};\n"
+
+    # print(c_header)
 
 keywords = {}
 
