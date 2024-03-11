@@ -9,7 +9,7 @@ const char CORRELATIVE_KINDS_TABLE[MAX_CORRELATIVE_KINDS][12] = {
     "SeeQel", "SeeQolTeh", "SeeTel", "SeeTel", "SeeWoe"};
 //   Place     Amount       Reason    Time      Demonstrative
 
-const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][32] = {
+const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][24] = {
     { // Place
         "Nowhere",    // None
         "Everywhere", // Every
