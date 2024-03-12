@@ -193,7 +193,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 ([SQTW][ieo][ehl])+Sie(Toe)? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
 ([SQTW][ieo][ehl])+Qie { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
 [A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
-[A-Za-z]+e { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
+([SQTW][ieo][ehl])+Wie { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
 \n { lex_line++; }
 [ \t]+ ; /* Do nothing */
 [^[:space:]]+  { printf("Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); exit(1); }
