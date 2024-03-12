@@ -39,14 +39,14 @@ add_custom_target(LEXER ALL DEPENDS
   "${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.c"
   "${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.h")
 add_custom_command(
-  COMMAND ${FLEX_PROGRAM} --outfile=${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c ${CMAKE_CURRENT_SOURCE_DIR}/other/lexicon.lex
+  COMMAND ${FLEX_PROGRAM} --outfile=${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c ${CMAKE_CURRENT_SOURCE_DIR}/src/lexicon.lex
   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c
-  MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/other/lexicon.lex"
+  MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/src/lexicon.lex"
   COMMENT "Generating lexicon")
 add_custom_command(
-  COMMAND ${BYACC_PROGRAM} -d ${CMAKE_CURRENT_SOURCE_DIR}/other/grammer.y
+  COMMAND ${BYACC_PROGRAM} -d ${CMAKE_CURRENT_SOURCE_DIR}/src/grammer.y
   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.c ${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.h
-  MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/other/grammer.y"
+  MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/src/grammer.y"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated-code/"
   COMMENT "Generating grammer rules")
 
