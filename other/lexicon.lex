@@ -89,6 +89,8 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
     return NUMBER_1;
 }
 [SWTQ]ie([SWTQ]el)?[SW]oe(Toe)? {
+    // WARNING: If you change this regex, make sure that this code will still work. The code relies on the structure of this regex.
+
     int person; // 4 possibilities
     int gender = 0; // 0 for unspecified. 5 possibilities.
     int type; // 2 possibilities
@@ -140,6 +142,8 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
         return ADJECTIVE;
 }
 ((QieQelQoe)|(Se[hl])|([TW]eh))(See)((Qel)|(QolTeh)|(Tel)|(Weh)|(Woe)) {
+    // WARNING: If you change this regex, make sure that this code will still work. The code relies on the structure of this regex.
+
     int type_index;
     int kind_index;
     int offset;
