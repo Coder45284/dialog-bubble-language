@@ -1,15 +1,23 @@
 #define MAX_CORRELATIVE_TYPES 5
 #define MAX_CORRELATIVE_KINDS 5
 
-const char CORRELATIVE_TYPE_TABLE[MAX_CORRELATIVE_TYPES][12] = {
-    "QieQelQoe", "Seh", "Sel", "Teh", "Weh"};
-//   None         Every  Some   What   That
+typedef enum {
+    CORREL_NONE  = 0, // QieQelQoe prefix
+    CORREL_EVERY = 1, // Seh       prefix
+    CORREL_SOME  = 2, // Sel       prefix
+    CORREL_WHAT  = 3, // Teh       prefix
+    CORREL_THAT  = 4  // Weh       prefix
+} CorrelativeType;
 
-const char CORRELATIVE_KINDS_TABLE[MAX_CORRELATIVE_KINDS][12] = {
-    "SeeQel", "SeeQolTeh", "SeeTel", "SeeWeh", "SeeWoe"};
-//   Place     Amount       Reason    Time      Demonstrative
+typedef enum {
+    CORREL_PLACE         = 0, // SeeQel    postfix
+    CORREL_AMOUNT        = 1, // SeeQolTeh postfix
+    CORREL_REASON        = 2, // SeeTel    postfix
+    CORREL_TIME          = 3, // SeeWeh    postfix
+    CORREL_DEMONSTRATIVE = 4  // SeeWoe    postfix
+} CorrelativeKind;
 
-const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][24] = {
+static const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][24] = {
     { // Place
         "Nowhere",    // None
         "Everywhere", // Every

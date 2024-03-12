@@ -146,22 +146,22 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 
     switch(yytext[0]) {
         case 'Q':
-            type_index = 0;
+            type_index = CORREL_NONE;
             offset = 4 * 3;
             break;
         case 'S':
             if(yytext[2] == 'h')
-                type_index = 1;
+                type_index = CORREL_EVERY;
             else
-                type_index = 2;
+                type_index = CORREL_SOME;
             offset = 2 * 3;
             break;
         case 'T':
-            type_index = 3;
+            type_index = CORREL_WHAT;
             offset = 2 * 3;
             break;
         case 'W':
-            type_index = 4;
+            type_index = CORREL_THAT;
             offset = 2 * 3;
             break;
     }
@@ -169,18 +169,18 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
     switch(yytext[offset]) {
         case 'Q':
             if(yytext[offset + 1] == 'e')
-                kind_index = 0;
+                kind_index = CORREL_PLACE;
             else
-                kind_index = 1;
+                kind_index = CORREL_AMOUNT;
             break;
         case 'T':
-            kind_index = 2;
+            kind_index = CORREL_REASON;
             break;
         case 'W':
             if(yytext[offset + 1] == 'e')
-                kind_index = 3;
+                kind_index = CORREL_TIME;
             else
-                kind_index = 4;
+                kind_index = CORREL_DEMONSTRATIVE;
             break;
     }
 
