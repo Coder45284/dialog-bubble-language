@@ -3,7 +3,7 @@
 #include "y.tab.h"
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
 
-#ifndef ENABLE_LEX_TRACE
+#ifdef ENABLE_LEX_TRACE
 #define LOG_DEBUG(DATA) printf("%s: \"%s\"\n", DATA, yytext)
 #define LOG_DEBUG_EXT(DATA, TRANSLATE) printf("%s: \"%s\" which is \"%s\"\n", DATA, yytext, TRANSLATE)
 #else

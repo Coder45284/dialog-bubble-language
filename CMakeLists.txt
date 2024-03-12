@@ -4,7 +4,7 @@ project(dialog_text_language)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Dependencies
+# Dependencies for raylib
 set(RAYLIB_VERSION 4.0)
 find_package(raylib ${RAYLIB_VERSION} REQUIRED)
 if (NOT raylib_FOUND) # If there's none, fetch and build raylib
@@ -23,13 +23,36 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
   endif()
 endif()
 
+# Configure Flex and Byacc
+find_program(FLEX_PROGRAM flex)
+find_program(BYACC_PROGRAM byacc)
+
 # Our Project
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-file(GLOB SOURCE_FILES src/*.c )
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated-code")
+
+add_custom_target(LEXER ALL DEPENDS
+  "${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c"
+  "${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.c"
+  "${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.h")
+add_custom_command(
+  COMMAND ${FLEX_PROGRAM} --outfile=${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c ${CMAKE_CURRENT_SOURCE_DIR}/other/lexicon.lex
+  OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c
+  MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/other/lexicon.lex"
+  COMMENT "Generating lexicon")
+add_custom_command(
+  COMMAND ${BYACC_PROGRAM} -d ${CMAKE_CURRENT_SOURCE_DIR}/other/grammer.y
+  OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.c ${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.h
+  MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/other/grammer.y"
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated-code/"
+  COMMENT "Generating grammer rules")
+
+file(GLOB SOURCE_FILES "src/*.c" )
 include_directories( "${CMAKE_SOURCE_DIR}/header-onlys/" )
+include_directories( "${CMAKE_CURRENT_BINARY_DIR}/generated-code/" )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 #set(raylib_VERBOSE 1)
