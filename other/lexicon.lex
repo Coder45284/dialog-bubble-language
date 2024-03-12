@@ -192,7 +192,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 }
 ([SQTW][ieo][ehl])+Sie(Toe)? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
 ([SQTW][ieo][ehl])+Qie { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
-[A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
+([SQTW][ieo][ehl])+Qee[SW]e[ehl] { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }
 ([SQTW][ieo][ehl])+Wie { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
 \n { lex_line++; }
 [ \t]+ ; /* Do nothing */
