@@ -108,16 +108,10 @@ int yyerror(char *why) {
      exit(0);
 }
 
-
 int grammerParse(const char *string) {
-     YY_BUFFER_STATE buffer_state = yy_scan_string ( string );
+     YY_BUFFER_STATE buffer_state = yy_scan_string (string);
 
      int yy_result = yyparse();
 
      yy_delete_buffer(buffer_state);
-}
-
-int main() {
-     // return grammerParse("if g_begin caro reda manoa ba 10s 1000s of seno na ba noa 1s 1000s isas veno ia ria 10s 1s 1000s of manos losta dama isasa 100s 1s 1000s and mio isas goldo end g_end then g_begin mano itas bono end if g_begin mio isas galdo end g_end then g_begin mio isas note rico end g_end g_end mario isas greeno of legondo 1s 1000s end END");
-     return yyparse();
 }
