@@ -17,7 +17,7 @@ typedef enum {
     CORREL_DEMONSTRATIVE = 4  // SeeWoe    postfix
 } CorrelativeKind;
 
-static const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][24] = {
+static const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][20] = {
     { // Place
         "Nowhere",    // None
         "Everywhere", // Every
