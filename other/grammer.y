@@ -40,7 +40,7 @@ choose:
     |END { printf("Grammer has passed without problems.\n"); };
 connect:
      DELIMITER choose
-    |CONJUNCTION noun_phrase verb_phrase end_phrase DELIMITER choose;
+    |CONJUNCTION noun_phrase verb_phrase end_phrase connect;
 if_group:
      GROUP_BEGIN condition_words GROUP_END then elif;
 then:

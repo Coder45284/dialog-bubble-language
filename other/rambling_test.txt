@@ -39,10 +39,10 @@ SeeWehTee SeeTeh TeeSeeTee
 
 Qee
 
-WehSeeQel isas TieWelSoe See
+WehSeeQel isas TieWelSoe Tel
 WehSeeQolTeh isas TieWelSoe See
 WehSeeTel isas TieWelSoe See
-WehSeeWeh isas TieWelSoe See
+WehSeeWeh isas TieWelSoe Sel
 WehSeeWoe isas TieWelSoe See
 
 END
