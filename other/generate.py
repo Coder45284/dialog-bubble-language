@@ -74,12 +74,23 @@ def addPronouns(keywords : {}):
 
     # print(c_header)
 
-def addConjunctions(keywords : {}):
+def addSentenceConjunctions(keywords : {}):
     conjunctions = []
     conjunctions.append(("Seh", "And conjunction"))
     conjunctions.append(("Sel", "Or conjunction"))
     conjunctions.append(("Tel", "Because conjunction"))
     conjunctions.append(("Weh", "So conjunction"))
+
+    for d in conjunctions:
+        if d[0] in keywords:
+            print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
+
+        keywords[d[0]] = d[1]
+
+def addPhraseConjunctions(keywords : {}):
+    conjunctions = []
+    conjunctions.append(("Qel", "And phrase conjunction"))
+    conjunctions.append(("Qeh", "Or phrase conjunction"))
 
     for d in conjunctions:
         if d[0] in keywords:
@@ -253,7 +264,8 @@ def addCorrelatives(keywords : {}):
 keywords = {}
 
 addPronouns(keywords)
-addConjunctions(keywords)
+addSentenceConjunctions(keywords)
+addPhraseConjunctions(keywords)
 addIfElses(keywords)
 addDelimiters(keywords)
 addPrepositions(keywords)

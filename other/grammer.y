@@ -23,7 +23,7 @@ extern int lex_line;
 %token GROUP_BEGIN GROUP_END END
 %token IF ELIF ELSE THEN
 
-%token <word> DELIMITER CONJUNCTION PROPOSITION
+%token <word> DELIMITER CONJUNCTION PHRASE_CONJUNCTION PROPOSITION
 
 %token <word> NOUN ADJECTIVE VERB ADVERB
 
@@ -71,7 +71,10 @@ end_phrase:
      noun_phrase
      |preposition_phrase;
 noun_phrase:
-     NOUN adjectives number preposition_phrase;
+     NOUN adjectives number preposition_phrase phrase_conjunction;
+phrase_conjunction:
+     PHRASE_CONJUNCTION NOUN adjectives number preposition_phrase phrase_conjunction
+     |;
 preposition_phrase:
      PROPOSITION NOUN adjectives number
      |;
