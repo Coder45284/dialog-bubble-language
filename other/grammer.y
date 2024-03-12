@@ -65,8 +65,8 @@ adjectives:
      adjectives ADJECTIVE
     |;
 end_phrase:
-    noun_phrase
-    |;
+     noun_phrase
+    |preposition_phrase;
 noun_phrase:
      NOUN adjectives number preposition_phrase;
 preposition_phrase:
