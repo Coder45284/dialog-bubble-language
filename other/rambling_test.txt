@@ -38,4 +38,11 @@ mario isas greeno SeeSee legondo
 SeeWehTee SeeTeh TeeSeeTee
 
 Qee
+
+WehSeeQel isas TieWelSoe See
+WehSeeQolTeh isas TieWelSoe See
+WehSeeTel isas TieWelSoe See
+WehSeeWeh isas TieWelSoe See
+WehSeeWoe isas TieWelSoe See
+
 END

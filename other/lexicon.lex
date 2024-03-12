@@ -137,6 +137,57 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
     else
         return ADJECTIVE;
 }
+((QieQelQoe)|(Se[hl])|([TW]eh))(See)((Qel)|(QolTeh)|(Tel)|(Weh)|(Woe)) {
+    int type_index;
+    int kind_index;
+    int offset;
+
+    switch(yytext[0]) {
+        case 'Q':
+            type_index = 0;
+            offset = 4 * 3;
+            break;
+        case 'S':
+            if(yytext[2] == 'h')
+                type_index = 1;
+            else
+                type_index = 2;
+            offset = 2 * 3;
+            break;
+        case 'T':
+            type_index = 3;
+            offset = 2 * 3;
+            break;
+        case 'W':
+            type_index = 4;
+            offset = 2 * 3;
+            break;
+    }
+
+    switch(yytext[offset]) {
+        case 'Q':
+            if(yytext[offset + 1] == 'e')
+                kind_index = 0;
+            else
+                kind_index = 1;
+            break;
+        case 'T':
+            kind_index = 2;
+            break;
+        case 'W':
+            if(yytext[offset + 1] == 'e')
+                kind_index = 3;
+            else
+                kind_index = 4;
+            break;
+    }
+
+    snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", CORRELATIVE_TABLE[kind_index][type_index]);
+
+    LOG_DEBUG_EXT("CORRELATIVE", yylval.word);
+
+    return NOUN;
+}
 [A-Za-z]+o[s]? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; return NOUN; }
 [A-Za-z]+a { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; return ADJECTIVE; }
 [A-Za-z]+as { LOG_DEBUG("VERB"); ENTER_WORD_IN; return VERB; }

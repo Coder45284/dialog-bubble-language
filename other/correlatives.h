@@ -6,7 +6,7 @@ const char CORRELATIVE_TYPE_TABLE[MAX_CORRELATIVE_TYPES][12] = {
 //   None         Every  Some   What   That
 
 const char CORRELATIVE_KINDS_TABLE[MAX_CORRELATIVE_KINDS][12] = {
-    "SeeQel", "SeeQolTeh", "SeeTel", "SeeWeh", "SeeWoe")};
+    "SeeQel", "SeeQolTeh", "SeeTel", "SeeWeh", "SeeWoe"};
 //   Place     Amount       Reason    Time      Demonstrative
 
 const char CORRELATIVE_TABLE[MAX_CORRELATIVE_TYPES][MAX_CORRELATIVE_KINDS][24] = {
