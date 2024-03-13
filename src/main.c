@@ -318,7 +318,9 @@ static void ButtonLanguageSoundExport()
 {
     VoiceContext context;
 
-    voiceGenerateAllPhonemics(&context, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+    context.note_amount = 0;
+
+    voiceInputPhonemics(&context, TextBoxLanguageEntryText, strlen(TextBoxLanguageEntryText), ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
     voiceReadyContext(&context);
 
