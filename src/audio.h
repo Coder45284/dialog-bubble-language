@@ -2,10 +2,12 @@
 #define AUDIO_DTLWS
 
 #include "voice.h"
+#include <threads.h>
 
+extern mtx_t audio_context_mtx;
 extern VoiceContext audio_context;
 
-void audioInit();
+int audioInit();
 void audioDeinit();
 
 void audioPlay();
