@@ -77,6 +77,27 @@ int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned
     return true;
 }
 
+void voiceInputPhonemics(VoiceContext *context, const char *const string, unsigned int length, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency) {
+    unsigned int n = 0;
+
+    while(n != length) {
+        if(string[n] == ' ') {
+            voiceInputPhonemic(context, "", volume, min_frequency, add_frequency);
+            n++;
+        }
+        else {
+            voiceInputPhonemic(context, string + n, volume, min_frequency, add_frequency);
+
+            n += 3;
+
+            if(n > length)
+                n = length;
+        }
+    }
+
+    voiceReadyContext(context);
+}
+
 void voiceGenerateAllPhonemics(VoiceContext *context, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency) {
     const char wave_type_chars[4] = {'s', 'q', 't', 'w'};
     const char   volumes_chars[3] = {'e', 'o', 'i'};
