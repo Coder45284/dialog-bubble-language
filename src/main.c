@@ -308,22 +308,7 @@ static void ButtonLanguageSound()
 
     audio_context.note_amount = 0;
 
-    for(unsigned int n = 0; n != length;) {
-        if(TextBoxLanguageEntryText[n] == ' ') {
-            voiceInputPhonemic(&audio_context, "", ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
-            n++;
-        }
-        else {
-            voiceInputPhonemic(&audio_context, TextBoxLanguageEntryText + n, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
-
-            n += 3;
-
-            if(n > length)
-                n = length;
-        }
-    }
-
-    voiceReadyContext(&audio_context);
+    voiceInputPhonemics(&audio_context, TextBoxLanguageEntryText, length, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
     mtx_unlock(&audio_context_mtx);
 
