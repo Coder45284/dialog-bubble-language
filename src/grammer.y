@@ -105,7 +105,6 @@ number_1:
 
 int yyerror(char *why) {
      printf("Parsing Error!: %s at line %d\n", why, lex_line);
-     exit(0);
 }
 
 int grammerParse(const char *string) {
