@@ -237,9 +237,13 @@ static void ButtonGeneratorWordReplace()
 }
 static void ButtonVoiceNoiseTest()
 {
+    mtx_lock(&audio_context_mtx);
+
     voiceGenerateAllPhonemics(&audio_context, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
     voiceReadyContext(&audio_context);
+
+    mtx_unlock(&audio_context_mtx);
 
     audioPlay();
 }
@@ -293,6 +297,8 @@ static void ButtonLanguageSound()
         TextBoxLanguageEntryText[length] = cleanup[length];
     }
 
+    mtx_lock(&audio_context_mtx);
+
     audio_context.note_amount = 0;
 
     for(unsigned int n = 0; n != length;) {
@@ -311,6 +317,8 @@ static void ButtonLanguageSound()
     }
 
     voiceReadyContext(&audio_context);
+
+    mtx_unlock(&audio_context_mtx);
 
     audioPlay();
 }

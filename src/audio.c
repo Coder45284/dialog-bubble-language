@@ -9,7 +9,11 @@ static AudioStream audio_stream;
 static int audio_context_mtx_status;
 
 static void audioSoundCallback(void *buffer_data, unsigned int frames) {
+    mtx_lock(&audio_context_mtx);
+
     voiceWriteToSoundBuffer(&audio_context, buffer_data, frames);
+
+    mtx_unlock(&audio_context_mtx);
 }
 
 int audioInit() {
