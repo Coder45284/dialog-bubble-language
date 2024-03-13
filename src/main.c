@@ -28,6 +28,9 @@ static void ButtonGrammer();
 static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
+const char *DropDownBoxLanguageSoundFormatText = "WAV;TXT"; // FLAC and OGG and VOA where options, but then I thought better of it.
+int DropDownBoxLanguageSoundFormatActive = 0;
+
 int ValueBoxVoiceVolumeValue  = 16384;
 int ValueBoxVoiceFreqValue      = 500;
 int ValueBoxVoiceFreqPlusValue = 1000;
@@ -79,7 +82,6 @@ int main()
     const char *GroupBoxLanguageText = "Language Snippit Editor";
     const char *ButtonGrammerText = "Check Grammer";
     const char *ButtonLanguageSoundText = "Play Sound";
-    const char *DropDownBoxLanguageSoundFormatText = "WAV;FLAC;OGG;VOA;TRAC";
     const char *ButtonLanguageSoundExportText = "Export Sound";
     const char *ScrollPanelWordSearchQueryText = "Query";
     const char *ValueBoxVoiceVolumeText = "Peak Volume";
@@ -113,7 +115,6 @@ int main()
     int DropDownBoxVoiceNoiseTypeActive = 0;
     bool TextBoxLanguageEntryEditMode = false;
     bool DropDownBoxLanguageSoundFormatEditMode = false;
-    int DropDownBoxLanguageSoundFormatActive = 0;
     //----------------------------------------------------------------------------------
 
     SetTargetFPS(60);
@@ -178,8 +179,14 @@ int main()
             if (GuiDropdownBox((Rectangle){ 696, 168, 72, 24 }, DropDownBoxGeneratorWordSelectionText, &DropDownBoxGeneratorWordSelectionActive, DropDownBoxGeneratorWordSelectionEditMode)) DropDownBoxGeneratorWordSelectionEditMode = !DropDownBoxGeneratorWordSelectionEditMode;
             if (GuiDropdownBox((Rectangle){ 696, 48, 72, 24 }, DropDownBoxWordGeneratorTypeText, &DropDownBoxWordGeneratorTypeActive, DropDownBoxWordGeneratorTypeEditMode)) DropDownBoxWordGeneratorTypeEditMode = !DropDownBoxWordGeneratorTypeEditMode;
             if (GuiDropdownBox((Rectangle){ 104, 384, 88, 24 }, DropDownBoxVoiceNoiseTypeText, &DropDownBoxVoiceNoiseTypeActive, DropDownBoxVoiceNoiseTypeEditMode)) DropDownBoxVoiceNoiseTypeEditMode = !DropDownBoxVoiceNoiseTypeEditMode;
-            if (GuiDropdownBox((Rectangle){ 528, 432, 120, 24 }, DropDownBoxLanguageSoundFormatText, &DropDownBoxLanguageSoundFormatActive, DropDownBoxLanguageSoundFormatEditMode)) DropDownBoxLanguageSoundFormatEditMode = !DropDownBoxLanguageSoundFormatEditMode;
-            
+            if (GuiDropdownBox((Rectangle){ 528, 432, 120, 24 }, DropDownBoxLanguageSoundFormatText, &DropDownBoxLanguageSoundFormatActive, DropDownBoxLanguageSoundFormatEditMode)) {
+                DropDownBoxLanguageSoundFormatEditMode = !DropDownBoxLanguageSoundFormatEditMode;
+
+                if(!DropDownBoxLanguageSoundFormatEditMode) {
+                    // Get the selected option
+                    printf("%d is the option.\n", DropDownBoxLanguageSoundFormatActive);
+                }
+            }
             GuiUnlock();
             //----------------------------------------------------------------------------------
 
