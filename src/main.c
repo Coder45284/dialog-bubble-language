@@ -316,14 +316,25 @@ static void ButtonLanguageSound()
 }
 static void ButtonLanguageSoundExport()
 {
+    const unsigned int length = strlen(TextBoxLanguageEntryText);
     VoiceContext context;
 
     context.note_amount = 0;
 
-    voiceInputPhonemics(&context, TextBoxLanguageEntryText, strlen(TextBoxLanguageEntryText), ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+    voiceInputPhonemics(&context, TextBoxLanguageEntryText, length, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
 
     voiceReadyContext(&context);
 
-    voiceExportWAV("export.wav", context.note_amount, context.notes);
+    if(DropDownBoxLanguageSoundFormatActive == 0)
+        voiceExportWAV("export.wav", context.note_amount, context.notes);
+    else {
+        FILE *file = fopen("export.txt", "w");
+
+        if(file != NULL) {
+            fputs(TextBoxLanguageEntryText, file);
+
+            fclose(file);
+        }
+    }
 }
 
