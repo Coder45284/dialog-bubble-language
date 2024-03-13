@@ -17,17 +17,17 @@ static void audioSoundCallback(void *buffer_data, unsigned int frames) {
 }
 
 int audioInit() {
-    audio_stream = LoadAudioStream(PCM_SAMPLES_PER_SECOND, PCM_SAMPLE_BITS, 1);
-    SetAudioStreamCallback(audio_stream, audioSoundCallback);
-
     // Setup the audio_context mutex
     audio_context_mtx_status = mtx_init(&audio_context_mtx, mtx_plain);
 
     // Return true if the mutex succeeds.
-    if(audio_context_mtx_status == thrd_success)
-        return 1;
-    else
+    if(audio_context_mtx_status != thrd_success)
         return 0;
+
+    audio_stream = LoadAudioStream(PCM_SAMPLES_PER_SECOND, PCM_SAMPLE_BITS, 1);
+    SetAudioStreamCallback(audio_stream, audioSoundCallback);
+
+    return 1;
 }
 
 void audioDeinit() {

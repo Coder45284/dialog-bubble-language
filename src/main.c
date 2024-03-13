@@ -51,7 +51,14 @@ int main()
     InitAudioDevice();
     SetAudioStreamBufferSizeDefault(VOICE_BUFFER_SIZE);
 
-    audioInit();
+    if(audioInit() == 0) {
+        printf("Audio initization has failed! It might be because the program has failed to make a mutex.\n");
+
+        CloseAudioDevice();       // Close sound and sound context
+        CloseWindow();            // Close window and OpenGL context
+
+        return -1;
+    }
 
     // language_builder: controls initialization
     //----------------------------------------------------------------------------------
