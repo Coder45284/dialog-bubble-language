@@ -12,8 +12,11 @@
 VoiceNote name = {type, TIMES_A_SECOND(times_a_second), TIMES_A_SECOND(times_a_second) * (time_off), FREQUENCY_TO_PERIOD(start_freq), FREQUENCY_TO_PERIOD(end_freq), start_amp, end_amp}
 
 void voiceReadyContext(VoiceContext *context) {
-    if(context->note_index >= context->note_amount)
+    if(context->call_reloader != NULL && context->note_index == VOICE_NOTE_LIMIT)
+        context->call_reloader(context);
+    if(context->note_index >= context->note_amount) {
         context->note_index = 0;
+    }
 
     context->note_state.type = context->notes[context->note_index].type;
     context->note_state.total_time = context->notes[context->note_index].total_time;
@@ -226,6 +229,7 @@ int voiceExportWAV(const char *file_path, unsigned int note_amount, VoiceNote *n
         return false;
 
     context.note_amount = note_amount;
+    context.call_reloader = NULL;
 
     for(unsigned int n = 0; n < note_amount; n++) {
         wav.frameCount += notes[n].total_time; // Count the frames here.

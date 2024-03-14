@@ -34,12 +34,16 @@ typedef struct {
 
 #define VOICE_NOTE_LIMIT 512
 
-typedef struct {
+typedef struct VoiceContext {
     VoiceNote notes[VOICE_NOTE_LIMIT];
     unsigned int note_amount;
     unsigned int note_index;
 
     VoiceNoteState note_state;
+
+    void *data_ptr; // This points to additional metadata which only call_reloader deals with.
+
+    void (*call_reloader)(struct VoiceContext *voice);
 } VoiceContext;
 
 void voiceReadyContext(VoiceContext *context);
