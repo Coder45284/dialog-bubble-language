@@ -3,7 +3,7 @@
 #include "raylib.h"
 
 mtx_t audio_context_mtx;
-VoiceContext audio_context = {{}, VOICE_NOTE_LIMIT, 0, {0}, NULL, NULL};
+VoiceContext audio_context = {{}, VOICE_NOTE_LIMIT, 0, {0}, NULL};
 
 static AudioStream audio_stream;
 static int audio_context_mtx_status;

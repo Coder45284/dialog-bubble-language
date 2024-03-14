@@ -41,8 +41,6 @@ typedef struct VoiceContext {
 
     VoiceNoteState note_state;
 
-    void *data_ptr; // This points to additional metadata which only call_reloader deals with.
-
     void (*call_reloader)(struct VoiceContext *voice);
 } VoiceContext;
 
