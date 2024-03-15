@@ -3,7 +3,7 @@
 #include "raylib.h"
 
 mtx_t audio_context_mtx;
-VoiceContext audio_context = {{}, VOICE_NOTE_LIMIT, 0, {0}, NULL};
+VoiceTextContext audio_context = {{{}, VOICE_NOTE_LIMIT, 0, {0}, NULL}, 0, 0, 16384, 500, 1000, NULL};
 
 static AudioStream audio_stream;
 static int audio_context_mtx_status;
@@ -11,7 +11,7 @@ static int audio_context_mtx_status;
 static void audioSoundCallback(void *buffer_data, unsigned int frames) {
     mtx_lock(&audio_context_mtx);
 
-    voiceWriteToSoundBuffer(&audio_context, buffer_data, frames);
+    voiceWriteToSoundBuffer(&audio_context.voice_context, buffer_data, frames);
 
     mtx_unlock(&audio_context_mtx);
 }

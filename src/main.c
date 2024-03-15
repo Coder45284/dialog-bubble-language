@@ -175,6 +175,7 @@ int main()
             if (GuiValueBox((Rectangle){ 104, 312, 88, 24 }, ValueBoxVoiceFreqText, &ValueBoxVoiceFreqValue, 60, 2000, ValueBoxVoiceFreqEditMode)) ValueBoxVoiceFreqEditMode = !ValueBoxVoiceFreqEditMode;
             if (GuiValueBox((Rectangle){ 104, 336, 88, 24 }, ValueBoxVoiceFreqPlusText, &ValueBoxVoiceFreqPlusValue, 60, 3000, ValueBoxVoiceFreqPlusEditMode)) ValueBoxVoiceFreqPlusEditMode = !ValueBoxVoiceFreqPlusEditMode;
             if (GuiValueBox((Rectangle){ 104, 360, 88, 24 }, ValueBoxVoiceNoiseVolumeText, &ValueBoxVoiceNoiseVolumeValue, 0, 100, ValueBoxVoiceNoiseVolumeEditMode)) ValueBoxVoiceNoiseVolumeEditMode = !ValueBoxVoiceNoiseVolumeEditMode;
+
             GuiLabel((Rectangle){ 40, 384, 64, 24 }, LabelVoiceNoiseTypeText);
             if (GuiButton((Rectangle){ 24, 432, 168, 24 }, ButtonVoiceNoiseTestText)) ButtonVoiceNoiseTest(); 
             GuiGroupBox((Rectangle){ 216, 272, 576, 208 }, GroupBoxLanguageText);
@@ -245,9 +246,13 @@ static void ButtonVoiceNoiseTest()
 {
     mtx_lock(&audio_context_mtx);
 
-    voiceGenerateAllPhonemics(&audio_context, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+    audio_context.volume = ValueBoxVoiceVolumeValue;
+    audio_context.min_frequency = ValueBoxVoiceFreqValue;
+    audio_context.add_frequency = ValueBoxVoiceFreqPlusValue;
 
-    voiceReadyContext(&audio_context);
+    voiceGenerateAllPhonemics(&audio_context.voice_context, audio_context.volume, audio_context.min_frequency, audio_context.add_frequency);
+
+    voiceReadyContext(&audio_context.voice_context);
 
     mtx_unlock(&audio_context_mtx);
 
@@ -304,9 +309,17 @@ static void ButtonLanguageSound()
 
     mtx_lock(&audio_context_mtx);
 
-    audio_context.note_amount = 0;
+    audio_context.voice_context.note_amount = 0;
+    audio_context.voice_context.call_reloader = NULL;
+    audio_context.head = 0;
+    audio_context.volume = ValueBoxVoiceVolumeValue;
+    audio_context.min_frequency = ValueBoxVoiceFreqValue;
+    audio_context.add_frequency = ValueBoxVoiceFreqPlusValue;
 
-    voiceInputPhonemics(&audio_context, TextBoxLanguageEntryText, length, ValueBoxVoiceVolumeValue, ValueBoxVoiceFreqValue, ValueBoxVoiceFreqPlusValue);
+    audio_context.length = length;
+    audio_context.text = TextBoxLanguageEntryText;
+
+    voiceFromTextSetup(&audio_context);
 
     mtx_unlock(&audio_context_mtx);
 
