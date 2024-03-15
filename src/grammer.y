@@ -39,7 +39,7 @@ extern int lex_line;
 choose:
      IF if_group choose
      |noun_phrase verb_phrase end_phrase connect
-     |{ printf("Grammer has passed without problems.\n"); };
+     |{ snprintf(grammer_status, sizeof(grammer_status) / sizeof(grammer_status[0]), "Grammer has passed without problems.\n"); };
 connect:
      DELIMITER choose
      |CONJUNCTION noun_phrase verb_phrase end_phrase connect;
@@ -88,7 +88,7 @@ number:
           if($1 < 0)
                space = '-';
 
-          printf("Adjective Number (Approximatly): %c%lf\n", space, number);
+          snprintf(grammer_status, sizeof(grammer_status) / sizeof(grammer_status[0]), "Adjective Number (Approximatly): %c%lf\n", space, number);
      }
      |;
 number_place:
@@ -106,7 +106,7 @@ number_1:
 %%
 
 int yyerror(char *why) {
-     printf("Parsing Error!: %s at line %d\n", why, lex_line);
+     snprintf(grammer_status, sizeof(grammer_status) / sizeof(grammer_status[0]), "Parsing Error!: %s at line %d\n", why, lex_line);
 }
 
 int grammerParse(const char *string) {

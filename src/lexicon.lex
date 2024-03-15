@@ -1,11 +1,14 @@
 %{
 #include <stdio.h>
 #include "y.tab.h"
+
+char lexer_status[0x100];
+
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
 
 #ifdef ENABLE_LEX_TRACE
-#define LOG_DEBUG(DATA) printf("%s: \"%s\"\n", DATA, yytext)
-#define LOG_DEBUG_EXT(DATA, TRANSLATE) printf("%s: \"%s\" which is \"%s\"\n", DATA, yytext, TRANSLATE)
+#define LOG_DEBUG(DATA) snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "%s: \"%s\"\n", DATA, yytext)
+#define LOG_DEBUG_EXT(DATA, TRANSLATE) snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "%s: \"%s\" which is \"%s\"\n", DATA, yytext, TRANSLATE)
 #else
 #define LOG_DEBUG(DATA)
 #define LOG_DEBUG_EXT(DATA, TRANSLATE)
@@ -213,7 +216,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 ([SQTW][ieo][ehl])+Wie { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; return ADVERB; }
 \n { lex_line++; }
 [ \t]+ ; /* Do nothing */
-[^[:space:]]+  { printf("Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); }
+[^[:space:]]+  { snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); }
 %%
 
 int yywrap() {
