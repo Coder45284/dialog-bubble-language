@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// Declare grammer status here.
+char grammer_status[0x100];
+
 // Declared in lex.yy.c
 // https://stackoverflow.com/questions/780676/string-input-to-flex-lexer
 // Thank you sevko
