@@ -49,7 +49,6 @@ int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned
 void voiceInputPhonemics(VoiceContext *context, const char *const string, unsigned int length, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency);
 void voiceGenerateAllPhonemics(VoiceContext *context, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency);
 void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned int frames);
-int voiceExportWAV(const char *file_path, unsigned int note_amount, VoiceNote *notes);
 
 #endif // VOICE_DTLWS
 

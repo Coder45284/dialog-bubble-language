@@ -50,7 +50,7 @@ add_custom_command(
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated-code/"
   COMMENT "Generating grammer rules")
 
-file(GLOB SOURCE_FILES "src/*.c" "${CMAKE_CURRENT_BINARY_DIR}/generated-code/*.c")
+file(GLOB SOURCE_FILES "src/*.c" "${CMAKE_CURRENT_BINARY_DIR}/generated-code/lexer.c" "${CMAKE_CURRENT_BINARY_DIR}/generated-code/y.tab.c")
 include_directories( "${CMAKE_SOURCE_DIR}/src/" )
 include_directories( "${CMAKE_SOURCE_DIR}/header-onlys/" )
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}/generated-code/" )

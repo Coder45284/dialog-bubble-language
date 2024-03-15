@@ -1,7 +1,6 @@
-#include <raylib.h>
 #include <math.h>
-#include <stdlib.h>
 #include <ctype.h>
+#include <stddef.h>
 
 #include "voice.h"
 
@@ -32,12 +31,12 @@ int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned
         const DEFINE_NOTE(default_note, SQUARE, 8.0, 0.50, 60, 60, 0, 0);
         context->notes[context->note_amount] = default_note;
         context->note_amount++;
-        return true;
+        return 1;
     }
 
     for(int i = 1; i < 3; i++) {
         if(string[i] == '\0')
-            return false;
+            return 0;
     }
 
     const VoiceWaveType  wave_types[4] = {SINE, SQUARE, TRIANGLE, SAWTOOTH};
@@ -77,7 +76,7 @@ int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned
     context->notes[context->note_amount] = default_note;
     context->note_amount++;
 
-    return true;
+    return 1;
 }
 
 void voiceInputPhonemics(VoiceContext *context, const char *const string, unsigned int length, unsigned int volume, unsigned int min_frequency, unsigned int add_frequency) {
@@ -198,57 +197,19 @@ void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned 
             context->note_index++;
 
             if(context->note_index == context->note_amount) {
-                context->note_index = 0;
-                context->note_amount = 1;
+                if(context->call_reloader != NULL && context->note_index == VOICE_NOTE_LIMIT)
+                    context->call_reloader(context);
+                else {
+                    context->note_index = 0;
+                    context->note_amount = 1;
 
-                context->notes[context->note_index].type = SQUARE;
-                context->notes[context->note_index].start_amp = 0;
-                context->notes[context->note_index].end_amp = 0;
+                    context->notes[context->note_index].type = SQUARE;
+                    context->notes[context->note_index].start_amp = 0;
+                    context->notes[context->note_index].end_amp = 0;
+                }
             }
 
             voiceReadyContext(context);
         }
     }
 }
-
-int voiceExportWAV(const char *file_path, unsigned int note_amount, VoiceNote *notes) {
-    VoiceContext context;
-    Wave wav;
-
-    wav.frameCount = 0; // This will be found later.
-    wav.sampleRate = PCM_SAMPLES_PER_SECOND;
-    wav.sampleSize = PCM_SAMPLE_BITS;
-    wav.channels   = 1;
-
-    // Memory safety.
-    if(note_amount >= VOICE_NOTE_LIMIT)
-        note_amount = VOICE_NOTE_LIMIT;
-
-    // There is no note to write.
-    if(note_amount == 0)
-        return false;
-
-    context.note_amount = note_amount;
-    context.call_reloader = NULL;
-
-    for(unsigned int n = 0; n < note_amount; n++) {
-        wav.frameCount += notes[n].total_time; // Count the frames here.
-        context.notes[n] = notes[n];
-    }
-
-    // No frames to write.
-    if(wav.frameCount == 0)
-        return false;
-
-    voiceReadyContext(&context);
-
-    wav.data = malloc(wav.frameCount * sizeof(PCM_SAMPLE_TYPE));
-
-    voiceWriteToSoundBuffer(&context, wav.data, wav.frameCount);
-    bool result = ExportWave(wav, file_path);
-
-    free(wav.data);
-
-    return result;
-}
-
