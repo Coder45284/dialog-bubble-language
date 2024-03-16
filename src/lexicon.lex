@@ -53,6 +53,7 @@ TeeWelTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; return NUMBER_SIGN; }
 SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 (Wee)?(Tee)?(Qee)?(See)?Te[lh] {
     LOG_DEBUG("NUMBER_PLACE");
+    // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     char postfix = '@';
     int number = translateNumberWord(yytext, &postfix);
@@ -69,6 +70,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 }
 (Weh)?(Teh)?(Qeh)?(Seh)?Tee {
     LOG_DEBUG("NUMBER_100");
+    // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     char postfix = '@';
     yylval.number = translateNumberWord(yytext, &postfix);
@@ -77,6 +79,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 }
 (Wel)?(Tel)?(Qel)?(Sel)?Tee {
     LOG_DEBUG("NUMBER_10");
+    // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     char postfix = '@';
     yylval.number = translateNumberWord(yytext, &postfix);
@@ -85,6 +88,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
 }
 (Wee)?(Tee)?(Qee)?(See)?Tee {
     LOG_DEBUG("NUMBER_1");
+    // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     char postfix = '@';
     yylval.number = translateNumberWord(yytext, &postfix);
@@ -92,7 +96,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
     return NUMBER_1;
 }
 [SWTQ]ie([SWTQ]el)?[SW]oe(Toe)? {
-    // WARNING: If you change this regex, make sure that this code will still work. The code relies on the structure of this regex.
+    // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     int person; // 4 possibilities
     int gender = 0; // 0 for unspecified. 5 possibilities.
@@ -145,7 +149,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; return NUMBER_SIGN; }
         return ADJECTIVE;
 }
 ((QieQelQoe)|(Se[hl])|([TW]eh))(See)((Qel)|(QolTeh)|(Tel)|(Weh)|(Woe)) {
-    // WARNING: If you change this regex, make sure that this code will still work. The code relies on the structure of this regex.
+    // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     int type_index;
     int kind_index;
