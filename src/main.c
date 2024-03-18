@@ -236,19 +236,30 @@ static void ButtonDictionaryPlaySound()
 }
 static void ButtonWordGeneratorGenerate()
 {
-    const char end_a[10][3] = {
-        {'Q','e','e'}, {'T','e','e'},
+    const char end_normal_a[2][3] = {
+        {'Q','e','e'}, {'T','e','e'}};
+    const char end_pitch_a[4][3] = {
         {'Q','e','l'}, {'T','e','l'},
-        {'Q','e','h'}, {'T','e','h'},
-        {'S','o','e'}, {'Q','o','e'}, {'W','o','e'},
+        {'Q','e','h'}, {'T','e','h'}};
+    const char end_fade_out_a[3][3] = {
+        {'S','o','e'}, {'Q','o','e'}, {'W','o','e'}};
+    const char end_fade_in_a[1][3] = {
         {'T','i','e'}};
-    const char end_b[18][3] = {
-        {'Q','e','l'}, {'Q','e','h'}, {'Q','o','e'}, {'Q','i','e'},
-        {'S','e','e'}, {'S','e','l'}, {'S','e','h'}, {'S','o','e'},
-        {'T','e','e'}, {'T','e','l'}, {'T','e','h'},
-        {'W','e','e'}, {'W','e','l'}, {'W','e','h'},
-        {'T','i','e'}, {'T','o','e'},
-        {'W','i','e'}, {'W','o','e'}};
+    const char end_normal_b[3][3] = {
+        {'S','e','e'},
+        {'T','e','e'},
+        {'W','e','e'}};
+    const char end_pitch_b[8][3] = {
+        {'Q','e','l'}, {'Q','e','h'},
+        {'S','e','l'}, {'S','e','h'},
+        {'T','e','l'}, {'T','e','h'},
+        {'W','e','l'}, {'W','e','h'}};
+    const char end_fade_out_b[4][3] = {
+        {'Q','o','e'}, {'T','o','e'},
+        {'S','o','e'}, {'W','o','e'}};
+    const char end_fade_in_b[3][3] = {
+        {'T','i','e'}, {'Q','i','e'},
+        {'W','i','e'}};
     const char fade_in[4][3] = {{'S','i','e'}, {'Q','i','e'}, {'T','i','e'}, {'W','i','e'}};
     const char fade_out[4][3] = {{'S','o','e'}, {'Q','o','e'}, {'T','o','e'}, {'W','o','e'}};
     const char normal[4][3] = {
@@ -274,10 +285,8 @@ static void ButtonWordGeneratorGenerate()
             strncat(word, normal[GetRandomValue(0, sizeof(normal) / sizeof(normal[0]) - 1)], 3);
     }
 
-    strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
-
-    strncat(word, end_a[GetRandomValue(0, sizeof(end_a) / sizeof(end_a[0]) - 1)], 3);
-    strncat(word, end_b[GetRandomValue(0, sizeof(end_b) / sizeof(end_b[0]) - 1)], 3);
+    if(GetRandomValue(0, 1))
+        strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
 
     printf("Word: %s.\n", word);
     snprintf(TextBoxLanguageEntryText, sizeof(TextBoxLanguageEntryText) / sizeof(TextBoxLanguageEntryText[0]), "%s", word );
