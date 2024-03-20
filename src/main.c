@@ -244,24 +244,27 @@ static void ButtonWordGeneratorGenerate()
         {'S','e','l'}, {'Q','e','l'}, {'T','e','l'}, {'W','e','l'},
         {'S','e','h'}, {'Q','e','h'}, {'T','e','h'}, {'W','e','h'}};
 
-    char word[5 * 3 + 1] = {0};
+    char word[128] = {0};
 
     if(GetRandomValue(0, 1))
         strncat(word, fade_in[GetRandomValue(0, sizeof(fade_in) / sizeof(fade_in[0]) - 1)], 3);
     else
         strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
 
-    const unsigned int which_pitch = GetRandomValue(0, 4);
+    const unsigned int which_pitch = GetRandomValue(0, 2);
     const unsigned int middle_notes = GetRandomValue(1, 3);
+    const unsigned int fade_note = GetRandomValue(0, 1);
+
+    const unsigned int has_pitch_shift = GetRandomValue(0, 1);
 
     for(unsigned int i = 0; i < middle_notes; i++) {
-        if(which_pitch == i)
+        if(which_pitch == i && has_pitch_shift)
             strncat(word, pitch[GetRandomValue(0, sizeof(pitch) / sizeof(pitch[0]) - 1)], 3);
         else
             strncat(word, normal[GetRandomValue(0, sizeof(normal) / sizeof(normal[0]) - 1)], 3);
     }
 
-    if(GetRandomValue(0, 1))
+    if(fade_note)
         strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
 
     printf("Word: %s.\n", word);
