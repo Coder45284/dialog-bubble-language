@@ -29,6 +29,7 @@ static void ButtonGrammer();
 static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
+char DropDownBoxGeneratorWordSelectionText[128] = "ONE;TWO;THREE";
 const char *DropDownBoxLanguageSoundFormatText = "WAV;TXT"; // FLAC and OGG and VOA where options, but then I thought better of it.
 int DropDownBoxLanguageSoundFormatActive = 0;
 
@@ -77,10 +78,9 @@ int main()
     const char *ButtonDictionaryPlaySoundText = "Play Sound";
     const char *GroupBoxWordGeneratorText = "Word Generator";
     const char *LabelWordGeneratorPOSText = "Parts of Speech";
-    const char *DropDownBoxWordGeneratorTypeText = "NOUN;ADJECTIVE;VERB;ADVERB;OTHER";
+    const char *DropDownBoxWordGeneratorTypeText = "NOUN;ADJECTIVE;VERB;ADVERB;NON";
     const char *ButtonWordGeneratorGenerateText = "Generate";
     const char *LabelWordGeneratorWordSelectionText = "Word Options";
-    const char *DropDownBoxGeneratorWordSelectionText = "ONE;TWO;THREE";
     const char *LabelGeneratorWordPlacementText = "Place Into Language";
     const char *ButtonGeneratorWordReplaceText = "Replace Word";
     const char *GroupBoxVoiceText = "Voice Options";
@@ -188,7 +188,45 @@ int main()
             GuiLabel((Rectangle){ 0, 504, 512, 24 }, lexer_status);
             GuiLabel((Rectangle){ 0, 528, 512, 24 }, grammer_status);
 
-            if (GuiDropdownBox((Rectangle){ 696, 168, 72, 24 }, DropDownBoxGeneratorWordSelectionText, &DropDownBoxGeneratorWordSelectionActive, DropDownBoxGeneratorWordSelectionEditMode)) DropDownBoxGeneratorWordSelectionEditMode = !DropDownBoxGeneratorWordSelectionEditMode;
+            if (GuiDropdownBox((Rectangle){ 696, 168, 72, 24 }, DropDownBoxGeneratorWordSelectionText, &DropDownBoxGeneratorWordSelectionActive, DropDownBoxGeneratorWordSelectionEditMode)) {
+                DropDownBoxGeneratorWordSelectionEditMode = !DropDownBoxGeneratorWordSelectionEditMode;
+
+                if(!DropDownBoxGeneratorWordSelectionEditMode) {
+                    char *word = DropDownBoxGeneratorWordSelectionText;
+
+                    for(unsigned i = 0; i < DropDownBoxGeneratorWordSelectionActive; i++) {
+                        word = strchr(word, ';') + 1;
+                    }
+
+                    char *word_end = strchr(word, ';');
+
+                    if(word_end == NULL)
+                        word_end = word + strlen(word);
+
+                    printf("Word ");
+                    for(char *head = word; head != word_end; head++)
+                        printf("%c",*head);
+                    printf("\n");
+
+                    mtx_lock(&audio_context_mtx);
+
+                    audio_context.voice_context.note_amount = 0;
+                    audio_context.voice_context.call_reloader = NULL;
+                    audio_context.head = 0;
+                    audio_context.volume = ValueBoxVoiceVolumeValue;
+                    audio_context.min_frequency = ValueBoxVoiceFreqValue;
+                    audio_context.add_frequency = ValueBoxVoiceFreqPlusValue;
+
+                    audio_context.length = word_end - word;
+                    audio_context.text = word;
+
+                    voiceFromTextSetup(&audio_context);
+
+                    mtx_unlock(&audio_context_mtx);
+
+                    audioPlay();
+                }
+            }
             if (GuiDropdownBox((Rectangle){ 696, 48, 72, 24 }, DropDownBoxWordGeneratorTypeText, &DropDownBoxWordGeneratorTypeActive, DropDownBoxWordGeneratorTypeEditMode)) DropDownBoxWordGeneratorTypeEditMode = !DropDownBoxWordGeneratorTypeEditMode;
             if (GuiDropdownBox((Rectangle){ 104, 384, 88, 24 }, DropDownBoxVoiceNoiseTypeText, &DropDownBoxVoiceNoiseTypeActive, DropDownBoxVoiceNoiseTypeEditMode)) DropDownBoxVoiceNoiseTypeEditMode = !DropDownBoxVoiceNoiseTypeEditMode;
             if (GuiDropdownBox((Rectangle){ 528, 432, 120, 24 }, DropDownBoxLanguageSoundFormatText, &DropDownBoxLanguageSoundFormatActive, DropDownBoxLanguageSoundFormatEditMode)) {
@@ -234,8 +272,7 @@ static void ButtonDictionaryPlaySound()
 {
     // TODO: Implement control logic
 }
-static void ButtonWordGeneratorGenerate()
-{
+static void generateWord(char *word, const size_t word_size) {
     const char fade_in[4][3] = {{'S','i','e'}, {'Q','i','e'}, {'T','i','e'}, {'W','i','e'}};
     const char fade_out[4][3] = {{'S','o','e'}, {'Q','o','e'}, {'T','o','e'}, {'W','o','e'}};
     const char normal[4][3] = {
@@ -244,18 +281,16 @@ static void ButtonWordGeneratorGenerate()
         {'S','e','l'}, {'Q','e','l'}, {'T','e','l'}, {'W','e','l'},
         {'S','e','h'}, {'Q','e','h'}, {'T','e','h'}, {'W','e','h'}};
 
-    char word[128] = {0};
+    const unsigned int middle_notes = GetRandomValue(1, 3);
+    const unsigned int fade_note = GetRandomValue(0, 1);
+
+    const unsigned int which_pitch = GetRandomValue(0, middle_notes);
+    const unsigned int has_pitch_shift = GetRandomValue(0, 1);
 
     if(GetRandomValue(0, 1))
         strncat(word, fade_in[GetRandomValue(0, sizeof(fade_in) / sizeof(fade_in[0]) - 1)], 3);
     else
         strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
-
-    const unsigned int which_pitch = GetRandomValue(0, 2);
-    const unsigned int middle_notes = GetRandomValue(1, 3);
-    const unsigned int fade_note = GetRandomValue(0, 1);
-
-    const unsigned int has_pitch_shift = GetRandomValue(0, 1);
 
     for(unsigned int i = 0; i < middle_notes; i++) {
         if(which_pitch == i && has_pitch_shift)
@@ -266,9 +301,30 @@ static void ButtonWordGeneratorGenerate()
 
     if(fade_note)
         strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
+}
+static void ButtonWordGeneratorGenerate() {
+    char section_text_backup[sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0])];
+    char word[128] = {0};
 
-    printf("Word: %s.\n", word);
-    snprintf(TextBoxLanguageEntryText, sizeof(TextBoxLanguageEntryText) / sizeof(TextBoxLanguageEntryText[0]), "%s", word );
+    DropDownBoxGeneratorWordSelectionText[0] = '\0';
+
+    for(unsigned int x = 0; x < 3; x++) {
+        word[0] = '\0';
+
+        generateWord(word, 128);
+
+        if( GetRandomValue(0, 4) > 3)
+            generateWord(word, 128);
+
+        strncpy(section_text_backup, DropDownBoxGeneratorWordSelectionText, sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0]));
+
+        if(DropDownBoxGeneratorWordSelectionText[0] != '\0')
+            snprintf(DropDownBoxGeneratorWordSelectionText, sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0]), "%s;%s", section_text_backup, word);
+        else
+            snprintf(DropDownBoxGeneratorWordSelectionText, sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0]), "%s",  word);
+    }
+
+    printf("%s\n", DropDownBoxGeneratorWordSelectionText);
 }
 static void ButtonGeneratorWordReplace()
 {
