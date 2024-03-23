@@ -17,6 +17,7 @@
 //----------------------------------------------------------------------------------
 // Controls Functions Declaration
 //----------------------------------------------------------------------------------
+static char* whichWord(char* text, int word_index, char** end_of_word);
 static void ButtonWordSearchEnglish();
 static void ButtonWordSearchLanguage();
 static void ButtonDictionaryUpdateEntry();
@@ -30,6 +31,7 @@ static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
 char DropDownBoxGeneratorWordSelectionText[128] = "ONE;TWO;THREE";
+int DropDownBoxGeneratorWordSelectionActive = 0;
 const char *DropDownBoxLanguageSoundFormatText = "WAV;TXT"; // FLAC and OGG and VOA where options, but then I thought better of it.
 int DropDownBoxLanguageSoundFormatActive = 0;
 
@@ -113,7 +115,6 @@ int main()
     bool DropDownBoxWordGeneratorTypeEditMode = false;
     int DropDownBoxWordGeneratorTypeActive = 0;
     bool DropDownBoxGeneratorWordSelectionEditMode = false;
-    int DropDownBoxGeneratorWordSelectionActive = 0;
     bool ValueBoxVoiceVolumeEditMode = false;
     bool ValueBoxVoiceFreqEditMode = false;
     bool ValueBoxVoiceFreqPlusEditMode = false;
@@ -192,16 +193,8 @@ int main()
                 DropDownBoxGeneratorWordSelectionEditMode = !DropDownBoxGeneratorWordSelectionEditMode;
 
                 if(!DropDownBoxGeneratorWordSelectionEditMode) {
-                    char *word = DropDownBoxGeneratorWordSelectionText;
-
-                    for(unsigned i = 0; i < DropDownBoxGeneratorWordSelectionActive; i++) {
-                        word = strchr(word, ';') + 1;
-                    }
-
-                    char *word_end = strchr(word, ';');
-
-                    if(word_end == NULL)
-                        word_end = word + strlen(word);
+                    char *word_end;
+                    char *word = whichWord(DropDownBoxGeneratorWordSelectionText, DropDownBoxGeneratorWordSelectionActive, &word_end);
 
                     printf("Playing Word ");
                     for(char *head = word; head != word_end; head++)
@@ -247,6 +240,20 @@ int main()
     //--------------------------------------------------------------------------------------
 
     return 0;
+}
+
+static char* whichWord(char* text, int word_index, char** end_of_word) {
+    char *word = text;
+
+    for(unsigned i = 0; i < word_index; i++)
+        word = strchr(word, ';') + 1;
+
+    *end_of_word = strchr(word, ';');
+
+    if(*end_of_word == NULL)
+        *end_of_word = word + strlen(word);
+
+    return word;
 }
 
 //------------------------------------------------------------------------------------
@@ -340,6 +347,7 @@ static void ButtonWordGeneratorGenerate() {
             not_finished = 0;
     }
     *word_section_text = '\0';
+    DropDownBoxGeneratorWordSelectionActive = 0;
 }
 static void ButtonGeneratorWordReplace()
 {
