@@ -255,30 +255,6 @@ static char* whichWord(char* text, int word_index, char** end_of_word) {
 
     return word;
 }
-
-//------------------------------------------------------------------------------------
-// Controls Functions Definitions (local)
-//------------------------------------------------------------------------------------
-static void ButtonWordSearchEnglish()
-{
-    // TODO: Implement control logic
-}
-static void ButtonWordSearchLanguage()
-{
-    // TODO: Implement control logic
-}
-static void ButtonDictionaryUpdateEntry()
-{
-    // TODO: Implement control logic
-}
-static void ButtonDictionaryDeleteEntry()
-{
-    // TODO: Implement control logic
-}
-static void ButtonDictionaryPlaySound()
-{
-    // TODO: Implement control logic
-}
 static size_t generateWord(char *word, const size_t word_size) {
     const char fade_in[4][3] = {{'S','i','e'}, {'Q','i','e'}, {'T','i','e'}, {'W','i','e'}};
     const char fade_out[4][3] = {{'S','o','e'}, {'Q','o','e'}, {'T','o','e'}, {'W','o','e'}};
@@ -316,6 +292,46 @@ static size_t generateWord(char *word, const size_t word_size) {
     }
 
     return word_length;
+}
+
+//------------------------------------------------------------------------------------
+// Controls Functions Definitions (local)
+//------------------------------------------------------------------------------------
+static void ButtonWordSearchEnglish()
+{
+    // TODO: Implement control logic
+}
+static void ButtonWordSearchLanguage()
+{
+    // TODO: Implement control logic
+}
+static void ButtonDictionaryUpdateEntry()
+{
+    // TODO: Implement control logic
+}
+static void ButtonDictionaryDeleteEntry()
+{
+    // TODO: Implement control logic
+}
+static void ButtonDictionaryPlaySound()
+{
+    mtx_lock(&audio_context_mtx);
+
+    audio_context.voice_context.note_amount = 0;
+    audio_context.voice_context.call_reloader = NULL;
+    audio_context.head = 0;
+    audio_context.volume = ValueBoxVoiceVolumeValue;
+    audio_context.min_frequency = ValueBoxVoiceFreqValue;
+    audio_context.add_frequency = ValueBoxVoiceFreqPlusValue;
+
+    audio_context.length = strnlen(TextBoxDictionaryLWordText, sizeof(TextBoxDictionaryLWordText) / sizeof(TextBoxDictionaryLWordText[0]));
+    audio_context.text = TextBoxDictionaryLWordText;
+
+    voiceFromTextSetup(&audio_context);
+
+    mtx_unlock(&audio_context_mtx);
+
+    audioPlay();
 }
 static void ButtonWordGeneratorGenerate() {
     char word[128] = {0};
