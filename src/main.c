@@ -34,6 +34,7 @@ char DropDownBoxGeneratorWordSelectionText[128] = "ONE;TWO;THREE";
 int DropDownBoxGeneratorWordSelectionActive = 0;
 const char *DropDownBoxLanguageSoundFormatText = "WAV;TXT"; // FLAC and OGG and VOA where options, but then I thought better of it.
 int DropDownBoxLanguageSoundFormatActive = 0;
+char TextBoxDictionaryLWordText[128] = "";
 
 int ValueBoxVoiceVolumeValue  = 16384;
 int ValueBoxVoiceFreqValue      = 500;
@@ -105,7 +106,6 @@ int main()
     Vector2 ScrollPanelWordSearchQueryScrollOffset = { 0, 0 };
     Vector2 ScrollPanelWordSearchQueryBoundsOffset = { 0, 0 };
     bool TextBoxDictionaryLWordEditMode = false;
-    char TextBoxDictionaryLWordText[128] = "";
     bool TextBoxDictionaryEWordEditMode = false;
     char TextBoxDictionaryEWordText[128] = "";
     bool TextBoxDictionaryPOSEditMode = false;
@@ -351,7 +351,11 @@ static void ButtonWordGeneratorGenerate() {
 }
 static void ButtonGeneratorWordReplace()
 {
-    // TODO: Implement control logic
+    char *word_end;
+    char *word = whichWord(DropDownBoxGeneratorWordSelectionText, DropDownBoxGeneratorWordSelectionActive, &word_end);
+
+    strncpy(TextBoxDictionaryLWordText, word, word_end - word);
+    TextBoxDictionaryLWordText[word_end - word] = '\0';
 }
 static void ButtonVoiceNoiseTest()
 {
