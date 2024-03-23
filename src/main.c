@@ -203,7 +203,7 @@ int main()
                     if(word_end == NULL)
                         word_end = word + strlen(word);
 
-                    printf("Word ");
+                    printf("Playing Word ");
                     for(char *head = word; head != word_end; head++)
                         printf("%c",*head);
                     printf("\n");
@@ -272,7 +272,7 @@ static void ButtonDictionaryPlaySound()
 {
     // TODO: Implement control logic
 }
-static void generateWord(char *word, const size_t word_size) {
+static size_t generateWord(char *word, const size_t word_size) {
     const char fade_in[4][3] = {{'S','i','e'}, {'Q','i','e'}, {'T','i','e'}, {'W','i','e'}};
     const char fade_out[4][3] = {{'S','o','e'}, {'Q','o','e'}, {'T','o','e'}, {'W','o','e'}};
     const char normal[4][3] = {
@@ -280,6 +280,8 @@ static void generateWord(char *word, const size_t word_size) {
     const char pitch[8][3] = {
         {'S','e','l'}, {'Q','e','l'}, {'T','e','l'}, {'W','e','l'},
         {'S','e','h'}, {'Q','e','h'}, {'T','e','h'}, {'W','e','h'}};
+
+    size_t word_length = 0;
 
     const unsigned int middle_notes = GetRandomValue(1, 3);
     const unsigned int fade_note = GetRandomValue(0, 1);
@@ -291,40 +293,53 @@ static void generateWord(char *word, const size_t word_size) {
         strncat(word, fade_in[GetRandomValue(0, sizeof(fade_in) / sizeof(fade_in[0]) - 1)], 3);
     else
         strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
+    word_length += 3;
 
     for(unsigned int i = 0; i < middle_notes; i++) {
         if(which_pitch == i && has_pitch_shift)
             strncat(word, pitch[GetRandomValue(0, sizeof(pitch) / sizeof(pitch[0]) - 1)], 3);
         else
             strncat(word, normal[GetRandomValue(0, sizeof(normal) / sizeof(normal[0]) - 1)], 3);
+        word_length += 3;
     }
 
-    if(fade_note)
+    if(fade_note) {
         strncat(word, fade_out[GetRandomValue(0, sizeof(fade_out) / sizeof(fade_out[0]) - 1)], 3);
+        word_length += 3;
+    }
+
+    return word_length;
 }
 static void ButtonWordGeneratorGenerate() {
-    char section_text_backup[sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0])];
     char word[128] = {0};
+    char *word_section_text = DropDownBoxGeneratorWordSelectionText;
+    int not_finished = 1;
 
     DropDownBoxGeneratorWordSelectionText[0] = '\0';
-
-    for(unsigned int x = 0; x < 3; x++) {
+    while(not_finished) {
+        int size = 0;
         word[0] = '\0';
 
-        generateWord(word, 128);
+        size += generateWord(word, 128);
 
         if( GetRandomValue(0, 4) > 3)
-            generateWord(word, 128);
+            size += generateWord(word, 128);
 
-        strncpy(section_text_backup, DropDownBoxGeneratorWordSelectionText, sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0]));
+        if(&DropDownBoxGeneratorWordSelectionText[sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0])] > word_section_text + size + 1) {
+            if(DropDownBoxGeneratorWordSelectionText[0] != '\0') {
+                *word_section_text = ';';
+                word_section_text++;
+            }
 
-        if(DropDownBoxGeneratorWordSelectionText[0] != '\0')
-            snprintf(DropDownBoxGeneratorWordSelectionText, sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0]), "%s;%s", section_text_backup, word);
+            for(char *i = word; *i != '\0'; i++) {
+                *word_section_text = *i;
+                word_section_text++;
+            }
+        }
         else
-            snprintf(DropDownBoxGeneratorWordSelectionText, sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0]), "%s",  word);
+            not_finished = 0;
     }
-
-    printf("%s\n", DropDownBoxGeneratorWordSelectionText);
+    *word_section_text = '\0';
 }
 static void ButtonGeneratorWordReplace()
 {
