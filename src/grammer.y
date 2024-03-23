@@ -115,4 +115,6 @@ int grammerParse(const char *string) {
      int yy_result = yyparse();
 
      yy_delete_buffer(buffer_state);
+
+     return yy_result;
 }
