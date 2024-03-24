@@ -9,6 +9,8 @@
 #include "audio.h"
 #include "grammer.h"
 
+#include "y.tab.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -337,9 +339,10 @@ static void ButtonWordGeneratorGenerate() {
     char word[128] = {0};
     char *word_section_text = DropDownBoxGeneratorWordSelectionText;
     int not_finished = 1;
+    int status;
 
     DropDownBoxGeneratorWordSelectionText[0] = '\0';
-    while(not_finished) {
+    for(int i = 0; i < 32 && not_finished; i++) {
         int size = 0;
         word[0] = '\0';
 
@@ -348,8 +351,75 @@ static void ButtonWordGeneratorGenerate() {
         if( GetRandomValue(0, 4) > 3)
             size += generateWord(word, 128);
 
-        int status = lexerParse(word);
-        printf("%s\nstatus %d\n", lexer_status, status);
+        status = lexerParse(word);
+
+        if(status != NOT_A_KEYWORD)
+            continue;
+
+        strcat(word, "Wie"); // Adverb
+        status = lexerParse(word);
+
+        if(status != ADVERB)
+            continue;
+        word[size] = '\0';
+
+        strcat(word, "Qie"); // Adjective
+        status = lexerParse(word);
+
+        if(status != ADJECTIVE)
+            continue;
+        word[size] = '\0';
+
+        strcat(word, "Sie"); // Noun
+        status = lexerParse(word);
+
+        if(status != NOUN)
+            continue;
+
+        strcat(word, "Toe"); // Noun plural
+        status = lexerParse(word);
+
+        if(status != NOUN)
+            continue;
+        word[size] = '\0';
+
+        strcat(word, "Qee");
+
+        strcat(word, "Weh");
+        status = lexerParse(word);
+        if(status != VERB)
+            continue;
+        word[size + 3] = '\0';
+
+        strcat(word, "Wee");
+        status = lexerParse(word);
+        if(status != VERB)
+            continue;
+        word[size + 3] = '\0';
+
+        strcat(word, "Wel");
+        status = lexerParse(word);
+        if(status != VERB)
+            continue;
+        word[size + 3] = '\0';
+
+        strcat(word, "Seh");
+        status = lexerParse(word);
+        if(status != VERB)
+            continue;
+        word[size + 3] = '\0';
+
+        strcat(word, "See");
+        status = lexerParse(word);
+        if(status != VERB)
+            continue;
+        word[size + 3] = '\0';
+
+        strcat(word, "Sel");
+        status = lexerParse(word);
+        if(status != VERB)
+            continue;
+        word[size] = '\0';
 
         if(&DropDownBoxGeneratorWordSelectionText[sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0])] > word_section_text + size + 1) {
             if(DropDownBoxGeneratorWordSelectionText[0] != '\0') {
