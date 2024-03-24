@@ -88,25 +88,60 @@ int main()
         sqlite3_free(sql_error_mesg);
     }
 
-    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY"
-        " VALUES(1,'SoeWee','NOUN;ADJECTIVE');";
+    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY VALUES(?1,?2,?3);";
+    sqlite3_stmt *sql_insert_dictionary_code = NULL;
 
-    db_return = sqlite3_exec(database, SQL_INSERT_DICTIONARY, sqlLiteCallback, 0, &sql_error_mesg);
+    db_return = sqlite3_prepare_v2(database, SQL_INSERT_DICTIONARY, -1, &sql_insert_dictionary_code, NULL);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
+    if(sql_insert_dictionary_code != NULL) {
+        sqlite3_bind_int64(sql_insert_dictionary_code, 1, 1);
+        sqlite3_bind_text( sql_insert_dictionary_code, 2, "SoeWee", -1, NULL);
+        sqlite3_bind_text( sql_insert_dictionary_code, 3, "NOUN;ADJECTIVE", -1, NULL);
+
+        db_return = sqlite3_step(sql_insert_dictionary_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_insert_dictionary_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+    }
+    sqlite3_finalize(sql_insert_dictionary_code);
+
+    const char SQL_INSERT_ENGLISH_TRANSLATION[] = "INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);";
+    sqlite3_stmt *sql_insert_english_translation_code = NULL;
+
+    db_return = sqlite3_prepare_v2(database, SQL_INSERT_ENGLISH_TRANSLATION, -1, &sql_insert_english_translation_code, NULL);
 
     if(db_return != SQLITE_OK) {
         printf("Sqlite3 error: %s\n", sql_error_mesg);
         sqlite3_free(sql_error_mesg);
     }
 
-    const char SQL_INSERT_ENGLISH_TRANSLATION[] = "INSERT INTO ENGLISH_TRANSLATION"
-        " VALUES(1,'APPLE','It is an apple');";
+    if(sql_insert_english_translation_code != NULL) {
+        sqlite3_bind_int64(sql_insert_english_translation_code, 1, 1);
+        sqlite3_bind_text( sql_insert_english_translation_code, 2, "APPLE", -1, NULL);
+        sqlite3_bind_text( sql_insert_english_translation_code, 3, "It is an apple!", -1, NULL);
 
-    db_return = sqlite3_exec(database, SQL_INSERT_ENGLISH_TRANSLATION, sqlLiteCallback, 0, &sql_error_mesg);
+        db_return = sqlite3_step(sql_insert_english_translation_code);
 
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_insert_english_translation_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
     }
+    sqlite3_finalize(sql_insert_english_translation_code);
+
 
     // Initialization
     //---------------------------------------------------------------------------------------
