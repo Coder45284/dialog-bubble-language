@@ -348,8 +348,8 @@ static void ButtonWordGeneratorGenerate() {
         if( GetRandomValue(0, 4) > 3)
             size += generateWord(word, 128);
 
-        lexerParse(word);
-        printf("%s\n", lexer_status);
+        int status = lexerParse(word);
+        printf("%s\nstatus %d\n", lexer_status, status);
 
         if(&DropDownBoxGeneratorWordSelectionText[sizeof(DropDownBoxGeneratorWordSelectionText) / sizeof(DropDownBoxGeneratorWordSelectionText[0])] > word_section_text + size + 1) {
             if(DropDownBoxGeneratorWordSelectionText[0] != '\0') {

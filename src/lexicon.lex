@@ -238,7 +238,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
 ([SQTW][ieo][ehl])+Wie { lex_word_count++; LOG_DEBUG("ADVERB"); ENTER_WORD_IN; LEX_TOKEN_RETURN(ADVERB); }
 \n { lex_line++; }
 [ \t]+ ; /* Do nothing */
-[^[:space:]]+  { snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); }
+[^[:space:]]+  { snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); LEX_TOKEN_RETURN(NOT_A_KEYWORD); }
 %%
 
 int yywrap() {
