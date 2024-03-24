@@ -4,6 +4,8 @@ project(dialog_text_language)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(SQLite3 REQUIRED)
+
 # Dependencies for raylib
 set(RAYLIB_VERSION 4.0)
 find_package(raylib ${RAYLIB_VERSION} REQUIRED)
@@ -58,7 +60,8 @@ include_directories( "${CMAKE_CURRENT_BINARY_DIR}/generated-code/" )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
-target_link_libraries (${PROJECT_NAME} m)
+target_link_libraries(${PROJECT_NAME} m)
+target_link_libraries(${PROJECT_NAME} ${SQLite3_LIBRARIES})
 
 # Web Configurations
 if ("${PLATFORM}" STREQUAL "Web")

@@ -2,6 +2,7 @@
 
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
+#include <sqlite3.h>
 
 #include "constants.h"
 #include "voice.h"
@@ -16,10 +17,12 @@
 #include <stdlib.h>
 #include <math.h>
 
+static char* whichWord(char* text, int word_index, char** end_of_word);
+static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name);
+
 //----------------------------------------------------------------------------------
 // Controls Functions Declaration
 //----------------------------------------------------------------------------------
-static char* whichWord(char* text, int word_index, char** end_of_word);
 static void ButtonWordSearchEnglish();
 static void ButtonWordSearchLanguage();
 static void ButtonDictionaryUpdateEntry();
@@ -32,6 +35,7 @@ static void ButtonGrammer();
 static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
+sqlite3 *database;
 char DropDownBoxGeneratorWordSelectionText[128] = "ONE;TWO;THREE";
 int DropDownBoxGeneratorWordSelectionActive = 0;
 const char *DropDownBoxLanguageSoundFormatText = "WAV;TXT"; // FLAC and OGG and VOA where options, but then I thought better of it.
@@ -49,6 +53,31 @@ char TextBoxLanguageEntryText[128] = "";
 //------------------------------------------------------------------------------------
 int main()
 {
+    int db_return;
+    char *sql_error_mesg = NULL;
+
+    db_return = sqlite3_open("database.db", &database);
+
+    if(db_return) {
+        printf("Database can not be opened \"%s\"\n", sqlite3_errmsg(database));
+        sqlite3_close(database);
+        return 1;
+    }
+
+    const char SQL_BUILD_TABLE[] = "CREATE TABLE DICTIONARY("
+        "ID INT PRIMARY KEY NOT NULL,"
+        "WORD "            "CHAR(128),"
+        "PARTS_OF_SPEECH " "CHAR(64),"
+        "ENGLISH_KEYWORD " "CHAR(64),"
+        "ENGLISH_DEFINITION TEXT)";
+
+    db_return = sqlite3_exec(database, SQL_BUILD_TABLE, sqlLiteCallback, 0, &sql_error_mesg);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
     // Initialization
     //---------------------------------------------------------------------------------------
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dialog Text Language Work Station");
@@ -241,6 +270,8 @@ int main()
     CloseWindow();            // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
+    sqlite3_close(database);
+
     return 0;
 }
 
@@ -256,6 +287,18 @@ static char* whichWord(char* text, int word_index, char** end_of_word) {
         *end_of_word = word + strlen(word);
 
     return word;
+}
+static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name) {
+    for(int i = 0; i < argc; i++) {
+        printf("%s: ", collumn_name[i]);
+        if(argv[i] != NULL)
+            printf("%s\n", argv);
+        else
+            printf("NULL\n", argv);
+    }
+    printf("\n");
+
+    return 0;
 }
 static size_t generateWord(char *word, const size_t word_size) {
     const char fade_in[4][3] = {{'S','i','e'}, {'Q','i','e'}, {'T','i','e'}, {'W','i','e'}};
