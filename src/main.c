@@ -64,14 +64,44 @@ int main()
         return 1;
     }
 
-    const char SQL_BUILD_TABLE[] = "CREATE TABLE DICTIONARY("
-        "ID INT PRIMARY KEY NOT NULL,"
+    const char SQL_BUILD_DICTIONARY[] = "CREATE TABLE DICTIONARY("
+        "W_ID INT PRIMARY KEY NOT NULL,"
         "WORD "            "CHAR(128),"
-        "PARTS_OF_SPEECH " "CHAR(64),"
-        "ENGLISH_KEYWORD " "CHAR(64),"
-        "ENGLISH_DEFINITION TEXT)";
+        "PARTS_OF_SPEECH " "CHAR(64))";
 
-    db_return = sqlite3_exec(database, SQL_BUILD_TABLE, sqlLiteCallback, 0, &sql_error_mesg);
+    db_return = sqlite3_exec(database, SQL_BUILD_DICTIONARY, sqlLiteCallback, 0, &sql_error_mesg);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
+    const char SQL_BUILD_ENGLISH_TRANSLATION[] = "CREATE TABLE ENGLISH_TRANSLATION("
+        "W_ID "    "INT PRIMARY KEY NOT NULL,"
+        "KEYWORD " "CHAR(64),"
+        "DEFINITION TEXT)";
+
+    db_return = sqlite3_exec(database, SQL_BUILD_ENGLISH_TRANSLATION, sqlLiteCallback, 0, &sql_error_mesg);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
+    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY"
+        " VALUES(1,'SoeWee','NOUN;ADJECTIVE');";
+
+    db_return = sqlite3_exec(database, SQL_INSERT_DICTIONARY, sqlLiteCallback, 0, &sql_error_mesg);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
+    const char SQL_INSERT_ENGLISH_TRANSLATION[] = "INSERT INTO ENGLISH_TRANSLATION"
+        " VALUES(1,'APPLE','It is an apple');";
+
+    db_return = sqlite3_exec(database, SQL_INSERT_ENGLISH_TRANSLATION, sqlLiteCallback, 0, &sql_error_mesg);
 
     if(db_return != SQLITE_OK) {
         printf("Sqlite3 error: %s\n", sql_error_mesg);
