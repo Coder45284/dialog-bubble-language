@@ -383,6 +383,7 @@ static void ButtonWordGeneratorGenerate() {
             continue;
         word[size] = '\0';
 
+        // Verb testing
         strcat(word, "Qee");
 
         strcat(word, "Weh");
