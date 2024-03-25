@@ -14,6 +14,8 @@ sqlite3_stmt *sql_get_english_word_to_id_code = NULL;
 sqlite3_stmt *sql_get_entry_dictionary_id_code = NULL;
 sqlite3_stmt *sql_insert_dictionary_code = NULL;
 sqlite3_stmt *sql_insert_english_translation_code = NULL;
+sqlite3_stmt *sql_update_dictionary_code = NULL;
+sqlite3_stmt *sql_update_english_translation_code = NULL;
 
 int sqlInit() {
     int db_return;
@@ -51,45 +53,33 @@ int sqlInit() {
         sqlite3_free(sql_error_mesg);
     }
 
-    const char SQL_GET_LANGUAGE_WORD_TO_ID[] = "SELECT W_ID FROM DICTIONARY WHERE WORD=?1;";
-    db_return = sqlite3_prepare_v2(database, SQL_GET_LANGUAGE_WORD_TO_ID, -1, &sql_get_language_word_to_id_code, NULL);
+    db_return = sqlite3_prepare_v2(database, "SELECT W_ID FROM DICTIONARY WHERE WORD=?1;", -1, &sql_get_language_word_to_id_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
+    db_return = sqlite3_prepare_v2(database, "SELECT W_ID FROM ENGLISH_TRANSLATION WHERE KEYWORD=?1;", -1, &sql_get_english_word_to_id_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
-    const char SQL_GET_ENGLISH_WORD_TO_ID[] = "SELECT W_ID FROM ENGLISH_TRANSLATION WHERE KEYWORD=?1;";
-    db_return = sqlite3_prepare_v2(database, SQL_GET_ENGLISH_WORD_TO_ID, -1, &sql_get_english_word_to_id_code, NULL);
+    db_return = sqlite3_prepare_v2(database, "SELECT W_ID FROM DICTIONARY WHERE WORD=?1 AND PARTS_OF_SPEECH=?2;", -1, &sql_get_entry_dictionary_id_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
+    db_return = sqlite3_prepare_v2(database, "INSERT INTO DICTIONARY(WORD,PARTS_OF_SPEECH)VALUES(?1,?2);", -1, &sql_insert_dictionary_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
-    const char SQL_GET_ENTRY_DICTIONARY_ID[] = "SELECT W_ID FROM DICTIONARY WHERE WORD=?1 AND PARTS_OF_SPEECH=?2;";
-    db_return = sqlite3_prepare_v2(database, SQL_GET_ENTRY_DICTIONARY_ID, -1, &sql_get_entry_dictionary_id_code, NULL);
+    db_return = sqlite3_prepare_v2(database, "INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);", -1, &sql_insert_english_translation_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
+    db_return = sqlite3_prepare_v2(database, "UPDATE DICTIONARY SET WORD=?1,PARTS_OF_SPEECH=?2 WHERE W_ID=?3;", -1, &sql_update_dictionary_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
-    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY(WORD,PARTS_OF_SPEECH)VALUES(?1,?2);";
-    db_return = sqlite3_prepare_v2(database, SQL_INSERT_DICTIONARY, -1, &sql_insert_dictionary_code, NULL);
-
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
-
-    const char SQL_INSERT_ENGLISH_TRANSLATION[] = "INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);";
-    db_return = sqlite3_prepare_v2(database, SQL_INSERT_ENGLISH_TRANSLATION, -1, &sql_insert_english_translation_code, NULL);
-
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
+    db_return = sqlite3_prepare_v2(database, "UPDATE ENGLISH_TRANSLATION SET KEYWORD=?1,DEFINITION=?2 WHERE W_ID=?3;", -1, &sql_update_english_translation_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
     sqlAddWord("QeeSoeWee", "VERB",              "RUN", "The action of running.");
     sqlAddWord("QeeSeeWel", "NOUN;ADJECTIVE",    "RED", "The color red.");
@@ -100,11 +90,15 @@ int sqlInit() {
 }
 
 void sqlDeinit() {
+
     sqlite3_finalize(sql_get_language_word_to_id_code);
     sqlite3_finalize(sql_get_english_word_to_id_code);
     sqlite3_finalize(sql_get_entry_dictionary_id_code);
     sqlite3_finalize(sql_insert_dictionary_code);
     sqlite3_finalize(sql_insert_english_translation_code);
+    sqlite3_finalize(sql_update_dictionary_code);
+    sqlite3_finalize(sql_update_english_translation_code);
+
     sqlite3_close(database);
 }
 
@@ -175,8 +169,13 @@ int sqlGetWordIDEnglish(const char *const word) {
 int sqlAddWord(const char *const word, const char *const parts_of_speech, const char *const english_keyword, const char *const english_definition) {
     int db_return;
 
+    // Make sure the prepared statements are allocated.
     if(sql_insert_dictionary_code == NULL || sql_get_entry_dictionary_id_code == NULL || sql_insert_english_translation_code == NULL)
-        return 0;
+        return -1; // Missing prepared statements
+
+    // Make sure that the word does not exist first.
+    if(sqlGetWordIDLanguage(word) != 0)
+        return -2; // Word already exists or mi
 
     {
         sqlite3_bind_text( sql_insert_dictionary_code, 1, word, -1, NULL);
