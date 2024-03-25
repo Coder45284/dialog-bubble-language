@@ -18,6 +18,7 @@ static sqlite3_stmt *sql_insert_dictionary_code = NULL;
 static sqlite3_stmt *sql_insert_english_translation_code = NULL;
 static sqlite3_stmt *sql_update_dictionary_code = NULL;
 static sqlite3_stmt *sql_update_english_translation_code = NULL;
+static sqlite3_stmt *sql_delete_entry_code = NULL;
 
 int sqlInit(const char *const path) {
     int db_return;
@@ -91,6 +92,10 @@ int sqlInit(const char *const path) {
     if(db_return != SQLITE_OK)
         printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
+    db_return = sqlite3_prepare_v2(database, "DELETE FROM ?1 WHERE W_ID=?2;", -1, &sql_delete_entry_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
+
     return 0;
 }
 
@@ -104,6 +109,7 @@ void sqlDeinit() {
     sqlite3_finalize(sql_insert_english_translation_code);
     sqlite3_finalize(sql_update_dictionary_code);
     sqlite3_finalize(sql_update_english_translation_code);
+    sqlite3_finalize(sql_delete_entry_code);
 
     sqlite3_close(database);
 }
@@ -291,6 +297,36 @@ int sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
     }
 
     return word_id;
+}
+
+int sqlRemoveWord(int word_id) {
+    const char *const TABLES[2] = {"DICTIONARY", "ENGLISH_TRANSLATION"};
+    int db_return;
+    int status = 0;
+
+    if(sql_delete_entry_code != NULL)
+        return 0; // Cannot delete without this prepared statement.
+
+    for(int i = 0; i < 2; i++) {
+        sqlite3_bind_text( sql_delete_entry_code, 1, TABLES[i], -1, NULL);
+        sqlite3_bind_int64(sql_delete_entry_code, 2, word_id);
+
+        db_return = sqlite3_step(sql_delete_entry_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_delete_entry_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+        else
+            status = 1; // True
+
+        sqlite3_reset(sql_delete_entry_code);
+    }
+
+    return status;
 }
 
 static int sqlLiteDoesTableExist(const char *const table_name) {
