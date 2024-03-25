@@ -2,7 +2,6 @@
 
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-#include <sqlite3.h>
 
 #include "constants.h"
 #include "voice.h"
@@ -18,7 +17,6 @@
 #include <math.h>
 
 static char* whichWord(char* text, int word_index, char** end_of_word);
-static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name);
 
 //----------------------------------------------------------------------------------
 // Controls Functions Declaration
@@ -35,7 +33,6 @@ static void ButtonGrammer();
 static void ButtonLanguageSound();
 static void ButtonLanguageSoundExport();
 
-sqlite3 *database;
 char DropDownBoxGeneratorWordSelectionText[128] = "ONE;TWO;THREE";
 int DropDownBoxGeneratorWordSelectionActive = 0;
 const char *DropDownBoxLanguageSoundFormatText = "WAV;TXT"; // FLAC and OGG and VOA where options, but then I thought better of it.
@@ -53,95 +50,7 @@ char TextBoxLanguageEntryText[128] = "";
 //------------------------------------------------------------------------------------
 int main()
 {
-    int db_return;
-    char *sql_error_mesg = NULL;
-
-    db_return = sqlite3_open("database.db", &database);
-
-    if(db_return) {
-        printf("Database can not be opened \"%s\"\n", sqlite3_errmsg(database));
-        sqlite3_close(database);
-        return 1;
-    }
-
-    const char SQL_BUILD_DICTIONARY[] = "CREATE TABLE DICTIONARY("
-        "W_ID INT PRIMARY KEY NOT NULL,"
-        "WORD "            "CHAR(128),"
-        "PARTS_OF_SPEECH " "CHAR(64))";
-
-    db_return = sqlite3_exec(database, SQL_BUILD_DICTIONARY, sqlLiteCallback, 0, &sql_error_mesg);
-
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
-
-    const char SQL_BUILD_ENGLISH_TRANSLATION[] = "CREATE TABLE ENGLISH_TRANSLATION("
-        "W_ID "    "INT PRIMARY KEY NOT NULL,"
-        "KEYWORD " "CHAR(64),"
-        "DEFINITION TEXT)";
-
-    db_return = sqlite3_exec(database, SQL_BUILD_ENGLISH_TRANSLATION, sqlLiteCallback, 0, &sql_error_mesg);
-
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
-
-    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY VALUES(?1,?2,?3);";
-    sqlite3_stmt *sql_insert_dictionary_code = NULL;
-
-    db_return = sqlite3_prepare_v2(database, SQL_INSERT_DICTIONARY, -1, &sql_insert_dictionary_code, NULL);
-
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
-
-    if(sql_insert_dictionary_code != NULL) {
-        sqlite3_bind_int64(sql_insert_dictionary_code, 1, 1);
-        sqlite3_bind_text( sql_insert_dictionary_code, 2, "SoeWee", -1, NULL);
-        sqlite3_bind_text( sql_insert_dictionary_code, 3, "NOUN;ADJECTIVE", -1, NULL);
-
-        db_return = sqlite3_step(sql_insert_dictionary_code);
-
-        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_insert_dictionary_code);
-        }
-
-        if(db_return != SQLITE_DONE) {
-            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
-        }
-    }
-    sqlite3_finalize(sql_insert_dictionary_code);
-
-    const char SQL_INSERT_ENGLISH_TRANSLATION[] = "INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);";
-    sqlite3_stmt *sql_insert_english_translation_code = NULL;
-
-    db_return = sqlite3_prepare_v2(database, SQL_INSERT_ENGLISH_TRANSLATION, -1, &sql_insert_english_translation_code, NULL);
-
-    if(db_return != SQLITE_OK) {
-        printf("Sqlite3 error: %s\n", sql_error_mesg);
-        sqlite3_free(sql_error_mesg);
-    }
-
-    if(sql_insert_english_translation_code != NULL) {
-        sqlite3_bind_int64(sql_insert_english_translation_code, 1, 1);
-        sqlite3_bind_text( sql_insert_english_translation_code, 2, "APPLE", -1, NULL);
-        sqlite3_bind_text( sql_insert_english_translation_code, 3, "It is an apple!", -1, NULL);
-
-        db_return = sqlite3_step(sql_insert_english_translation_code);
-
-        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_insert_english_translation_code);
-        }
-
-        if(db_return != SQLITE_DONE) {
-            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
-        }
-    }
-    sqlite3_finalize(sql_insert_english_translation_code);
-
+    sqlInit();
 
     // Initialization
     //---------------------------------------------------------------------------------------
@@ -335,7 +244,7 @@ int main()
     CloseWindow();            // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
-    sqlite3_close(database);
+    sqlDeinit();
 
     return 0;
 }
@@ -352,18 +261,6 @@ static char* whichWord(char* text, int word_index, char** end_of_word) {
         *end_of_word = word + strlen(word);
 
     return word;
-}
-static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name) {
-    for(int i = 0; i < argc; i++) {
-        printf("%s: ", collumn_name[i]);
-        if(argv[i] != NULL)
-            printf("%s\n", argv);
-        else
-            printf("NULL\n", argv);
-    }
-    printf("\n");
-
-    return 0;
 }
 static size_t generateWord(char *word, const size_t word_size) {
     const char fade_in[4][3] = {{'S','i','e'}, {'Q','i','e'}, {'T','i','e'}, {'W','i','e'}};
