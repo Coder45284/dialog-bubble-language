@@ -110,6 +110,70 @@ void sqlDeinit() {
     sqlite3_close(database);
 }
 
+int sqlGetWordIDLanguage(const char *const word) {
+    int db_return;
+    sqlite3_int64 id_number = 0;
+
+    if(sql_get_language_word_to_id_code != NULL) {
+        sqlite3_bind_text(sql_get_language_word_to_id_code, 1, word, -1, NULL);\
+
+        db_return = sqlite3_step(sql_get_language_word_to_id_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_language_word_to_id_code);
+        }
+
+        if(db_return == SQLITE_ROW)
+            id_number = sqlite3_column_int64(sql_get_language_word_to_id_code, 0);
+
+        db_return = sqlite3_step(sql_get_language_word_to_id_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_language_word_to_id_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+
+        sqlite3_reset(sql_get_language_word_to_id_code);
+    }
+
+    return id_number;
+}
+
+int sqlGetWordIDEnglish(const char *const word) {
+    int db_return;
+    sqlite3_int64 id_number = 0;
+
+    if(sql_get_english_word_to_id_code != NULL) {
+        sqlite3_bind_text(sql_get_english_word_to_id_code, 1, word, -1, NULL);\
+
+        db_return = sqlite3_step(sql_get_english_word_to_id_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_english_word_to_id_code);
+        }
+
+        if(db_return == SQLITE_ROW)
+            id_number = sqlite3_column_int64(sql_get_english_word_to_id_code, 0);
+
+        db_return = sqlite3_step(sql_get_english_word_to_id_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_english_word_to_id_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("sqlGetWordIDEnglish prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+
+        sqlite3_reset(sql_get_english_word_to_id_code);
+    }
+
+    return id_number;
+}
+
 int sqlAddWord(const char *const word, const char *const parts_of_speech, const char *const english_keyword, const char *const english_definition) {
     int db_return;
 
