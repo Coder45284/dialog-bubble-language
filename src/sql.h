@@ -15,6 +15,7 @@ int sqlGetWordIDLanguage(const char *const word);
 int sqlGetWordIDEnglish(const char *const word);
 int sqlAddWord(const WordDefinition *const word_definition);
 int sqlUpdateWord(int word_id, const WordDefinition *const word_definition);
+int sqlGetWord(int word_id, WordDefinition *word_definition);
 int sqlRemoveWord(int word_id);
 
 #endif // SQL_DTLWS

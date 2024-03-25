@@ -18,6 +18,7 @@ static sqlite3_stmt *sql_insert_dictionary_code = NULL;
 static sqlite3_stmt *sql_insert_english_translation_code = NULL;
 static sqlite3_stmt *sql_update_dictionary_code = NULL;
 static sqlite3_stmt *sql_update_english_translation_code = NULL;
+static sqlite3_stmt *sql_get_entry_code = NULL;
 static sqlite3_stmt *sql_delete_entry_code = NULL;
 
 int sqlInit(const char *const path) {
@@ -92,6 +93,10 @@ int sqlInit(const char *const path) {
     if(db_return != SQLITE_OK)
         printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
+    db_return = sqlite3_prepare_v2(database, "SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1; SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", -1, &sql_get_entry_code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
+
     db_return = sqlite3_prepare_v2(database, "DELETE FROM ?1 WHERE W_ID=?2;", -1, &sql_delete_entry_code, NULL);
     if(db_return != SQLITE_OK)
         printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
@@ -109,6 +114,7 @@ void sqlDeinit() {
     sqlite3_finalize(sql_insert_english_translation_code);
     sqlite3_finalize(sql_update_dictionary_code);
     sqlite3_finalize(sql_update_english_translation_code);
+    sqlite3_finalize(sql_get_entry_code);
     sqlite3_finalize(sql_delete_entry_code);
 
     sqlite3_close(database);
@@ -297,6 +303,10 @@ int sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
     }
 
     return word_id;
+}
+
+int sqlGetWord(int word_id, WordDefinition *word_definition) {
+    //
 }
 
 int sqlRemoveWord(int word_id) {
