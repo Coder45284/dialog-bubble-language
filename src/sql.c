@@ -29,7 +29,7 @@ int sqlInit() {
 
     const char SQL_BUILD_DICTIONARY[] = "CREATE TABLE DICTIONARY("
         "W_ID "         "INTEGER PRIMARY KEY,"
-        "WORD "         "CHAR(128),"
+        "WORD "         "CHAR(128) UNIQUE,"
         "PARTS_OF_SPEECH CHAR(64))";
 
     db_return = sqlite3_exec(database, SQL_BUILD_DICTIONARY, sqlLiteCallback, 0, &sql_error_mesg);
@@ -91,12 +91,10 @@ int sqlInit() {
         sqlite3_free(sql_error_mesg);
     }
 
-    /*
     sqlAddWord("QeeSoeWee", "VERB",              "RUN", "The action of running.");
     sqlAddWord("QeeSeeWel", "NOUN;ADJECTIVE",    "RED", "The color red.");
     sqlAddWord("QoeQoeWeh", "NOUN",             "CART", "A cart like a shopping cart.");
     sqlAddWord("ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement.");
-    */
 
     return 0;
 }
