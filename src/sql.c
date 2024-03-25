@@ -81,10 +81,13 @@ int sqlInit() {
     if(db_return != SQLITE_OK)
         printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
 
+    /*
     sqlAddWord("QeeSoeWee", "VERB",              "RUN", "The action of running.");
     sqlAddWord("QeeSeeWel", "NOUN;ADJECTIVE",    "RED", "The color red.");
     sqlAddWord("QoeQoeWeh", "NOUN",             "CART", "A cart like a shopping cart.");
     sqlAddWord("ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement.");
+    sqlUpdateWord(sqlGetWordIDEnglish("CART"), "Weh", "PARTITION", "CARD", "It is non sense.");
+    */
 
     return 0;
 }
@@ -240,6 +243,51 @@ int sqlAddWord(const char *const word, const char *const parts_of_speech, const 
         sqlite3_reset(sql_insert_english_translation_code);
     }
     return id_number;
+}
+
+int sqlUpdateWord(int word_id, const char *const word, const char *const parts_of_speech, const char *const english_keyword, const char *const english_definition) {
+    int db_return;
+
+    if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)
+        return -1; // Missing prepared statements
+
+    {
+        sqlite3_bind_text( sql_update_dictionary_code, 1, word, -1, NULL);
+        sqlite3_bind_text( sql_update_dictionary_code, 2, parts_of_speech, -1, NULL);
+        sqlite3_bind_int64(sql_update_dictionary_code, 3, word_id);
+
+        db_return = sqlite3_step(sql_update_dictionary_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_update_dictionary_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+
+        sqlite3_reset(sql_update_dictionary_code);
+    }
+
+    {
+        sqlite3_bind_text( sql_update_english_translation_code, 1, english_keyword, -1, NULL);
+        sqlite3_bind_text( sql_update_english_translation_code, 2, english_definition, -1, NULL);
+        sqlite3_bind_int64(sql_update_english_translation_code, 3, word_id);
+
+        db_return = sqlite3_step(sql_update_english_translation_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_update_english_translation_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+
+        sqlite3_reset(sql_update_english_translation_code);
+    }
+
+    return word_id;
 }
 
 static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name) {
