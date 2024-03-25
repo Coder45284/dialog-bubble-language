@@ -20,7 +20,8 @@ static sqlite3_stmt *sql_insert_english_translation_code = NULL;
 static sqlite3_stmt *sql_update_dictionary_code = NULL;
 static sqlite3_stmt *sql_update_english_translation_code = NULL;
 static sqlite3_stmt *sql_get_entry_code = NULL;
-static sqlite3_stmt *sql_delete_entry_code = NULL;
+static sqlite3_stmt *sql_delete_dictionary_entry_code = NULL;
+static sqlite3_stmt *sql_delete_english_translation_entry_code = NULL;
 
 int sqlInit(const char *const path) {
     int db_return;
@@ -72,7 +73,8 @@ int sqlInit(const char *const path) {
     sqlLitePrepare("UPDATE DICTIONARY SET WORD=?1,PARTS_OF_SPEECH=?2 WHERE W_ID=?3;", &sql_update_dictionary_code);
     sqlLitePrepare("UPDATE ENGLISH_TRANSLATION SET KEYWORD=?1,DEFINITION=?2 WHERE W_ID=?3;", &sql_update_english_translation_code);
     sqlLitePrepare("SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1; SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_get_entry_code);
-    sqlLitePrepare("DELETE FROM ?1 WHERE W_ID=?2;", &sql_delete_entry_code);
+    sqlLitePrepare("DELETE FROM DICTIONARY WHERE W_ID=?1;", &sql_delete_dictionary_entry_code);
+    sqlLitePrepare("DELETE FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_delete_english_translation_entry_code);
 
     return 0;
 }
@@ -88,7 +90,8 @@ void sqlDeinit() {
     sqlite3_finalize(sql_update_dictionary_code);
     sqlite3_finalize(sql_update_english_translation_code);
     sqlite3_finalize(sql_get_entry_code);
-    sqlite3_finalize(sql_delete_entry_code);
+    sqlite3_finalize(sql_delete_dictionary_entry_code);
+    sqlite3_finalize(sql_delete_english_translation_entry_code);
 
     sqlite3_close(database);
 }
@@ -283,21 +286,19 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
 }
 
 int sqlRemoveWord(int word_id) {
-    const char *const TABLES[2] = {"DICTIONARY", "ENGLISH_TRANSLATION"};
     int db_return;
     int status = 0;
 
-    if(sql_delete_entry_code != NULL)
+    if(sql_delete_dictionary_entry_code != NULL || sql_delete_english_translation_entry_code != NULL)
         return 0; // Cannot delete without this prepared statement.
 
-    for(int i = 0; i < 2; i++) {
-        sqlite3_bind_text( sql_delete_entry_code, 1, TABLES[i], -1, NULL);
-        sqlite3_bind_int64(sql_delete_entry_code, 2, word_id);
+    {
+        sqlite3_bind_int64(sql_delete_dictionary_entry_code, 1, word_id);
 
-        db_return = sqlite3_step(sql_delete_entry_code);
+        db_return = sqlite3_step(sql_delete_dictionary_entry_code);
 
         for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_delete_entry_code);
+            db_return = sqlite3_step(sql_delete_dictionary_entry_code);
         }
 
         if(db_return != SQLITE_DONE) {
@@ -306,7 +307,25 @@ int sqlRemoveWord(int word_id) {
         else
             status = 1; // True
 
-        sqlite3_reset(sql_delete_entry_code);
+        sqlite3_reset(sql_delete_dictionary_entry_code);
+    }
+
+    {
+        sqlite3_bind_int64(sql_delete_english_translation_entry_code, 1, word_id);
+
+        db_return = sqlite3_step(sql_delete_english_translation_entry_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_delete_english_translation_entry_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+        else
+            status = 1; // True
+
+        sqlite3_reset(sql_delete_english_translation_entry_code);
     }
 
     return status;
