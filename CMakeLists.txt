@@ -4,6 +4,8 @@ project(dialog_text_language)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(DIALOG_BUBBLE_LANGUAGE_UNIT_TESTING "This will enable making tests." ON)
+
 find_package(SQLite3 REQUIRED)
 
 # Dependencies for raylib
@@ -65,13 +67,17 @@ target_link_libraries(${PROJECT_NAME} ${SQLite3_LIBRARIES})
 
 # Web Configurations
 if ("${PLATFORM}" STREQUAL "Web")
-    # Tell Emscripten to build an example.html file.
-    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
+  # Tell Emscripten to build an example.html file.
+  set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
 endif()
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
 if (APPLE)
-    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
-    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
-    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+  target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+  target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+  target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
+
+if(DIALOG_BUBBLE_LANGUAGE_UNIT_TESTING)
+  add_subdirectory(unit-tests)
 endif()
