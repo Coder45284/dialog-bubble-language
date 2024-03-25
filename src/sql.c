@@ -172,7 +172,7 @@ int sqlGetWordIDEnglish(const char *const word) {
     return id_number;
 }
 
-int sqlAddWord(const char *const word, const char *const parts_of_speech, const char *const english_keyword, const char *const english_definition) {
+int sqlAddWord(const WordDefinition *const word_definition) {
     int db_return;
 
     // Make sure the prepared statements are allocated.
@@ -180,12 +180,12 @@ int sqlAddWord(const char *const word, const char *const parts_of_speech, const 
         return -1; // Missing prepared statements
 
     // Make sure that the word does not exist first.
-    if(sqlGetWordIDLanguage(word) != 0)
-        return -2; // Word already exists or mi
+    if(sqlGetWordIDLanguage(word_definition->word) != 0)
+        return -2; // Word already exists.
 
     {
-        sqlite3_bind_text( sql_insert_dictionary_code, 1, word, -1, NULL);
-        sqlite3_bind_text( sql_insert_dictionary_code, 2, parts_of_speech, -1, NULL);
+        sqlite3_bind_text( sql_insert_dictionary_code, 1, word_definition->word, -1, NULL);
+        sqlite3_bind_text( sql_insert_dictionary_code, 2, word_definition->parts_of_speech, -1, NULL);
 
         db_return = sqlite3_step(sql_insert_dictionary_code);
 
@@ -203,8 +203,8 @@ int sqlAddWord(const char *const word, const char *const parts_of_speech, const 
     sqlite3_int64 id_number = 0;
 
     {
-        sqlite3_bind_text(sql_get_entry_dictionary_id_code, 1, word, -1, NULL);
-        sqlite3_bind_text(sql_get_entry_dictionary_id_code, 2, parts_of_speech, -1, NULL);
+        sqlite3_bind_text(sql_get_entry_dictionary_id_code, 1, word_definition->word, -1, NULL);
+        sqlite3_bind_text(sql_get_entry_dictionary_id_code, 2, word_definition->parts_of_speech, -1, NULL);
 
         db_return = sqlite3_step(sql_get_entry_dictionary_id_code);
 
@@ -230,8 +230,8 @@ int sqlAddWord(const char *const word, const char *const parts_of_speech, const 
 
     {
         sqlite3_bind_int64(sql_insert_english_translation_code, 1, id_number);
-        sqlite3_bind_text( sql_insert_english_translation_code, 2, english_keyword, -1, NULL);
-        sqlite3_bind_text( sql_insert_english_translation_code, 3, english_definition, -1, NULL);
+        sqlite3_bind_text( sql_insert_english_translation_code, 2, word_definition->keyword, -1, NULL);
+        sqlite3_bind_text( sql_insert_english_translation_code, 3, word_definition->definition, -1, NULL);
 
         db_return = sqlite3_step(sql_insert_english_translation_code);
 
@@ -248,15 +248,15 @@ int sqlAddWord(const char *const word, const char *const parts_of_speech, const 
     return id_number;
 }
 
-int sqlUpdateWord(int word_id, const char *const word, const char *const parts_of_speech, const char *const english_keyword, const char *const english_definition) {
+int sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
     int db_return;
 
     if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)
         return -1; // Missing prepared statements
 
     {
-        sqlite3_bind_text( sql_update_dictionary_code, 1, word, -1, NULL);
-        sqlite3_bind_text( sql_update_dictionary_code, 2, parts_of_speech, -1, NULL);
+        sqlite3_bind_text( sql_update_dictionary_code, 1, word_definition->word, -1, NULL);
+        sqlite3_bind_text( sql_update_dictionary_code, 2, word_definition->parts_of_speech, -1, NULL);
         sqlite3_bind_int64(sql_update_dictionary_code, 3, word_id);
 
         db_return = sqlite3_step(sql_update_dictionary_code);
@@ -273,8 +273,8 @@ int sqlUpdateWord(int word_id, const char *const word, const char *const parts_o
     }
 
     {
-        sqlite3_bind_text( sql_update_english_translation_code, 1, english_keyword, -1, NULL);
-        sqlite3_bind_text( sql_update_english_translation_code, 2, english_definition, -1, NULL);
+        sqlite3_bind_text( sql_update_english_translation_code, 1, word_definition->keyword, -1, NULL);
+        sqlite3_bind_text( sql_update_english_translation_code, 2, word_definition->definition, -1, NULL);
         sqlite3_bind_int64(sql_update_english_translation_code, 3, word_id);
 
         db_return = sqlite3_step(sql_update_english_translation_code);
