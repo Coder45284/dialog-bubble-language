@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+static void sqlLitePrepare(const char *const statement, sqlite3_stmt **code);
 static int sqlLiteDoesTableExist(const char *const table_name);
 static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name);
 
@@ -33,9 +34,7 @@ int sqlInit(const char *const path) {
         return 1;
     }
 
-    db_return = sqlite3_prepare_v2(database, "SELECT * FROM sqlite_master WHERE type='table' AND tbl_name=?1", -1, &sql_check_for_table_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
+    sqlLitePrepare("SELECT * FROM sqlite_master WHERE type='table' AND tbl_name=?1", &sql_check_for_table_code);
 
     if(!sqlLiteDoesTableExist("DICTIONARY")) {
         const char SQL_BUILD_DICTIONARY[] = "CREATE TABLE DICTIONARY("
@@ -65,41 +64,15 @@ int sqlInit(const char *const path) {
         }
     }
 
-    db_return = sqlite3_prepare_v2(database, "SELECT W_ID FROM DICTIONARY WHERE WORD=?1;", -1, &sql_get_language_word_to_id_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "SELECT W_ID FROM ENGLISH_TRANSLATION WHERE KEYWORD=?1;", -1, &sql_get_english_word_to_id_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "SELECT W_ID FROM DICTIONARY WHERE WORD=?1 AND PARTS_OF_SPEECH=?2;", -1, &sql_get_entry_dictionary_id_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "INSERT INTO DICTIONARY(WORD,PARTS_OF_SPEECH)VALUES(?1,?2);", -1, &sql_insert_dictionary_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);", -1, &sql_insert_english_translation_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "UPDATE DICTIONARY SET WORD=?1,PARTS_OF_SPEECH=?2 WHERE W_ID=?3;", -1, &sql_update_dictionary_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "UPDATE ENGLISH_TRANSLATION SET KEYWORD=?1,DEFINITION=?2 WHERE W_ID=?3;", -1, &sql_update_english_translation_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1; SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", -1, &sql_get_entry_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
-
-    db_return = sqlite3_prepare_v2(database, "DELETE FROM ?1 WHERE W_ID=?2;", -1, &sql_delete_entry_code, NULL);
-    if(db_return != SQLITE_OK)
-        printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return));
+    sqlLitePrepare("SELECT W_ID FROM DICTIONARY WHERE WORD=?1;", &sql_get_language_word_to_id_code);
+    sqlLitePrepare("SELECT W_ID FROM ENGLISH_TRANSLATION WHERE KEYWORD=?1;", &sql_get_english_word_to_id_code);
+    sqlLitePrepare("SELECT W_ID FROM DICTIONARY WHERE WORD=?1 AND PARTS_OF_SPEECH=?2;", &sql_get_entry_dictionary_id_code);
+    sqlLitePrepare("INSERT INTO DICTIONARY(WORD,PARTS_OF_SPEECH)VALUES(?1,?2);", &sql_insert_dictionary_code);
+    sqlLitePrepare("INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);", &sql_insert_english_translation_code);
+    sqlLitePrepare("UPDATE DICTIONARY SET WORD=?1,PARTS_OF_SPEECH=?2 WHERE W_ID=?3;", &sql_update_dictionary_code);
+    sqlLitePrepare("UPDATE ENGLISH_TRANSLATION SET KEYWORD=?1,DEFINITION=?2 WHERE W_ID=?3;", &sql_update_english_translation_code);
+    sqlLitePrepare("SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1; SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_get_entry_code);
+    sqlLitePrepare("DELETE FROM ?1 WHERE W_ID=?2;", &sql_delete_entry_code);
 
     return 0;
 }
@@ -337,6 +310,14 @@ int sqlRemoveWord(int word_id) {
     }
 
     return status;
+}
+
+static void sqlLitePrepare(const char *const statement, sqlite3_stmt **code) {
+    int db_return;
+
+    db_return = sqlite3_prepare_v2(database, statement, -1, code, NULL);
+    if(db_return != SQLITE_OK)
+        printf("Sqlite3 Statement: \"%s\"\nPrepare Error: %s\n\n", statement, sqlite3_errstr(db_return));
 }
 
 static int sqlLiteDoesTableExist(const char *const table_name) {
