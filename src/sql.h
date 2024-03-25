@@ -1,7 +1,7 @@
 #ifndef SQL_DTLWS
 #define SQL_DTLWS
 
-int sqlInit();
+int sqlInit(const char *const path);
 void sqlDeinit();
 
 int sqlGetWordIDLanguage(const char *const word);

@@ -3,6 +3,7 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
+#include "sql.h"
 #include "constants.h"
 #include "voice.h"
 #include "voice_from_text.h"
@@ -50,7 +51,7 @@ char TextBoxLanguageEntryText[128] = "";
 //------------------------------------------------------------------------------------
 int main()
 {
-    sqlInit();
+    sqlInit("database.db");
 
     // Initialization
     //---------------------------------------------------------------------------------------

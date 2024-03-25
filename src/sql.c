@@ -17,11 +17,11 @@ sqlite3_stmt *sql_insert_english_translation_code = NULL;
 sqlite3_stmt *sql_update_dictionary_code = NULL;
 sqlite3_stmt *sql_update_english_translation_code = NULL;
 
-int sqlInit() {
+int sqlInit(const char *const path) {
     int db_return;
     char *sql_error_mesg = NULL;
 
-    db_return = sqlite3_open("database.db", &database);
+    db_return = sqlite3_open(path, &database);
 
     if(db_return) {
         printf("Database can not be opened \"%s\"\n", sqlite3_errmsg(database));
