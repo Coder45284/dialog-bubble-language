@@ -72,7 +72,7 @@ int sqlInit() {
         sqlite3_free(sql_error_mesg);
     }
 
-    sqlAddWord("QeeSoeWee", "VERB",             "RUN", "The action of running.");
+    sqlAddWord("QeeSoeWee", "VERB",              "RUN", "The action of running.");
     sqlAddWord("QeeSeeWel", "NOUN;ADJECTIVE",    "RED", "The color red.");
     sqlAddWord("QoeQoeWeh", "NOUN",             "CART", "A cart like a shopping cart.");
     sqlAddWord("ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement.");
@@ -82,6 +82,7 @@ int sqlInit() {
 
 void sqlDeinit() {
     sqlite3_finalize(sql_insert_dictionary_code);
+    sqlite3_finalize(sql_get_entry_dictionary_id_code);
     sqlite3_finalize(sql_insert_english_translation_code);
     sqlite3_close(database);
 }
