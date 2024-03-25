@@ -8,8 +8,11 @@
 static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name);
 
 sqlite3 *database = NULL;
-sqlite3_stmt *sql_insert_dictionary_code = NULL;
+
+sqlite3_stmt *sql_get_language_word_to_id_code = NULL;
+sqlite3_stmt *sql_get_english_word_to_id_code = NULL;
 sqlite3_stmt *sql_get_entry_dictionary_id_code = NULL;
+sqlite3_stmt *sql_insert_dictionary_code = NULL;
 sqlite3_stmt *sql_insert_english_translation_code = NULL;
 
 int sqlInit() {
@@ -48,8 +51,16 @@ int sqlInit() {
         sqlite3_free(sql_error_mesg);
     }
 
-    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY(WORD,PARTS_OF_SPEECH)VALUES(?1,?2);";
-    db_return = sqlite3_prepare_v2(database, SQL_INSERT_DICTIONARY, -1, &sql_insert_dictionary_code, NULL);
+    const char SQL_GET_LANGUAGE_WORD_TO_ID[] = "SELECT W_ID FROM DICTIONARY WHERE WORD=?1;";
+    db_return = sqlite3_prepare_v2(database, SQL_GET_LANGUAGE_WORD_TO_ID, -1, &sql_get_language_word_to_id_code, NULL);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
+    const char SQL_GET_ENGLISH_WORD_TO_ID[] = "SELECT W_ID FROM ENGLISH_TRANSLATION WHERE KEYWORD=?1;";
+    db_return = sqlite3_prepare_v2(database, SQL_GET_ENGLISH_WORD_TO_ID, -1, &sql_get_english_word_to_id_code, NULL);
 
     if(db_return != SQLITE_OK) {
         printf("Sqlite3 error: %s\n", sql_error_mesg);
@@ -64,6 +75,14 @@ int sqlInit() {
         sqlite3_free(sql_error_mesg);
     }
 
+    const char SQL_INSERT_DICTIONARY[] = "INSERT INTO DICTIONARY(WORD,PARTS_OF_SPEECH)VALUES(?1,?2);";
+    db_return = sqlite3_prepare_v2(database, SQL_INSERT_DICTIONARY, -1, &sql_insert_dictionary_code, NULL);
+
+    if(db_return != SQLITE_OK) {
+        printf("Sqlite3 error: %s\n", sql_error_mesg);
+        sqlite3_free(sql_error_mesg);
+    }
+
     const char SQL_INSERT_ENGLISH_TRANSLATION[] = "INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);";
     db_return = sqlite3_prepare_v2(database, SQL_INSERT_ENGLISH_TRANSLATION, -1, &sql_insert_english_translation_code, NULL);
 
@@ -72,17 +91,21 @@ int sqlInit() {
         sqlite3_free(sql_error_mesg);
     }
 
+    /*
     sqlAddWord("QeeSoeWee", "VERB",              "RUN", "The action of running.");
     sqlAddWord("QeeSeeWel", "NOUN;ADJECTIVE",    "RED", "The color red.");
     sqlAddWord("QoeQoeWeh", "NOUN",             "CART", "A cart like a shopping cart.");
     sqlAddWord("ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement.");
+    */
 
     return 0;
 }
 
 void sqlDeinit() {
-    sqlite3_finalize(sql_insert_dictionary_code);
+    sqlite3_finalize(sql_get_language_word_to_id_code);
+    sqlite3_finalize(sql_get_english_word_to_id_code);
     sqlite3_finalize(sql_get_entry_dictionary_id_code);
+    sqlite3_finalize(sql_insert_dictionary_code);
     sqlite3_finalize(sql_insert_english_translation_code);
     sqlite3_close(database);
 }
@@ -155,7 +178,7 @@ int sqlAddWord(const char *const word, const char *const parts_of_speech, const 
 
         sqlite3_reset(sql_insert_english_translation_code);
     }
-    return 0;
+    return id_number;
 }
 
 static int sqlLiteCallback(void* ignored, int argc, char** argv, char** collumn_name) {
