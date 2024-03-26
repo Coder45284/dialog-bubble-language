@@ -1,6 +1,43 @@
 #include "sql.h"
 
+#include <stdio.h>
+
 int main() {
+    int problem = 0;
+
+    if(sqlGetWordIDLanguage("QeeSoeWee") != SQL_NOT_INIT) {
+        problem |= 1;
+        printf("SQL_NOT_INIT sqlGetWordIDLanguage\n");
+    }
+
+    if(sqlGetWordIDEnglish("RUN") != SQL_NOT_INIT) {
+        problem |= 1;
+        printf("SQL_NOT_INIT sqlGetWordIDEnglish\n");
+    }
+    {
+        WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
+
+        if(sqlAddWord(&word_def) != SQL_NOT_INIT) {
+            problem |= 1;
+            printf("SQL_NOT_INIT sqlAddWord\n");
+        }
+
+        if(sqlUpdateWord(1, &word_def) != SQL_NOT_INIT) {
+            problem |= 1;
+            printf("SQL_NOT_INIT sqlUpdateWord\n");
+        }
+
+        if(sqlGetWord(1, &word_def) != SQL_NOT_INIT) {
+            problem |= 1;
+            printf("SQL_NOT_INIT sqlGetWord\n");
+        }
+
+        if(sqlRemoveWord(1) != SQL_NOT_INIT) {
+            problem |= 1;
+            printf("SQL_NOT_INITsqlRemoveWord\n");
+        }
+    }
+
 
     {
         WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
@@ -23,5 +60,5 @@ int main() {
         sqlUpdateWord(sqlGetWordIDEnglish("CART"), &word_def);
     }
 
-     return 0;
+     return problem;
 }

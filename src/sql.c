@@ -110,7 +110,11 @@ int sqlGetWordIDLanguage(const char *const word) {
     int db_return;
     sqlite3_int64 id_number = 0;
 
-    if(sql_get_language_word_to_id_code != NULL) {
+    // Make sure the prepared statements are allocated.
+    if(sql_get_language_word_to_id_code == NULL)
+        return SQL_NOT_INIT; // Missing prepared statements
+
+    {
         sqlite3_bind_text(sql_get_language_word_to_id_code, 1, word, -1, NULL);\
 
         db_return = sqlite3_step(sql_get_language_word_to_id_code);
@@ -141,6 +145,10 @@ int sqlGetWordIDLanguage(const char *const word) {
 int sqlGetWordIDEnglish(const char *const word) {
     int db_return;
     sqlite3_int64 id_number = 0;
+
+    // Make sure the prepared statements are allocated.
+    if(sql_get_english_word_to_id_code == NULL)
+        return SQL_NOT_INIT; // Missing prepared statements
 
     if(sql_get_english_word_to_id_code != NULL) {
         sqlite3_bind_text(sql_get_english_word_to_id_code, 1, word, -1, NULL);
@@ -175,7 +183,7 @@ int sqlAddWord(const WordDefinition *const word_definition) {
 
     // Make sure the prepared statements are allocated.
     if(sql_insert_dictionary_code == NULL || sql_get_entry_dictionary_id_code == NULL || sql_insert_english_translation_code == NULL)
-        return -1; // Missing prepared statements
+        return SQL_NOT_INIT; // Missing prepared statements
 
     // Make sure that the word does not exist first.
     if(sqlGetWordIDLanguage(word_definition->word) != 0)
@@ -250,7 +258,7 @@ int sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
     int db_return;
 
     if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)
-        return -1; // Missing prepared statements
+        return SQL_NOT_INIT; // Missing prepared statements
 
     {
         sqlite3_bind_text( sql_update_dictionary_code, 1, word_definition->word, -1, NULL);
@@ -294,6 +302,9 @@ int sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
 int sqlGetWord(int word_id, WordDefinition *word_definition) {
     int db_return;
     int status = 0;
+
+    if(sql_get_dictionary_entry_code == NULL || sql_get_english_translation_entry_code == NULL)
+        return SQL_NOT_INIT; // Missing prepared statements
 
     {
         sqlite3_bind_int64(sql_get_dictionary_entry_code, 1, word_id);
@@ -364,8 +375,8 @@ int sqlRemoveWord(int word_id) {
     int db_return;
     int status = 0;
 
-    if(sql_delete_dictionary_entry_code != NULL || sql_delete_english_translation_entry_code != NULL)
-        return 0; // Cannot delete without this prepared statement.
+    if(sql_delete_dictionary_entry_code == NULL || sql_delete_english_translation_entry_code == NULL)
+        return SQL_NOT_INIT; // Cannot delete without this prepared statement.
 
     {
         sqlite3_bind_int64(sql_delete_dictionary_entry_code, 1, word_id);

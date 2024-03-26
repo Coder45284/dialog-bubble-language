@@ -8,6 +8,8 @@ typedef struct {
     char definition[768];
 } WordDefinition;
 
+#define SQL_NOT_INIT -1
+
 int sqlInit(const char *const path);
 void sqlDeinit();
 
