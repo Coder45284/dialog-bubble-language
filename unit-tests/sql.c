@@ -5,7 +5,7 @@
 #define STATUS_CHECK(function, word)\
 {\
     int status = function;\
-    if(status == SQL_NOT_INIT) {\
+    if(status != SQL_NOT_INIT) {\
         problem |= 1;\
         printf("SQL_NOT_INIT %s returned %d\n", word, status);\
     }\
@@ -26,6 +26,7 @@ int main() {
         STATUS_CHECK(sqlRemoveWord(1), "sqlRemoveWord");
     }
 
+    sqlInit(":memory:");
 
     {
         WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
@@ -48,5 +49,7 @@ int main() {
         sqlUpdateWord(sqlGetWordIDEnglish("CART"), &word_def);
     }
 
-     return problem;
+    sqlDeinit();
+
+    return problem;
 }
