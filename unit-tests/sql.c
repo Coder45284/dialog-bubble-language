@@ -2,40 +2,28 @@
 
 #include <stdio.h>
 
+#define STATUS_CHECK(function, word)\
+{\
+    int status = function;\
+    if(status == SQL_NOT_INIT) {\
+        problem |= 1;\
+        printf("SQL_NOT_INIT %s returned %d\n", word, status);\
+    }\
+}
+
 int main() {
     int problem = 0;
 
-    if(sqlGetWordIDLanguage("QeeSoeWee") != SQL_NOT_INIT) {
-        problem |= 1;
-        printf("SQL_NOT_INIT sqlGetWordIDLanguage\n");
-    }
+    STATUS_CHECK(sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
+    STATUS_CHECK(sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
 
-    if(sqlGetWordIDEnglish("RUN") != SQL_NOT_INIT) {
-        problem |= 1;
-        printf("SQL_NOT_INIT sqlGetWordIDEnglish\n");
-    }
     {
         WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
 
-        if(sqlAddWord(&word_def) != SQL_NOT_INIT) {
-            problem |= 1;
-            printf("SQL_NOT_INIT sqlAddWord\n");
-        }
-
-        if(sqlUpdateWord(1, &word_def) != SQL_NOT_INIT) {
-            problem |= 1;
-            printf("SQL_NOT_INIT sqlUpdateWord\n");
-        }
-
-        if(sqlGetWord(1, &word_def) != SQL_NOT_INIT) {
-            problem |= 1;
-            printf("SQL_NOT_INIT sqlGetWord\n");
-        }
-
-        if(sqlRemoveWord(1) != SQL_NOT_INIT) {
-            problem |= 1;
-            printf("SQL_NOT_INITsqlRemoveWord\n");
-        }
+        STATUS_CHECK(sqlAddWord(&word_def), "sqlAddWord");
+        STATUS_CHECK(sqlUpdateWord(1, &word_def), "sqlUpdateWord");
+        STATUS_CHECK(sqlGetWord(1, &word_def), "sqlGetWord");
+        STATUS_CHECK(sqlRemoveWord(1), "sqlRemoveWord");
     }
 
 
