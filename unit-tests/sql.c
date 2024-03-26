@@ -2,28 +2,28 @@
 
 #include <stdio.h>
 
-#define STATUS_CHECK(function, word)\
+#define STATUS_CHECK(expected, expected_text, function, word)\
 {\
     int status = function;\
-    if(status != SQL_NOT_INIT) {\
+    if(status != expected) {\
         problem |= 1;\
-        printf("SQL_NOT_INIT %s returned %d\n", word, status);\
+        printf("%s %s returned %d\n", expected_text, word, status);\
     }\
 }
 
 int main() {
     int problem = 0;
 
-    STATUS_CHECK(sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
-    STATUS_CHECK(sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
+    STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
+    STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
 
     {
         WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
 
-        STATUS_CHECK(sqlAddWord(&word_def), "sqlAddWord");
-        STATUS_CHECK(sqlUpdateWord(1, &word_def), "sqlUpdateWord");
-        STATUS_CHECK(sqlGetWord(1, &word_def), "sqlGetWord");
-        STATUS_CHECK(sqlRemoveWord(1), "sqlRemoveWord");
+        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlAddWord(&word_def), "sqlAddWord");
+        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlUpdateWord(1, &word_def), "sqlUpdateWord");
+        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWord(1, &word_def), "sqlGetWord");
+        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
     }
 
     // Do not need to write to disk.

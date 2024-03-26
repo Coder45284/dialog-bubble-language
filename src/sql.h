@@ -8,7 +8,11 @@ typedef struct {
     char definition[768];
 } WordDefinition;
 
+// Does not exist.
+#define SQL_SUCCESS 1
+#define SQL_DNE 0
 #define SQL_NOT_INIT -1
+#define SQL_ONLY_ONE_ENTRY -2
 
 int sqlInit(const char *const path);
 void sqlDeinit();
