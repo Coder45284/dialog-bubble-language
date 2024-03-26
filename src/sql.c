@@ -3,6 +3,7 @@
 #include <sqlite3.h>
 
 #include <stddef.h>
+#include <string.h>
 #include <stdio.h>
 
 static void sqlLitePrepare(const char *const statement, sqlite3_stmt **code);
@@ -75,6 +76,12 @@ int sqlInit(const char *const path) {
     sqlLitePrepare("SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1; SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_get_entry_code);
     sqlLitePrepare("DELETE FROM DICTIONARY WHERE W_ID=?1;", &sql_delete_dictionary_entry_code);
     sqlLitePrepare("DELETE FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_delete_english_translation_entry_code);
+
+    WordDefinition word_definition = {"BADWORD","NOUN;ADJECTIVE;VERB","SadWord", "What definition!!!"};
+
+    sqlGetWord(3, &word_definition);
+
+    printf("WORD: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", word_definition.word, word_definition.parts_of_speech, word_definition.keyword, word_definition.definition);
 
     return 0;
 }
@@ -282,7 +289,41 @@ int sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
 }
 
 int sqlGetWord(int word_id, WordDefinition *word_definition) {
-    //
+    int db_return;
+    int status = 0;
+
+    {
+        sqlite3_bind_int64(sql_get_entry_code, 1, word_id);
+
+        db_return = sqlite3_step(sql_get_entry_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_entry_code);
+        }
+
+        if(db_return == SQLITE_ROW) {
+            strncpy(word_definition->word, sqlite3_column_text(sql_get_entry_code, 0), sizeof(word_definition->word) / sizeof(word_definition->word[0]));
+            strncpy(word_definition->parts_of_speech, sqlite3_column_text(sql_get_entry_code, 1), sizeof(word_definition->parts_of_speech) / sizeof(word_definition->parts_of_speech[0]));
+        }
+        else
+            printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
+
+        db_return = sqlite3_step(sql_get_entry_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_entry_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
+        }
+        else
+            status = 1; // True
+
+        sqlite3_reset(sql_get_entry_code);
+    }
+
+    return status;
 }
 
 int sqlRemoveWord(int word_id) {
