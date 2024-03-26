@@ -26,8 +26,10 @@ int main() {
         STATUS_CHECK(sqlRemoveWord(1), "sqlRemoveWord");
     }
 
+    // Do not need to write to disk.
     sqlInit(":memory:");
 
+    // TODO Add checks if words are successfully created.
     {
         WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
         sqlAddWord(&word_def);
@@ -44,6 +46,9 @@ int main() {
         WordDefinition word_def = {"ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement."};
         sqlAddWord(&word_def);
     }
+
+    // Check words.
+
     {
         WordDefinition word_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
         sqlUpdateWord(sqlGetWordIDEnglish("CART"), &word_def);
