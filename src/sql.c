@@ -20,7 +20,8 @@ static sqlite3_stmt *sql_insert_dictionary_code = NULL;
 static sqlite3_stmt *sql_insert_english_translation_code = NULL;
 static sqlite3_stmt *sql_update_dictionary_code = NULL;
 static sqlite3_stmt *sql_update_english_translation_code = NULL;
-static sqlite3_stmt *sql_get_entry_code = NULL;
+static sqlite3_stmt *sql_get_dictionary_entry_code = NULL;
+static sqlite3_stmt *sql_get_english_translation_entry_code = NULL;
 static sqlite3_stmt *sql_delete_dictionary_entry_code = NULL;
 static sqlite3_stmt *sql_delete_english_translation_entry_code = NULL;
 
@@ -73,7 +74,8 @@ int sqlInit(const char *const path) {
     sqlLitePrepare("INSERT INTO ENGLISH_TRANSLATION VALUES(?1,?2,?3);", &sql_insert_english_translation_code);
     sqlLitePrepare("UPDATE DICTIONARY SET WORD=?1,PARTS_OF_SPEECH=?2 WHERE W_ID=?3;", &sql_update_dictionary_code);
     sqlLitePrepare("UPDATE ENGLISH_TRANSLATION SET KEYWORD=?1,DEFINITION=?2 WHERE W_ID=?3;", &sql_update_english_translation_code);
-    sqlLitePrepare("SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1; SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_get_entry_code);
+    sqlLitePrepare("SELECT WORD,PARTS_OF_SPEECH FROM DICTIONARY WHERE W_ID=?1;", &sql_get_dictionary_entry_code);
+    sqlLitePrepare("SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_get_english_translation_entry_code);
     sqlLitePrepare("DELETE FROM DICTIONARY WHERE W_ID=?1;", &sql_delete_dictionary_entry_code);
     sqlLitePrepare("DELETE FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_delete_english_translation_entry_code);
 
@@ -96,7 +98,8 @@ void sqlDeinit() {
     sqlite3_finalize(sql_insert_english_translation_code);
     sqlite3_finalize(sql_update_dictionary_code);
     sqlite3_finalize(sql_update_english_translation_code);
-    sqlite3_finalize(sql_get_entry_code);
+    sqlite3_finalize(sql_get_dictionary_entry_code);
+    sqlite3_finalize(sql_get_english_translation_entry_code);
     sqlite3_finalize(sql_delete_dictionary_entry_code);
     sqlite3_finalize(sql_delete_english_translation_entry_code);
 
@@ -293,25 +296,25 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
     int status = 0;
 
     {
-        sqlite3_bind_int64(sql_get_entry_code, 1, word_id);
+        sqlite3_bind_int64(sql_get_dictionary_entry_code, 1, word_id);
 
-        db_return = sqlite3_step(sql_get_entry_code);
+        db_return = sqlite3_step(sql_get_dictionary_entry_code);
 
         for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_get_entry_code);
+            db_return = sqlite3_step(sql_get_dictionary_entry_code);
         }
 
         if(db_return == SQLITE_ROW) {
-            strncpy(word_definition->word, sqlite3_column_text(sql_get_entry_code, 0), sizeof(word_definition->word) / sizeof(word_definition->word[0]));
-            strncpy(word_definition->parts_of_speech, sqlite3_column_text(sql_get_entry_code, 1), sizeof(word_definition->parts_of_speech) / sizeof(word_definition->parts_of_speech[0]));
+            strncpy(word_definition->word, sqlite3_column_text(sql_get_dictionary_entry_code, 0), sizeof(word_definition->word) / sizeof(word_definition->word[0]));
+            strncpy(word_definition->parts_of_speech, sqlite3_column_text(sql_get_dictionary_entry_code, 1), sizeof(word_definition->parts_of_speech) / sizeof(word_definition->parts_of_speech[0]));
         }
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
 
-        db_return = sqlite3_step(sql_get_entry_code);
+        db_return = sqlite3_step(sql_get_dictionary_entry_code);
 
         for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_get_entry_code);
+            db_return = sqlite3_step(sql_get_dictionary_entry_code);
         }
 
         if(db_return != SQLITE_DONE) {
@@ -320,7 +323,38 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
         else
             status = 1; // True
 
-        sqlite3_reset(sql_get_entry_code);
+        sqlite3_reset(sql_get_dictionary_entry_code);
+    }
+
+    {
+        sqlite3_bind_int64(sql_get_english_translation_entry_code, 1, word_id);
+
+        db_return = sqlite3_step(sql_get_english_translation_entry_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_english_translation_entry_code);
+        }
+
+        if(db_return == SQLITE_ROW) {
+            strncpy(word_definition->keyword, sqlite3_column_text(sql_get_english_translation_entry_code, 0), sizeof(word_definition->keyword) / sizeof(word_definition->keyword[0]));
+            strncpy(word_definition->definition, sqlite3_column_text(sql_get_english_translation_entry_code, 1), sizeof(word_definition->definition) / sizeof(word_definition->definition[0]));
+        }
+        else
+            printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
+
+        db_return = sqlite3_step(sql_get_english_translation_entry_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_get_english_translation_entry_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
+        }
+        else
+            status = 1; // True
+
+        sqlite3_reset(sql_get_english_translation_entry_code);
     }
 
     return status;
