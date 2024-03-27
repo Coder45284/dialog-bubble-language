@@ -271,10 +271,16 @@ db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_defin
     if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)
         return SQL_NOT_INIT; // Missing prepared statements
 
+    // Check if word_id exists.
     db_return_code status = sqlGetWord(word_id, NULL);
 
     if(status != SQL_SUCCESS)
         return status;
+
+    int language_id = sqlGetWordIDLanguage(word_definition->word);
+
+    if(language_id != SQL_DNE && language_id != word_id)
+        return SQL_ONLY_ONE_ENTRY;
 
     {
         sqlite3_bind_text( sql_update_dictionary_code, 1, word_definition->word, -1, NULL);

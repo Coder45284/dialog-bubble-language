@@ -274,7 +274,7 @@ int successfullInitTest(const char *const text) {
 
         word_defs[1].word[0] = word_defs[0].word[0];
 
-        STATUS_CHECK(SQL_DNE, "Same Language Word Update SQL_DNE", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
+        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Word Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
     }
     // TODO Test Update same English keyword test.
 
