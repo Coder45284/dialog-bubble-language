@@ -109,6 +109,7 @@ int main() {
 
         const int word_id = sqlGetWordIDEnglish(word_defs[1].keyword);
 
+        STATUS_CHECK(SQL_DNE,     "SQL_DNE",     sqlUpdateWord(29,      &expected_def), "sqlUpdateWord");
         STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", sqlUpdateWord(word_id, &expected_def), "sqlUpdateWord");
 
         int result = sqlGetWord(word_id, &word_defs[1]);

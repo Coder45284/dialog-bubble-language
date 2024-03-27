@@ -250,10 +250,14 @@ int sqlAddWord(const WordDefinition *const word_definition) {
 
 db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
     int db_return;
-    db_return_code status = SQL_DNE;
 
     if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)
         return SQL_NOT_INIT; // Missing prepared statements
+
+    db_return_code status = sqlGetWord(word_id, NULL);
+
+    if(status != SQL_SUCCESS)
+        return status;
 
     {
         sqlite3_bind_text( sql_update_dictionary_code, 1, word_definition->word, -1, NULL);
@@ -287,8 +291,6 @@ db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_defin
         if(db_return != SQLITE_DONE) {
             printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
         }
-        else
-            status = SQL_SUCCESS;
 
         sqlite3_reset(sql_update_english_translation_code);
     }
@@ -313,8 +315,10 @@ db_return_code sqlGetWord(int word_id, WordDefinition *word_definition) {
         }
 
         if(db_return == SQLITE_ROW) {
-            strncpy(word_definition->word, sqlite3_column_text(sql_get_dictionary_entry_code, 0), sizeof(word_definition->word) / sizeof(word_definition->word[0]));
-            strncpy(word_definition->parts_of_speech, sqlite3_column_text(sql_get_dictionary_entry_code, 1), sizeof(word_definition->parts_of_speech) / sizeof(word_definition->parts_of_speech[0]));
+            if(word_definition != NULL) {
+                strncpy(word_definition->word, sqlite3_column_text(sql_get_dictionary_entry_code, 0), sizeof(word_definition->word) / sizeof(word_definition->word[0]));
+                strncpy(word_definition->parts_of_speech, sqlite3_column_text(sql_get_dictionary_entry_code, 1), sizeof(word_definition->parts_of_speech) / sizeof(word_definition->parts_of_speech[0]));
+            }
 
             db_return = sqlite3_step(sql_get_dictionary_entry_code);
 
@@ -344,8 +348,10 @@ db_return_code sqlGetWord(int word_id, WordDefinition *word_definition) {
         }
 
         if(db_return == SQLITE_ROW) {
-            strncpy(word_definition->keyword, sqlite3_column_text(sql_get_english_translation_entry_code, 0), sizeof(word_definition->keyword) / sizeof(word_definition->keyword[0]));
-            strncpy(word_definition->definition, sqlite3_column_text(sql_get_english_translation_entry_code, 1), sizeof(word_definition->definition) / sizeof(word_definition->definition[0]));
+            if(word_definition != NULL) {
+                strncpy(word_definition->keyword, sqlite3_column_text(sql_get_english_translation_entry_code, 0), sizeof(word_definition->keyword) / sizeof(word_definition->keyword[0]));
+                strncpy(word_definition->definition, sqlite3_column_text(sql_get_english_translation_entry_code, 1), sizeof(word_definition->definition) / sizeof(word_definition->definition[0]));
+            }
 
             db_return = sqlite3_step(sql_get_english_translation_entry_code);
 
