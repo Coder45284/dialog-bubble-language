@@ -408,7 +408,7 @@ int sqlRemoveWord(int word_id) {
 }
 
 void wordDefinitionStr(const WordDefinition *const def, char *destination, int destination_limit) {
-    snprintf("Word: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", destination_limit, destination, def->word, def->parts_of_speech, def->keyword, def->definition);
+    snprintf(destination, destination_limit, "Word: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", def->word, def->parts_of_speech, def->keyword, def->definition);
 }
 
 static void sqlLitePrepare(const char *const statement, sqlite3_stmt **code) {
