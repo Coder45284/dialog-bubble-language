@@ -323,6 +323,8 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
                 printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
             }
         }
+        else if(db_return == SQLITE_DONE)
+            status = SQL_DNE; // Redundent
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
 
@@ -354,6 +356,8 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
             else
                 status = SQL_SUCCESS; // True
         }
+        else if(db_return == SQLITE_DONE)
+            status = SQL_DNE; // Redundent
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
 
