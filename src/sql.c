@@ -79,12 +79,6 @@ int sqlInit(const char *const path) {
     sqlLitePrepare("DELETE FROM DICTIONARY WHERE W_ID=?1;", &sql_delete_dictionary_entry_code);
     sqlLitePrepare("DELETE FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_delete_english_translation_entry_code);
 
-    WordDefinition word_definition = {"BADWORD","NOUN;ADJECTIVE;VERB","SadWord", "What definition!!!"};
-
-    sqlGetWord(3, &word_definition);
-
-    printf("WORD: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", word_definition.word, word_definition.parts_of_speech, word_definition.keyword, word_definition.definition);
-
     return 0;
 }
 
@@ -411,6 +405,10 @@ int sqlRemoveWord(int word_id) {
     }
 
     return status;
+}
+
+void wordDefinitionStr(const WordDefinition *const def, char *destination, int destination_limit) {
+    snprintf("Word: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", destination_limit, destination, def->word, def->parts_of_speech, def->keyword, def->definition);
 }
 
 static void sqlLitePrepare(const char *const statement, sqlite3_stmt **code) {

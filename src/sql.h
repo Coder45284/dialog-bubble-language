@@ -24,4 +24,6 @@ int sqlUpdateWord(int word_id, const WordDefinition *const word_definition);
 int sqlGetWord(int word_id, WordDefinition *word_definition);
 int sqlRemoveWord(int word_id);
 
+void wordDefinitionStr(const WordDefinition *const word_definition, char *destination, int destination_limit);
+
 #endif // SQL_DTLWS
