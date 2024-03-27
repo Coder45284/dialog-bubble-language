@@ -98,6 +98,9 @@ int main() {
                 }
             }
         }
+        else {
+            STATUS_CHECK(SQL_DNE, "SQL_DNE", sqlGetWord(english_id, &definition_test), "sqlGetWord");
+        }
     }
 
     // Check words.

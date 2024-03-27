@@ -312,19 +312,19 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
         if(db_return == SQLITE_ROW) {
             strncpy(word_definition->word, sqlite3_column_text(sql_get_dictionary_entry_code, 0), sizeof(word_definition->word) / sizeof(word_definition->word[0]));
             strncpy(word_definition->parts_of_speech, sqlite3_column_text(sql_get_dictionary_entry_code, 1), sizeof(word_definition->parts_of_speech) / sizeof(word_definition->parts_of_speech[0]));
+
+            db_return = sqlite3_step(sql_get_dictionary_entry_code);
+
+            for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+                db_return = sqlite3_step(sql_get_dictionary_entry_code);
+            }
+
+            if(db_return != SQLITE_DONE) {
+                printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
+            }
         }
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
-
-        db_return = sqlite3_step(sql_get_dictionary_entry_code);
-
-        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_get_dictionary_entry_code);
-        }
-
-        if(db_return != SQLITE_DONE) {
-            printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
-        }
 
         sqlite3_reset(sql_get_dictionary_entry_code);
     }
@@ -341,21 +341,21 @@ int sqlGetWord(int word_id, WordDefinition *word_definition) {
         if(db_return == SQLITE_ROW) {
             strncpy(word_definition->keyword, sqlite3_column_text(sql_get_english_translation_entry_code, 0), sizeof(word_definition->keyword) / sizeof(word_definition->keyword[0]));
             strncpy(word_definition->definition, sqlite3_column_text(sql_get_english_translation_entry_code, 1), sizeof(word_definition->definition) / sizeof(word_definition->definition[0]));
+
+            db_return = sqlite3_step(sql_get_english_translation_entry_code);
+
+            for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+                db_return = sqlite3_step(sql_get_english_translation_entry_code);
+            }
+
+            if(db_return != SQLITE_DONE) {
+                printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
+            }
+            else
+                status = SQL_SUCCESS; // True
         }
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
-
-        db_return = sqlite3_step(sql_get_english_translation_entry_code);
-
-        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
-            db_return = sqlite3_step(sql_get_english_translation_entry_code);
-        }
-
-        if(db_return != SQLITE_DONE) {
-            printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
-        }
-        else
-            status = SQL_SUCCESS; // True
 
         sqlite3_reset(sql_get_english_translation_entry_code);
     }
