@@ -277,6 +277,29 @@ int successfullInitTest(const char *const text) {
         STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Word Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
     }
     // TODO Test Update same English keyword test.
+    {
+        WordDefinition word_defs[2] = {
+            {"QeeToeTeeTel", "VERB",      "MAD", "State of anger."},
+            {"TeeToeTeeTeh", "ADJECTIVE", "BAD", "Opsite of good."}
+        };
+
+        const int id = sqlAddWord(&word_defs[0]);
+        if(id <= SQL_DNE) {
+            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 0, id, output);
+            problem |= 1;
+        }
+        const int second_id = sqlAddWord(&word_defs[1]);
+        if(id <= SQL_DNE) {
+            wordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
+            printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 1, id, output);
+            problem |= 1;
+        }
+
+        word_defs[1].keyword[0] = word_defs[0].keyword[0];
+
+        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Keyword Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
+    }
 
     // TODO Find a way to make a stability test on both tables. Each table should have the same amount of entries. Also, they should have the same identifiers.
 
