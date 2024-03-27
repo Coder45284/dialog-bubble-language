@@ -13,8 +13,8 @@
     }\
 }
 
-int noInitTest();
-int successfullInitTest();
+int noInitTest(const char *const text);
+int successfullInitTest(const char *const text);
 
 int main() {
     int problem = 0;
@@ -24,11 +24,17 @@ int main() {
     // Do not need to write to disk.
     sqlInit(":memory:");
 
-    problem |= successfullInitTest();
+    problem |= successfullInitTest("FIRST successfullInitTest");
 
     sqlDeinit();
 
-    // problem |= noInitTest("After sqlDeinit");
+    problem |= noInitTest("AFTER sqlDeinit");
+
+    sqlInit(":memory:");
+
+    problem |= successfullInitTest("SECOND successfullInitTest");
+
+    sqlDeinit();
 
     return problem;
 }
@@ -36,7 +42,7 @@ int main() {
 int noInitTest(const char *const text) {
     int problem = 0;
 
-    printf("%s\n", text);
+    printf("noInitTest %s\n", text);
 
     STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
     STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
@@ -53,8 +59,10 @@ int noInitTest(const char *const text) {
     return problem;
 }
 
-int successfullInitTest() {
+int successfullInitTest(const char *const text) {
     int problem = 0;
+
+    printf("successfullInitTest %s\n", text);
 
     WordDefinition word_defs[5] = {
         {"QeeSoeWee", "VERB", "RUN", "The action of running."},

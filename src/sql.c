@@ -85,19 +85,32 @@ int sqlInit(const char *const path) {
 void sqlDeinit() {
 
     sqlite3_finalize(sql_check_for_table_code);
+    sql_check_for_table_code = NULL;
     sqlite3_finalize(sql_get_language_word_to_id_code);
+    sql_get_language_word_to_id_code = NULL;
     sqlite3_finalize(sql_get_english_word_to_id_code);
+    sql_get_english_word_to_id_code = NULL;
     sqlite3_finalize(sql_get_entry_dictionary_id_code);
+    sql_get_entry_dictionary_id_code = NULL;
     sqlite3_finalize(sql_insert_dictionary_code);
+    sql_insert_dictionary_code = NULL;
     sqlite3_finalize(sql_insert_english_translation_code);
+    sql_insert_english_translation_code = NULL;
     sqlite3_finalize(sql_update_dictionary_code);
+    sql_update_dictionary_code = NULL;
     sqlite3_finalize(sql_update_english_translation_code);
+    sql_update_english_translation_code = NULL;
     sqlite3_finalize(sql_get_dictionary_entry_code);
+    sql_get_dictionary_entry_code = NULL;
     sqlite3_finalize(sql_get_english_translation_entry_code);
+    sql_get_english_translation_entry_code = NULL;
     sqlite3_finalize(sql_delete_dictionary_entry_code);
+    sql_delete_dictionary_entry_code = NULL;
     sqlite3_finalize(sql_delete_english_translation_entry_code);
+    sql_delete_english_translation_entry_code = NULL;
 
     sqlite3_close(database);
+    database = NULL;
 }
 
 int sqlGetWordIDLanguage(const char *const word) {
