@@ -13,8 +13,30 @@
     }\
 }
 
+int noInitTest();
+int successfullInitTest();
+
 int main() {
     int problem = 0;
+
+    problem |= noInitTest("BEFORE sqlInit");
+
+    // Do not need to write to disk.
+    sqlInit(":memory:");
+
+    problem |= successfullInitTest();
+
+    sqlDeinit();
+
+    // problem |= noInitTest("After sqlDeinit");
+
+    return problem;
+}
+
+int noInitTest(const char *const text) {
+    int problem = 0;
+
+    printf("%s\n", text);
 
     STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
     STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
@@ -28,8 +50,11 @@ int main() {
         STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
     }
 
-    // Do not need to write to disk.
-    sqlInit(":memory:");
+    return problem;
+}
+
+int successfullInitTest() {
+    int problem = 0;
 
     WordDefinition word_defs[5] = {
         {"QeeSoeWee", "VERB", "RUN", "The action of running."},
@@ -177,8 +202,6 @@ int main() {
             }
         }
     }
-
-    sqlDeinit();
 
     return problem;
 }
