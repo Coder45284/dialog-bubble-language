@@ -28,13 +28,15 @@ int main() {
 
     sqlDeinit();
 
-    problem |= noInitTest("AFTER sqlDeinit");
+    if(problem == 0) {
+        problem |= noInitTest("AFTER sqlDeinit");
 
-    sqlInit(":memory:");
+        sqlInit(":memory:");
 
-    problem |= successfullInitTest("SECOND successfullInitTest");
+        problem |= successfullInitTest("SECOND successfullInitTest");
 
-    sqlDeinit();
+        sqlDeinit();
+    }
 
     return problem;
 }
