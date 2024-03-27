@@ -276,7 +276,7 @@ int successfullInitTest(const char *const text) {
 
         STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Word Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
     }
-    // TODO Test Update same English keyword test.
+    // Test Update same English keyword test.
     {
         WordDefinition word_defs[2] = {
             {"QeeToeTeeTel", "VERB",      "MAD", "State of anger."},

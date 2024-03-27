@@ -279,8 +279,15 @@ db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_defin
 
     int language_id = sqlGetWordIDLanguage(word_definition->word);
 
-    if(language_id != SQL_DNE && language_id != word_id)
-        return SQL_ONLY_ONE_ENTRY;
+    {
+        if(language_id != SQL_DNE && language_id != word_id)
+            return SQL_ONLY_ONE_ENTRY;
+
+        language_id = sqlGetWordIDEnglish(word_definition->keyword);
+
+        if(language_id != SQL_DNE && language_id != word_id)
+            return SQL_ONLY_ONE_ENTRY;
+    }
 
     {
         sqlite3_bind_text( sql_update_dictionary_code, 1, word_definition->word, -1, NULL);
