@@ -119,7 +119,7 @@ int main() {
         for(int i = 0; i < 4; i++) {
             int result = sqlGetWord(sqlGetWordIDEnglish(word_defs[i].keyword), &definition_test);
 
-            STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(SQL_SUCCESS, "update SQL_SUCCESS", result, "sqlGetWord");
 
             if(result == SQL_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
@@ -136,6 +136,42 @@ int main() {
                 }
                 if(strncmp(word_defs[i].definition, definition_test.definition, sizeof(definition_test.definition) / sizeof(definition_test.definition[0])) != 0) {
                     printf("update check word_defs[%d].definition:\"%s\" != \"%s\":definition_test.definition\n", i, word_defs[i].definition, definition_test.definition);
+                    problem |= 1;
+                }
+            }
+        }
+    }
+
+    // Remove tests.
+    {
+        const int word_id = sqlGetWordIDEnglish(word_defs[2].keyword);
+
+        STATUS_CHECK(SQL_DNE,     "SQL_DNE",     sqlRemoveWord(29),      "sqlRemoveWord");
+        STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", sqlRemoveWord(word_id), "sqlRemoveWord");
+
+        for(int i = 0; i < 4; i++) {
+            int result = sqlGetWord(sqlGetWordIDEnglish(word_defs[i].keyword), &definition_test);
+
+            if(i == 2)
+                continue;
+
+            STATUS_CHECK(SQL_SUCCESS, "remove SQL_SUCCESS", result, "sqlGetWord");
+
+            if(result == SQL_SUCCESS) {
+                if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
+                    printf("remove check word_defs[%d].word:\"%s\" != \"%s\":definition_test.word\n", i, word_defs[i].word, definition_test.word);
+                    problem |= 1;
+                }
+                if(strncmp(word_defs[i].parts_of_speech, definition_test.parts_of_speech, sizeof(definition_test.parts_of_speech) / sizeof(definition_test.parts_of_speech[0])) != 0) {
+                    printf("remove check word_defs[%d].parts_of_speech:\"%s\" != \"%s\":definition_test.parts_of_speech\n", i, word_defs[i].parts_of_speech, definition_test.parts_of_speech);
+                    problem |= 1;
+                }
+                if(strncmp(word_defs[i].keyword, definition_test.keyword, sizeof(definition_test.keyword) / sizeof(definition_test.keyword[0])) != 0) {
+                    printf("remove check word_defs[%d].keyword:\"%s\" != \"%s\":definition_test.keyword\n", i, word_defs[i].keyword, definition_test.keyword);
+                    problem |= 1;
+                }
+                if(strncmp(word_defs[i].definition, definition_test.definition, sizeof(definition_test.definition) / sizeof(definition_test.definition[0])) != 0) {
+                    printf("remove check word_defs[%d].definition:\"%s\" != \"%s\":definition_test.definition\n", i, word_defs[i].definition, definition_test.definition);
                     problem |= 1;
                 }
             }

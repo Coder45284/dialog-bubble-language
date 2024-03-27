@@ -378,10 +378,14 @@ db_return_code sqlGetWord(int word_id, WordDefinition *word_definition) {
 
 db_return_code sqlRemoveWord(int word_id) {
     int db_return;
-    db_return_code status = SQL_DNE;
 
     if(sql_delete_dictionary_entry_code == NULL || sql_delete_english_translation_entry_code == NULL)
         return SQL_NOT_INIT; // Cannot delete without this prepared statement.
+
+    db_return_code status = sqlGetWord(word_id, NULL);
+
+    if(status != SQL_SUCCESS)
+        return status;
 
     {
         sqlite3_bind_int64(sql_delete_dictionary_entry_code, 1, word_id);
@@ -411,8 +415,6 @@ db_return_code sqlRemoveWord(int word_id) {
         if(db_return != SQLITE_DONE) {
             printf("Sqlite3 prepare error: %s\n", sqlite3_errstr(db_return) );
         }
-        else
-            status = SQL_SUCCESS;
 
         sqlite3_reset(sql_delete_english_translation_entry_code);
     }
