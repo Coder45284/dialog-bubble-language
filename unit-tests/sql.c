@@ -222,8 +222,36 @@ int successfullInitTest(const char *const text) {
     }
 
     // I am very sure that there are still bugs with SQL. Rather than fix them now, I will fix them as I detect them. This way I can be sure that I fixed them.
-    // TODO Test Add same language word test.
-    // TODO Test Add same English keyword test.
+    // Test Add same language word test.
+    {
+        WordDefinition word_defs[2] = {
+            {"QeeSoeQee", "VERB", "STANDING", "The action of running."},
+            {"QeeSoeQee", "NOUN", "BLA", "An word of nothingness."}
+        };
+
+        const int result = sqlAddWord(&word_defs[0]);
+        if(result <= SQL_DNE) {
+            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            printf("Same Language Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
+            problem |= 1;
+        }
+        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Word Case: SQL_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
+    }
+    // Test Add same English keyword test.
+    {
+        WordDefinition word_defs[2] = {
+            {"QeeToeTee", "VERB", "WAITING", "The action of running."},
+            {"QeeToeTel", "NOUN", "LOAN", "An word of nothingness."}
+        };
+
+        const int result = sqlAddWord(&word_defs[0]);
+        if(result <= SQL_DNE) {
+            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            printf("Same English Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
+            problem |= 1;
+        }
+        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same English Word Case: SQL_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
+    }
     // TODO Test Update same language word test.
     // TODO Test Update same English keyword test.
 
