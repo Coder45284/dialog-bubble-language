@@ -211,6 +211,14 @@ int successfullInitTest(const char *const text) {
                 }
             }
         }
+
+        // Add this word back
+        const int result = sqlAddWord(&word_defs[2]);
+        if(result <= SQL_DNE) {
+            wordDefinitionStr(&word_defs[2], output, sizeof(output) / sizeof(output[0]));
+            printf("Definition cannot be placed back: Code %d. For definition\n%s\n", result, output);
+            problem |= 1;
+        }
     }
 
     // I am very sure that there are still bugs with SQL. Rather than fix them now, I will fix them as I detect them. This way I can be sure that I fixed them.
