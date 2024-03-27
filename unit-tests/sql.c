@@ -81,19 +81,19 @@ int main() {
 
             if(result == SQL_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
-                    printf("index %d\nword_defs[i].word:\"%s\" != \"%s\":definition_test.word\n", i, word_defs[i].word, definition_test.word);
+                    printf("word_defs[%d].word:\"%s\" != \"%s\":definition_test.word\n", i, word_defs[i].word, definition_test.word);
                     problem |= 1;
                 }
                 if(strncmp(word_defs[i].parts_of_speech, definition_test.parts_of_speech, sizeof(definition_test.parts_of_speech) / sizeof(definition_test.parts_of_speech[0])) != 0) {
-                    printf("index %d\nword_defs[i].parts_of_speech:\"%s\" != \"%s\":definition_test.parts_of_speech\n", i, word_defs[i].parts_of_speech, definition_test.parts_of_speech);
+                    printf("word_defs[%d].parts_of_speech:\"%s\" != \"%s\":definition_test.parts_of_speech\n", i, word_defs[i].parts_of_speech, definition_test.parts_of_speech);
                     problem |= 1;
                 }
                 if(strncmp(word_defs[i].keyword, definition_test.keyword, sizeof(definition_test.keyword) / sizeof(definition_test.keyword[0])) != 0) {
-                    printf("index %d\nword_defs[i].keyword:\"%s\" != \"%s\":definition_test.keyword\n", i, word_defs[i].keyword, definition_test.keyword);
+                    printf("word_defs[%d].keyword:\"%s\" != \"%s\":definition_test.keyword\n", i, word_defs[i].keyword, definition_test.keyword);
                     problem |= 1;
                 }
                 if(strncmp(word_defs[i].definition, definition_test.definition, sizeof(definition_test.definition) / sizeof(definition_test.definition[0])) != 0) {
-                    printf("index %d\nword_defs[i].definition:\"%s\" != \"%s\":definition_test.definition\n", i, word_defs[i].definition, definition_test.definition);
+                    printf("word_defs[%d].definition:\"%s\" != \"%s\":definition_test.definition\n", i, word_defs[i].definition, definition_test.definition);
                     problem |= 1;
                 }
             }
@@ -107,7 +107,10 @@ int main() {
 
     {
         WordDefinition word_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
-        sqlUpdateWord(sqlGetWordIDEnglish("CART"), &word_def);
+
+        const int word_id = sqlGetWordIDEnglish(word_defs[1].keyword);
+
+        sqlUpdateWord(word_id, &word_def);
     }
 
     sqlDeinit();
