@@ -213,5 +213,9 @@ int successfullInitTest(const char *const text) {
         }
     }
 
+    // I am very sure that there are still bugs with SQL. Rather than fix them now, I will fix them as I detect them. This way I can be sure that I fixed them.
+    // TODO Test Add in same keyword and name case.
+    // TODO Test Update in same keyword and name case.
+
     return problem;
 }
