@@ -29,21 +29,39 @@ int main() {
     // Do not need to write to disk.
     sqlInit(":memory:");
 
-    {
-        WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
-        STATUS_CHECK(1, "1", sqlAddWord(&word_def), "sqlAddWord");
+    WordDefinition word_defs[5] = {
+        {"QeeSoeWee", "VERB", "RUN", "The action of running."},
+        {"QeeSeeWel", "NOUN;ADJECTIVE", "RED", "The color red."},
+        {"QoeQoeWeh", "NOUN", "CART", "A cart like a shopping cart."},
+        {"ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement."},
+        {"@", "@", "@", "@"}
+    };
+
+    int expected_returns[5] = {1, 2, 3, 4, SQL_DNE};
+
+    for(int i = 0; i < 4; i++) {
+        const char word[2] = {'1' + i, '\0'};
+
+        STATUS_CHECK(1 + i, word, sqlAddWord(&word_defs[i]), "sqlAddWord");
     }
-    {
-        WordDefinition word_def = {"QeeSeeWel", "NOUN;ADJECTIVE", "RED", "The color red."};
-        STATUS_CHECK(2, "2", sqlAddWord(&word_def), "sqlAddWord");
-    }
-    {
-        WordDefinition word_def = {"QoeQoeWeh", "NOUN", "CART", "A cart like a shopping cart."};
-        STATUS_CHECK(3, "3", sqlAddWord(&word_def), "sqlAddWord");
-    }
-    {
-        WordDefinition word_def = {"ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement."};
-        STATUS_CHECK(4, "4", sqlAddWord(&word_def), "sqlAddWord");
+
+    char output[0x100];
+
+    // Sanity checks
+    for(int i = 0; i < 5; i++) {
+        int language_id = sqlGetWordIDLanguage(word_defs[i].word);
+        int english_id = sqlGetWordIDEnglish(word_defs[i].keyword);
+
+        if(language_id != english_id || expected_returns[i] != english_id) {
+            printf("language_id != english_id or expected_return != english_id\n");
+            printf("language_id: %d\n", language_id);
+            printf("english_id: %d\n", english_id);
+            printf("expected_return: %d\n", expected_returns[i]);
+
+            wordDefinitionStr(&word_defs[i], output, sizeof(output) / sizeof(output[0]));
+
+            printf("%s\n", output);
+        }
     }
 
     // Check words.
