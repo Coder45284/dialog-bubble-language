@@ -8,11 +8,12 @@ typedef struct {
     char definition[768];
 } WordDefinition;
 
-// Does not exist.
-#define SQL_SUCCESS 1
-#define SQL_DNE 0
-#define SQL_NOT_INIT -1
-#define SQL_ONLY_ONE_ENTRY -2
+typedef enum {
+    SQL_SUCCESS = 1,
+    SQL_DNE = 0, // This means does not exist.
+    SQL_NOT_INIT = -1,
+    SQL_ONLY_ONE_ENTRY = -2
+} db_return_code;
 
 int sqlInit(const char *const path);
 void sqlDeinit();
@@ -20,9 +21,10 @@ void sqlDeinit();
 int sqlGetWordIDLanguage(const char *const word);
 int sqlGetWordIDEnglish(const char *const word);
 int sqlAddWord(const WordDefinition *const word_definition);
-int sqlUpdateWord(int word_id, const WordDefinition *const word_definition);
-int sqlGetWord(int word_id, WordDefinition *word_definition);
-int sqlRemoveWord(int word_id);
+
+db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_definition);
+db_return_code sqlGetWord(int word_id, WordDefinition *word_definition);
+db_return_code sqlRemoveWord(int word_id);
 
 void wordDefinitionStr(const WordDefinition *const word_definition, char *destination, int destination_limit);
 
