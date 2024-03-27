@@ -99,18 +99,41 @@ int main() {
             }
         }
         else {
-            STATUS_CHECK(0, "FALSE", sqlGetWord(english_id, &definition_test), "sqlGetWord");
+            STATUS_CHECK(SQL_DNE, "SQL_DNE", sqlGetWord(english_id, &definition_test), "sqlGetWord");
         }
     }
 
     // Check words.
-
     {
-        WordDefinition word_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
+        WordDefinition returned_def;
+        WordDefinition expected_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
 
         const int word_id = sqlGetWordIDEnglish(word_defs[1].keyword);
 
-        sqlUpdateWord(word_id, &word_def);
+        STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", sqlUpdateWord(word_id, &expected_def), "sqlUpdateWord");
+
+        int result = sqlGetWord(word_id, &returned_def);
+
+        STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", result, "sqlGetWord from updated word");
+
+        if(result == SQL_SUCCESS) {
+            if(strncmp(returned_def.word, expected_def.word, sizeof(expected_def.word) / sizeof(expected_def.word[0])) != 0) {
+                printf("returned_def.word:\"%s\" != \"%s\":expected_def.word\n", returned_def.word, expected_def.word);
+                problem |= 1;
+            }
+            if(strncmp(returned_def.parts_of_speech, expected_def.parts_of_speech, sizeof(expected_def.parts_of_speech) / sizeof(expected_def.parts_of_speech[0])) != 0) {
+                printf("returned_def.parts_of_speech:\"%s\" != \"%s\":expected_def.parts_of_speech\n", returned_def.parts_of_speech, expected_def.parts_of_speech);
+                problem |= 1;
+            }
+            if(strncmp(returned_def.keyword, expected_def.keyword, sizeof(expected_def.keyword) / sizeof(expected_def.keyword[0])) != 0) {
+                printf("returned_def.keyword:\"%s\" != \"%s\":expected_def.keyword\n", returned_def.keyword, expected_def.keyword);
+                problem |= 1;
+            }
+            if(strncmp(returned_def.definition, expected_def.definition, sizeof(expected_def.definition) / sizeof(expected_def.definition[0])) != 0) {
+                printf("returned_def.definition:\"%s\" != \"%s\":expected_def.definition\n", returned_def.definition, expected_def.definition);
+                problem |= 1;
+            }
+        }
     }
 
     sqlDeinit();
