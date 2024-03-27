@@ -29,22 +29,21 @@ int main() {
     // Do not need to write to disk.
     sqlInit(":memory:");
 
-    // TODO Add checks if words are successfully created.
     {
         WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
-        sqlAddWord(&word_def);
+        STATUS_CHECK(1, "1", sqlAddWord(&word_def), "sqlAddWord");
     }
     {
         WordDefinition word_def = {"QeeSeeWel", "NOUN;ADJECTIVE", "RED", "The color red."};
-        sqlAddWord(&word_def);
+        STATUS_CHECK(2, "2", sqlAddWord(&word_def), "sqlAddWord");
     }
     {
         WordDefinition word_def = {"QoeQoeWeh", "NOUN", "CART", "A cart like a shopping cart."};
-        sqlAddWord(&word_def);
+        STATUS_CHECK(3, "3", sqlAddWord(&word_def), "sqlAddWord");
     }
     {
         WordDefinition word_def = {"ToeQeeWee", "ADVERB;ADJECTIVE", "SLOW", "Slow movement or to describe something with slow movement."};
-        sqlAddWord(&word_def);
+        STATUS_CHECK(4, "4", sqlAddWord(&word_def), "sqlAddWord");
     }
 
     // Check words.
