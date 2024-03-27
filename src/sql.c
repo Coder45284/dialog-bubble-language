@@ -42,7 +42,7 @@ int sqlInit(const char *const path) {
     if(!sqlLiteDoesTableExist("DICTIONARY")) {
         const char SQL_BUILD_DICTIONARY[] = "CREATE TABLE DICTIONARY("
             "W_ID "         "INTEGER PRIMARY KEY,"
-            "WORD "         "CHAR(127),"
+            "WORD "         "CHAR(127) UNIQUE,"
             "PARTS_OF_SPEECH CHAR(63))";
 
         db_return = sqlite3_exec(database, SQL_BUILD_DICTIONARY, sqlLiteCallback, 0, &sql_error_mesg);
@@ -56,7 +56,7 @@ int sqlInit(const char *const path) {
     if(!sqlLiteDoesTableExist("ENGLISH_TRANSLATION")) {
         const char SQL_BUILD_ENGLISH_TRANSLATION[] = "CREATE TABLE ENGLISH_TRANSLATION("
             "W_ID "    "INT,"
-            "KEYWORD " "CHAR(63),"
+            "KEYWORD " "CHAR(63) UNIQUE,"
             "DEFINITION VARCHAR,"
             "FOREIGN KEY (W_ID) REFERENCES DICTIONARY(W_ID))";
 

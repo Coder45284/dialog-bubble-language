@@ -241,7 +241,7 @@ int successfullInitTest(const char *const text) {
     {
         WordDefinition word_defs[2] = {
             {"QeeToeTee", "VERB", "WAITING", "The action of running."},
-            {"QeeToeTel", "NOUN", "LOAN", "An word of nothingness."}
+            {"QeeToeTel", "NOUN", "WAITING", "An word of nothingness."}
         };
 
         const int result = sqlAddWord(&word_defs[0]);
