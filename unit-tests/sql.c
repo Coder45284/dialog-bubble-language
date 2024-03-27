@@ -99,7 +99,7 @@ int main() {
             }
         }
         else {
-            STATUS_CHECK(SQL_DNE, "SQL_DNE", sqlGetWord(english_id, &definition_test), "sqlGetWord");
+            STATUS_CHECK(0, "FALSE", sqlGetWord(english_id, &definition_test), "sqlGetWord");
         }
     }
 
