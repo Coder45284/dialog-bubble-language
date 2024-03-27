@@ -55,9 +55,10 @@ int sqlInit(const char *const path) {
 
     if(!sqlLiteDoesTableExist("ENGLISH_TRANSLATION")) {
         const char SQL_BUILD_ENGLISH_TRANSLATION[] = "CREATE TABLE ENGLISH_TRANSLATION("
-            "W_ID "    "INT PRIMARY KEY NOT NULL,"
+            "W_ID "    "INT,"
             "KEYWORD " "CHAR(63),"
-            "DEFINITION VARCHAR)";
+            "DEFINITION VARCHAR,"
+            "FOREIGN KEY (W_ID) REFERENCES DICTIONARY(W_ID))";
 
         db_return = sqlite3_exec(database, SQL_BUILD_ENGLISH_TRANSLATION, sqlLiteCallback, 0, &sql_error_mesg);
 

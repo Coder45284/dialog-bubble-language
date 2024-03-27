@@ -222,8 +222,12 @@ int successfullInitTest(const char *const text) {
     }
 
     // I am very sure that there are still bugs with SQL. Rather than fix them now, I will fix them as I detect them. This way I can be sure that I fixed them.
-    // TODO Test Add in same keyword and name case.
-    // TODO Test Update in same keyword and name case.
+    // TODO Test Add same language word test.
+    // TODO Test Add same English keyword test.
+    // TODO Test Update same language word test.
+    // TODO Test Update same English keyword test.
+
+    // TODO Find a way to make a stability test on both tables. Each table should have the same amount of entries. Also, they should have the same identifiers.
 
     return problem;
 }
