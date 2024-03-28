@@ -51,7 +51,7 @@ char TextBoxLanguageEntryText[128] = "";
 //------------------------------------------------------------------------------------
 int main()
 {
-    sqlInit("database.db");
+    dbInit("database.db");
 
     // Initialization
     //---------------------------------------------------------------------------------------
@@ -245,7 +245,7 @@ int main()
     CloseWindow();            // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
-    sqlDeinit();
+    dbDeinit();
 
     return 0;
 }

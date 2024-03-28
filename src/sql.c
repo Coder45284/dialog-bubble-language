@@ -119,6 +119,8 @@ void dbDeinit() {
     sql_count_dictionary_entries_code = NULL;
     sqlite3_finalize(sql_count_english_translation_entries_code);
     sql_count_english_translation_entries_code = NULL;
+    sqlite3_finalize(sql_get_english_translation_all_ids_code);
+    sql_get_english_translation_all_ids_code = NULL;
 
     sqlite3_close(database);
     database = NULL;
