@@ -275,7 +275,7 @@ int dbAddWord(const DBWordDefinition *const word_definition) {
     return id_number;
 }
 
-db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_definition) {
+db_return_code dbUpdateWord(int word_id, const DBWordDefinition *const word_definition) {
     int db_return;
 
     if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)

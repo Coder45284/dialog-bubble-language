@@ -53,7 +53,7 @@ int noInitTest(const char *const text) {
         DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
 
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbAddWord(&word_def), "dbAddWord");
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlUpdateWord(1, &word_def), "sqlUpdateWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbUpdateWord(1, &word_def), "dbUpdateWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWord(1, &word_def), "sqlGetWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
     }
@@ -144,8 +144,8 @@ int successfullInitTest(const char *const text) {
 
         const int word_id = dbGetWordIDEnglish(word_defs[1].keyword);
 
-        STATUS_CHECK(DB_DNE,     "DB_DNE",     sqlUpdateWord(29,      &expected_def), "sqlUpdateWord");
-        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlUpdateWord(word_id, &expected_def), "sqlUpdateWord");
+        STATUS_CHECK(DB_DNE,     "DB_DNE",     dbUpdateWord(29,      &expected_def), "dbUpdateWord");
+        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", dbUpdateWord(word_id, &expected_def), "dbUpdateWord");
 
         int result = sqlGetWord(word_id, &word_defs[1]);
 
@@ -274,7 +274,7 @@ int successfullInitTest(const char *const text) {
 
         word_defs[1].word[0] = word_defs[0].word[0];
 
-        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Word Update DB_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Word Update DB_ONLY_ONE_ENTRY", dbUpdateWord(second_id, &word_defs[1]), "dbUpdateWord");
     }
     // Test Update same English keyword test.
     {
@@ -298,7 +298,7 @@ int successfullInitTest(const char *const text) {
 
         word_defs[1].keyword[0] = word_defs[0].keyword[0];
 
-        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Keyword Update DB_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Keyword Update DB_ONLY_ONE_ENTRY", dbUpdateWord(second_id, &word_defs[1]), "dbUpdateWord");
     }
 
     // Find a way to make a stability test on both tables. Each table should have the same amount of entries.
