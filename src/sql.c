@@ -126,7 +126,7 @@ void sqlDeinit() {
 
 int sqlGetWordIDLanguage(const char *const word) {
     int db_return;
-    sqlite3_int64 id_number = SQL_DNE;
+    sqlite3_int64 id_number = DB_DNE;
 
     // Make sure the prepared statements are allocated.
     if(sql_get_language_word_to_id_code == NULL)
@@ -162,7 +162,7 @@ int sqlGetWordIDLanguage(const char *const word) {
 
 int sqlGetWordIDEnglish(const char *const word) {
     int db_return;
-    sqlite3_int64 id_number = SQL_DNE;
+    sqlite3_int64 id_number = DB_DNE;
 
     // Make sure the prepared statements are allocated.
     if(sql_get_english_word_to_id_code == NULL)
@@ -290,12 +290,12 @@ db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_def
     int language_id = sqlGetWordIDLanguage(word_definition->word);
 
     {
-        if(language_id != SQL_DNE && language_id != word_id)
+        if(language_id != DB_DNE && language_id != word_id)
             return SQL_ONLY_ONE_ENTRY;
 
         language_id = sqlGetWordIDEnglish(word_definition->keyword);
 
-        if(language_id != SQL_DNE && language_id != word_id)
+        if(language_id != DB_DNE && language_id != word_id)
             return SQL_ONLY_ONE_ENTRY;
     }
 
@@ -340,7 +340,7 @@ db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_def
 
 db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition) {
     int db_return;
-    db_return_code status = SQL_DNE;
+    db_return_code status = DB_DNE;
 
     if(sql_get_dictionary_entry_code == NULL || sql_get_english_translation_entry_code == NULL)
         return SQL_NOT_INIT; // Missing prepared statements
@@ -371,7 +371,7 @@ db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition) {
             }
         }
         else if(db_return == SQLITE_DONE)
-            status = SQL_DNE; // Redundent
+            status = DB_DNE; // Redundent
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
 
@@ -406,7 +406,7 @@ db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition) {
                 status = DB_SUCCESS; // True
         }
         else if(db_return == SQLITE_DONE)
-            status = SQL_DNE; // Redundent
+            status = DB_DNE; // Redundent
         else
             printf("Sqlite3 prepare error: %s: %d\n", sqlite3_errstr(db_return), db_return );
 

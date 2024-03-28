@@ -10,7 +10,7 @@ typedef struct {
 
 typedef enum {
     DB_SUCCESS = 1,
-    SQL_DNE = 0, // This means does not exist.
+    DB_DNE = 0, // This means does not exist.
     SQL_NOT_INIT = -1,
     SQL_ONLY_ONE_ENTRY = -2,
     SQL_INVALID_TABLE = -3
