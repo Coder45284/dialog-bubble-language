@@ -305,6 +305,7 @@ int successfullInitTest(const char *const text) {
     // Check the stability of the table.
     if(sqlIsDatabaseOkay(output, sizeof(output) / sizeof(output[0])) != SQL_SUCCESS) {
         printf("Database %s", output);
+        problem |= 1;
     }
 
     return problem;
