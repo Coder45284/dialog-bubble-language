@@ -462,7 +462,7 @@ db_return_code dbRemoveWord(int word_id) {
     return status;
 }
 
-db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
+db_return_code dbIsDatabaseOkay(char *destination, int destination_limit) {
     int db_return;
     sqlite3_int64 dictionary_count = 0;
     sqlite3_int64 english_translation_count = 0;

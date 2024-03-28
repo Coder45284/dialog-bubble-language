@@ -303,7 +303,7 @@ int successfullInitTest(const char *const text) {
 
     // Find a way to make a stability test on both tables. Each table should have the same amount of entries.
     // Check the stability of the table.
-    if(sqlIsDatabaseOkay(output, sizeof(output) / sizeof(output[0])) != DB_SUCCESS) {
+    if(dbIsDatabaseOkay(output, sizeof(output) / sizeof(output[0])) != DB_SUCCESS) {
         printf("Database %s", output);
         problem |= 1;
     }
