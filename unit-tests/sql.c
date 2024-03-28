@@ -50,7 +50,7 @@ int noInitTest(const char *const text) {
     STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
 
     {
-        WordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
+        DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
 
         STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlAddWord(&word_def), "sqlAddWord");
         STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlUpdateWord(1, &word_def), "sqlUpdateWord");
@@ -66,7 +66,7 @@ int successfullInitTest(const char *const text) {
 
     printf("successfullInitTest %s\n", text);
 
-    WordDefinition word_defs[5] = {
+    DBWordDefinition word_defs[5] = {
         {"QeeSoeWee", "VERB", "RUN", "The action of running."},
         {"QeeSeeWel", "NOUN;ADJECTIVE", "RED", "The color red."},
         {"QoeQoeWeh", "NOUN", "CART", "A cart like a shopping cart."},
@@ -83,7 +83,7 @@ int successfullInitTest(const char *const text) {
     }
 
     char output[0x100];
-    WordDefinition definition_test;
+    DBWordDefinition definition_test;
 
     // Sanity checks
     for(int i = 0; i < 5; i++) {
@@ -140,7 +140,7 @@ int successfullInitTest(const char *const text) {
 
     // Update tests.
     {
-        const WordDefinition expected_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
+        const DBWordDefinition expected_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
 
         const int word_id = sqlGetWordIDEnglish(word_defs[1].keyword);
 
@@ -224,7 +224,7 @@ int successfullInitTest(const char *const text) {
     // I am very sure that there are still bugs with SQL. Rather than fix them now, I will fix them as I detect them. This way I can be sure that I fixed them.
     // Test Add same language word test.
     {
-        WordDefinition word_defs[2] = {
+        DBWordDefinition word_defs[2] = {
             {"QeeSoeQee", "VERB", "STANDING", "The action of running."},
             {"QeeSoeQee", "NOUN", "BLA", "An word of nothingness."}
         };
@@ -239,7 +239,7 @@ int successfullInitTest(const char *const text) {
     }
     // Test Add same English keyword test.
     {
-        WordDefinition word_defs[2] = {
+        DBWordDefinition word_defs[2] = {
             {"QeeToeTee", "VERB", "WAITING", "The action of running."},
             {"QeeToeTel", "NOUN", "WAITING", "An word of nothingness."}
         };
@@ -254,7 +254,7 @@ int successfullInitTest(const char *const text) {
     }
     // Test Update same language word test.
     {
-        WordDefinition word_defs[2] = {
+        DBWordDefinition word_defs[2] = {
             {"QeeToeTeeQee", "VERB", "WAITINGS", "The action of running."},
             {"TeeToeTeeQee", "NOUN", "BLAY", "An word of nothingness."}
         };
@@ -278,7 +278,7 @@ int successfullInitTest(const char *const text) {
     }
     // Test Update same English keyword test.
     {
-        WordDefinition word_defs[2] = {
+        DBWordDefinition word_defs[2] = {
             {"QeeToeTeeTel", "VERB",      "MAD", "State of anger."},
             {"TeeToeTeeTeh", "ADJECTIVE", "BAD", "Opsite of good."}
         };

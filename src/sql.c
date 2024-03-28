@@ -196,7 +196,7 @@ int sqlGetWordIDEnglish(const char *const word) {
     return id_number;
 }
 
-int sqlAddWord(const WordDefinition *const word_definition) {
+int sqlAddWord(const DBWordDefinition *const word_definition) {
     int db_return;
 
     // Make sure the prepared statements are allocated.
@@ -275,7 +275,7 @@ int sqlAddWord(const WordDefinition *const word_definition) {
     return id_number;
 }
 
-db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_definition) {
+db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_definition) {
     int db_return;
 
     if(sql_update_dictionary_code == NULL || sql_update_english_translation_code == NULL)
@@ -338,7 +338,7 @@ db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_defin
     return status;
 }
 
-db_return_code sqlGetWord(int word_id, WordDefinition *word_definition) {
+db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition) {
     int db_return;
     db_return_code status = SQL_DNE;
 
@@ -467,7 +467,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
     sqlite3_int64 dictionary_count = 0;
     sqlite3_int64 english_translation_count = 0;
     sqlite3_int64 dictionary_id = 0;
-    WordDefinition definition;
+    DBWordDefinition definition;
 
     // Make sure the prepared statements are allocated.
     if(sql_count_dictionary_entries_code == NULL || sql_count_english_translation_entries_code == NULL)
@@ -561,7 +561,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
         return SQL_INVALID_TABLE;
 }
 
-void wordDefinitionStr(const WordDefinition *const def, char *destination, int destination_limit) {
+void wordDefinitionStr(const DBWordDefinition *const def, char *destination, int destination_limit) {
     snprintf(destination, destination_limit, "Word: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", def->word, def->parts_of_speech, def->keyword, def->definition);
 }
 

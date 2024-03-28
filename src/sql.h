@@ -6,7 +6,7 @@ typedef struct {
     char parts_of_speech[64];
     char keyword[64];
     char definition[768];
-} WordDefinition;
+} DBWordDefinition;
 
 typedef enum {
     SQL_SUCCESS = 1,
@@ -21,14 +21,14 @@ void sqlDeinit();
 
 int sqlGetWordIDLanguage(const char *const word);
 int sqlGetWordIDEnglish(const char *const word);
-int sqlAddWord(const WordDefinition *const word_definition);
+int sqlAddWord(const DBWordDefinition *const word_definition);
 
-db_return_code sqlUpdateWord(int word_id, const WordDefinition *const word_definition);
-db_return_code sqlGetWord(int word_id, WordDefinition *word_definition);
+db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_definition);
+db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition);
 db_return_code sqlRemoveWord(int word_id);
 
 db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit);
 
-void wordDefinitionStr(const WordDefinition *const word_definition, char *destination, int destination_limit);
+void wordDefinitionStr(const DBWordDefinition *const word_definition, char *destination, int destination_limit);
 
 #endif // SQL_DTLWS
