@@ -42,6 +42,7 @@ int main() {
 }
 
 int noInitTest(const char *const text) {
+    DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
     int problem = 0;
 
     printf("noInitTest %s\n", text);
@@ -49,14 +50,10 @@ int noInitTest(const char *const text) {
     STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWordIDLanguage("QeeSoeWee"), "dbGetWordIDLanguage");
     STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWordIDEnglish("RUN"), "dbGetWordIDEnglish");
 
-    {
-        DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
-
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbAddWord(&word_def), "dbAddWord");
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbUpdateWord(1, &word_def), "dbUpdateWord");
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWord(1, &word_def), "dbGetWord");
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbRemoveWord(1), "dbRemoveWord");
-    }
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbAddWord(&word_def), "dbAddWord");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbUpdateWord(1, &word_def), "dbUpdateWord");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWord(1, &word_def), "dbGetWord");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbRemoveWord(1), "dbRemoveWord");
 
     return problem;
 }
