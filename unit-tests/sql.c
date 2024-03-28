@@ -95,7 +95,7 @@ int successfullInitTest(const char *const text) {
             printf("language_id: %d\n", language_id);
             printf("english_id: %d\n", english_id);
 
-            wordDefinitionStr(&word_defs[i], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[i], output, sizeof(output) / sizeof(output[0]));
             printf("%s\n", output);
         }
 
@@ -104,7 +104,7 @@ int successfullInitTest(const char *const text) {
             printf("expected_return: %d\n", expected_returns[i]);
             printf("english_id: %d\n", english_id);
 
-            wordDefinitionStr(&word_defs[i], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[i], output, sizeof(output) / sizeof(output[0]));
             printf("%s\n", output);
 
         }
@@ -215,7 +215,7 @@ int successfullInitTest(const char *const text) {
         // Add this word back
         const int result = dbAddWord(&word_defs[2]);
         if(result <= DB_DNE) {
-            wordDefinitionStr(&word_defs[2], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[2], output, sizeof(output) / sizeof(output[0]));
             printf("Definition cannot be placed back: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
@@ -231,7 +231,7 @@ int successfullInitTest(const char *const text) {
 
         const int result = dbAddWord(&word_defs[0]);
         if(result <= DB_DNE) {
-            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("Same Language Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
@@ -246,7 +246,7 @@ int successfullInitTest(const char *const text) {
 
         const int result = dbAddWord(&word_defs[0]);
         if(result <= DB_DNE) {
-            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("Same English Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
@@ -261,13 +261,13 @@ int successfullInitTest(const char *const text) {
 
         const int id = dbAddWord(&word_defs[0]);
         if(id <= DB_DNE) {
-            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 0, id, output);
             problem |= 1;
         }
         const int second_id = dbAddWord(&word_defs[1]);
         if(id <= DB_DNE) {
-            wordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 1, id, output);
             problem |= 1;
         }
@@ -285,13 +285,13 @@ int successfullInitTest(const char *const text) {
 
         const int id = dbAddWord(&word_defs[0]);
         if(id <= DB_DNE) {
-            wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 0, id, output);
             problem |= 1;
         }
         const int second_id = dbAddWord(&word_defs[1]);
         if(id <= DB_DNE) {
-            wordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
+            dbWordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 1, id, output);
             problem |= 1;
         }

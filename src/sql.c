@@ -537,7 +537,7 @@ db_return_code dbIsDatabaseOkay(char *destination, int destination_limit) {
             dictionary_id = sqlite3_column_int64(sql_get_english_translation_all_ids_code, 0);
 
             if(dbGetWord(dictionary_id, &definition) != DB_SUCCESS) {
-                wordDefinitionStr(&definition, destination, destination_limit);
+                dbWordDefinitionStr(&definition, destination, destination_limit);
                 success = 0;
             }
 
@@ -561,7 +561,7 @@ db_return_code dbIsDatabaseOkay(char *destination, int destination_limit) {
         return DB_INVALID_TABLE;
 }
 
-void wordDefinitionStr(const DBWordDefinition *const def, char *destination, int destination_limit) {
+void dbWordDefinitionStr(const DBWordDefinition *const def, char *destination, int destination_limit) {
     snprintf(destination, destination_limit, "Word: %s\nParts Of Speech: %s\nKeyword: %s\nDefinition: %s\n", def->word, def->parts_of_speech, def->keyword, def->definition);
 }
 

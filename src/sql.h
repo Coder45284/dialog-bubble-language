@@ -29,6 +29,6 @@ db_return_code dbRemoveWord(int word_id);
 
 db_return_code dbIsDatabaseOkay(char *destination, int destination_limit);
 
-void wordDefinitionStr(const DBWordDefinition *const word_definition, char *destination, int destination_limit);
+void dbWordDefinitionStr(const DBWordDefinition *const word_definition, char *destination, int destination_limit);
 
 #endif // SQL_DTLWS
