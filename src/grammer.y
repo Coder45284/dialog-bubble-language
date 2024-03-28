@@ -53,7 +53,7 @@ elif:
      |;
 condition_words:
      sentence CONJUNCTION condition_words
-     |sentence DELIMITER;
+     |sentence;
 words:
      sentence CONJUNCTION words
      |sentence DELIMITER words
