@@ -205,10 +205,10 @@ int sqlAddWord(const DBWordDefinition *const word_definition) {
 
     // Make sure that the word does not exist first.
     if(sqlGetWordIDLanguage(word_definition->word) != 0)
-        return SQL_ONLY_ONE_ENTRY; // Language Word already exists.
+        return DB_ONLY_ONE_ENTRY; // Language Word already exists.
 
     if(sqlGetWordIDEnglish(word_definition->keyword) != 0)
-        return SQL_ONLY_ONE_ENTRY; // English Word already exists.
+        return DB_ONLY_ONE_ENTRY; // English Word already exists.
 
     {
         sqlite3_bind_text( sql_insert_dictionary_code, 1, word_definition->word, -1, NULL);
@@ -291,12 +291,12 @@ db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_def
 
     {
         if(language_id != DB_DNE && language_id != word_id)
-            return SQL_ONLY_ONE_ENTRY;
+            return DB_ONLY_ONE_ENTRY;
 
         language_id = sqlGetWordIDEnglish(word_definition->keyword);
 
         if(language_id != DB_DNE && language_id != word_id)
-            return SQL_ONLY_ONE_ENTRY;
+            return DB_ONLY_ONE_ENTRY;
     }
 
     {

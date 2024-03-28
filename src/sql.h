@@ -12,7 +12,7 @@ typedef enum {
     DB_SUCCESS = 1,
     DB_DNE = 0, // This means does not exist.
     DB_NOT_INIT = -1,
-    SQL_ONLY_ONE_ENTRY = -2,
+    DB_ONLY_ONE_ENTRY = -2,
     SQL_INVALID_TABLE = -3
 } db_return_code;
 

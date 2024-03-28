@@ -235,7 +235,7 @@ int successfullInitTest(const char *const text) {
             printf("Same Language Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
-        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Word Case: SQL_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Word Case: DB_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
     }
     // Test Add same English keyword test.
     {
@@ -250,7 +250,7 @@ int successfullInitTest(const char *const text) {
             printf("Same English Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
-        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same English Word Case: SQL_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same English Word Case: DB_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
     }
     // Test Update same language word test.
     {
@@ -274,7 +274,7 @@ int successfullInitTest(const char *const text) {
 
         word_defs[1].word[0] = word_defs[0].word[0];
 
-        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Word Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Word Update DB_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
     }
     // Test Update same English keyword test.
     {
@@ -298,7 +298,7 @@ int successfullInitTest(const char *const text) {
 
         word_defs[1].keyword[0] = word_defs[0].keyword[0];
 
-        STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Keyword Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Keyword Update DB_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
     }
 
     // Find a way to make a stability test on both tables. Each table should have the same amount of entries.
