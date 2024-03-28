@@ -112,9 +112,9 @@ int successfullInitTest(const char *const text) {
         if(expected_returns[i] > SQL_DNE) {
             int result = sqlGetWord(english_id, &definition_test);
 
-            STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "sqlGetWord");
 
-            if(result == SQL_SUCCESS) {
+            if(result == DB_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
                     printf("word_defs[%d].word:\"%s\" != \"%s\":definition_test.word\n", i, word_defs[i].word, definition_test.word);
                     problem |= 1;
@@ -145,18 +145,18 @@ int successfullInitTest(const char *const text) {
         const int word_id = sqlGetWordIDEnglish(word_defs[1].keyword);
 
         STATUS_CHECK(SQL_DNE,     "SQL_DNE",     sqlUpdateWord(29,      &expected_def), "sqlUpdateWord");
-        STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", sqlUpdateWord(word_id, &expected_def), "sqlUpdateWord");
+        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlUpdateWord(word_id, &expected_def), "sqlUpdateWord");
 
         int result = sqlGetWord(word_id, &word_defs[1]);
 
-        STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", result, "sqlGetWord from updated word");
+        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "sqlGetWord from updated word");
 
         for(int i = 0; i < 4; i++) {
             int result = sqlGetWord(sqlGetWordIDEnglish(word_defs[i].keyword), &definition_test);
 
-            STATUS_CHECK(SQL_SUCCESS, "update SQL_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(DB_SUCCESS, "update DB_SUCCESS", result, "sqlGetWord");
 
-            if(result == SQL_SUCCESS) {
+            if(result == DB_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
                     printf("update check word_defs[%d].word:\"%s\" != \"%s\":definition_test.word\n", i, word_defs[i].word, definition_test.word);
                     problem |= 1;
@@ -182,7 +182,7 @@ int successfullInitTest(const char *const text) {
         const int word_id = sqlGetWordIDEnglish(word_defs[2].keyword);
 
         STATUS_CHECK(SQL_DNE,     "SQL_DNE",     sqlRemoveWord(29),      "sqlRemoveWord");
-        STATUS_CHECK(SQL_SUCCESS, "SQL_SUCCESS", sqlRemoveWord(word_id), "sqlRemoveWord");
+        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlRemoveWord(word_id), "sqlRemoveWord");
 
         for(int i = 0; i < 4; i++) {
             int result = sqlGetWord(sqlGetWordIDEnglish(word_defs[i].keyword), &definition_test);
@@ -190,9 +190,9 @@ int successfullInitTest(const char *const text) {
             if(i == 2)
                 continue;
 
-            STATUS_CHECK(SQL_SUCCESS, "remove SQL_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(DB_SUCCESS, "remove DB_SUCCESS", result, "sqlGetWord");
 
-            if(result == SQL_SUCCESS) {
+            if(result == DB_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
                     printf("remove check word_defs[%d].word:\"%s\" != \"%s\":definition_test.word\n", i, word_defs[i].word, definition_test.word);
                     problem |= 1;
@@ -303,7 +303,7 @@ int successfullInitTest(const char *const text) {
 
     // Find a way to make a stability test on both tables. Each table should have the same amount of entries.
     // Check the stability of the table.
-    if(sqlIsDatabaseOkay(output, sizeof(output) / sizeof(output[0])) != SQL_SUCCESS) {
+    if(sqlIsDatabaseOkay(output, sizeof(output) / sizeof(output[0])) != DB_SUCCESS) {
         printf("Database %s", output);
         problem |= 1;
     }

@@ -284,7 +284,7 @@ db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_def
     // Check if word_id exists.
     db_return_code status = sqlGetWord(word_id, NULL);
 
-    if(status != SQL_SUCCESS)
+    if(status != DB_SUCCESS)
         return status;
 
     int language_id = sqlGetWordIDLanguage(word_definition->word);
@@ -403,7 +403,7 @@ db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition) {
                 printf("Sqlite3 preparey error: %s\n", sqlite3_errstr(db_return) );
             }
             else
-                status = SQL_SUCCESS; // True
+                status = DB_SUCCESS; // True
         }
         else if(db_return == SQLITE_DONE)
             status = SQL_DNE; // Redundent
@@ -424,7 +424,7 @@ db_return_code sqlRemoveWord(int word_id) {
 
     db_return_code status = sqlGetWord(word_id, NULL);
 
-    if(status != SQL_SUCCESS)
+    if(status != DB_SUCCESS)
         return status;
 
     {
@@ -536,7 +536,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
         while(db_return == SQLITE_ROW && success) {
             dictionary_id = sqlite3_column_int64(sql_get_english_translation_all_ids_code, 0);
 
-            if(sqlGetWord(dictionary_id, &definition) != SQL_SUCCESS) {
+            if(sqlGetWord(dictionary_id, &definition) != DB_SUCCESS) {
                 wordDefinitionStr(&definition, destination, destination_limit);
                 success = 0;
             }
@@ -556,7 +556,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
     }
 
     if(success)
-        return SQL_SUCCESS;
+        return DB_SUCCESS;
     else
         return SQL_INVALID_TABLE;
 }

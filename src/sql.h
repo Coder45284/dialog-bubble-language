@@ -9,7 +9,7 @@ typedef struct {
 } DBWordDefinition;
 
 typedef enum {
-    SQL_SUCCESS = 1,
+    DB_SUCCESS = 1,
     SQL_DNE = 0, // This means does not exist.
     SQL_NOT_INIT = -1,
     SQL_ONLY_ONE_ENTRY = -2,
