@@ -124,7 +124,7 @@ void dbDeinit() {
     database = NULL;
 }
 
-int sqlGetWordIDLanguage(const char *const word) {
+int dbGetWordIDLanguage(const char *const word) {
     int db_return;
     sqlite3_int64 id_number = DB_DNE;
 
@@ -151,7 +151,7 @@ int sqlGetWordIDLanguage(const char *const word) {
         }
 
         if(db_return != SQLITE_DONE) {
-            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+            printf("dbGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
         }
 
         sqlite3_reset(sql_get_language_word_to_id_code);
@@ -204,7 +204,7 @@ int sqlAddWord(const DBWordDefinition *const word_definition) {
         return DB_NOT_INIT; // Missing prepared statements
 
     // Make sure that the word does not exist first.
-    if(sqlGetWordIDLanguage(word_definition->word) != 0)
+    if(dbGetWordIDLanguage(word_definition->word) != 0)
         return DB_ONLY_ONE_ENTRY; // Language Word already exists.
 
     if(sqlGetWordIDEnglish(word_definition->keyword) != 0)
@@ -287,7 +287,7 @@ db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_def
     if(status != DB_SUCCESS)
         return status;
 
-    int language_id = sqlGetWordIDLanguage(word_definition->word);
+    int language_id = dbGetWordIDLanguage(word_definition->word);
 
     {
         if(language_id != DB_DNE && language_id != word_id)
@@ -490,7 +490,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
         }
 
         if(db_return != SQLITE_DONE) {
-            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+            printf("dbGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
         }
 
         sqlite3_reset(sql_count_dictionary_entries_code);
@@ -513,7 +513,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
         }
 
         if(db_return != SQLITE_DONE) {
-            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+            printf("dbGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
         }
 
         sqlite3_reset(sql_count_english_translation_entries_code);
@@ -549,7 +549,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
         }
 
         if(success && db_return != SQLITE_DONE) {
-            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+            printf("dbGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
         }
 
         sqlite3_reset(sql_get_english_translation_all_ids_code);

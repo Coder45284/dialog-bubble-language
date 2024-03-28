@@ -46,7 +46,7 @@ int noInitTest(const char *const text) {
 
     printf("noInitTest %s\n", text);
 
-    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWordIDLanguage("QeeSoeWee"), "dbGetWordIDLanguage");
     STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
 
     {
@@ -87,7 +87,7 @@ int successfullInitTest(const char *const text) {
 
     // Sanity checks
     for(int i = 0; i < 5; i++) {
-        int language_id = sqlGetWordIDLanguage(word_defs[i].word);
+        int language_id = dbGetWordIDLanguage(word_defs[i].word);
         int english_id = sqlGetWordIDEnglish(word_defs[i].keyword);
 
         if(language_id != english_id) {

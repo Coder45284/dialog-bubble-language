@@ -19,7 +19,7 @@ typedef enum {
 int dbInit(const char *const path);
 void dbDeinit();
 
-int sqlGetWordIDLanguage(const char *const word);
+int dbGetWordIDLanguage(const char *const word);
 int sqlGetWordIDEnglish(const char *const word);
 int sqlAddWord(const DBWordDefinition *const word_definition);
 
