@@ -3,7 +3,7 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
-#include "sql.h"
+#include "database.h"
 #include "constants.h"
 #include "voice.h"
 #include "voice_from_text.h"
