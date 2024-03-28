@@ -26,16 +26,16 @@ int main() {
 
     problem |= successfullInitTest("FIRST successfullInitTest");
 
-    sqlDeinit();
+    dbDeinit();
 
     if(problem == 0) {
-        problem |= noInitTest("AFTER sqlDeinit");
+        problem |= noInitTest("AFTER dbDeinit");
 
         dbInit(":memory:");
 
         problem |= successfullInitTest("SECOND successfullInitTest");
 
-        sqlDeinit();
+        dbDeinit();
     }
 
     return problem;

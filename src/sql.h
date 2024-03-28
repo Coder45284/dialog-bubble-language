@@ -17,7 +17,7 @@ typedef enum {
 } db_return_code;
 
 int dbInit(const char *const path);
-void sqlDeinit();
+void dbDeinit();
 
 int sqlGetWordIDLanguage(const char *const word);
 int sqlGetWordIDEnglish(const char *const word);

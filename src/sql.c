@@ -89,7 +89,7 @@ int dbInit(const char *const path) {
     return 0;
 }
 
-void sqlDeinit() {
+void dbDeinit() {
 
     sqlite3_finalize(sql_check_for_table_code);
     sql_check_for_table_code = NULL;
