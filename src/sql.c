@@ -416,7 +416,7 @@ db_return_code dbGetWord(int word_id, DBWordDefinition *word_definition) {
     return status;
 }
 
-db_return_code sqlRemoveWord(int word_id) {
+db_return_code dbRemoveWord(int word_id) {
     int db_return;
 
     if(sql_delete_dictionary_entry_code == NULL || sql_delete_english_translation_entry_code == NULL)

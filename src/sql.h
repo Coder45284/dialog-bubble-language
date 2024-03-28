@@ -25,7 +25,7 @@ int dbAddWord(const DBWordDefinition *const word_definition);
 
 db_return_code dbUpdateWord(int word_id, const DBWordDefinition *const word_definition);
 db_return_code dbGetWord(int word_id, DBWordDefinition *word_definition);
-db_return_code sqlRemoveWord(int word_id);
+db_return_code dbRemoveWord(int word_id);
 
 db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit);
 

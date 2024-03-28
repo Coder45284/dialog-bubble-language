@@ -55,7 +55,7 @@ int noInitTest(const char *const text) {
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbAddWord(&word_def), "dbAddWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbUpdateWord(1, &word_def), "dbUpdateWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWord(1, &word_def), "dbGetWord");
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbRemoveWord(1), "dbRemoveWord");
     }
 
     return problem;
@@ -181,8 +181,8 @@ int successfullInitTest(const char *const text) {
     {
         const int word_id = dbGetWordIDEnglish(word_defs[2].keyword);
 
-        STATUS_CHECK(DB_DNE,     "DB_DNE",     sqlRemoveWord(29),      "sqlRemoveWord");
-        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlRemoveWord(word_id), "sqlRemoveWord");
+        STATUS_CHECK(DB_DNE,     "DB_DNE",     dbRemoveWord(29),      "dbRemoveWord");
+        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", dbRemoveWord(word_id), "dbRemoveWord");
 
         for(int i = 0; i < 4; i++) {
             int result = dbGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
