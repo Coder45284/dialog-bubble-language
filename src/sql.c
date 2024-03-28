@@ -28,7 +28,7 @@ static sqlite3_stmt *sql_count_dictionary_entries_code = NULL;
 static sqlite3_stmt *sql_count_english_translation_entries_code = NULL;
 static sqlite3_stmt *sql_get_english_translation_all_ids_code = NULL;
 
-int sqlInit(const char *const path) {
+int dbInit(const char *const path) {
     int db_return;
     char *sql_error_mesg = NULL;
 

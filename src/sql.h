@@ -16,7 +16,7 @@ typedef enum {
     DB_INVALID_TABLE = -3
 } db_return_code;
 
-int sqlInit(const char *const path);
+int dbInit(const char *const path);
 void sqlDeinit();
 
 int sqlGetWordIDLanguage(const char *const word);

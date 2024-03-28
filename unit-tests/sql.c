@@ -19,10 +19,10 @@ int successfullInitTest(const char *const text);
 int main() {
     int problem = 0;
 
-    problem |= noInitTest("BEFORE sqlInit");
+    problem |= noInitTest("BEFORE dbInit");
 
     // Do not need to write to disk.
-    sqlInit(":memory:");
+    dbInit(":memory:");
 
     problem |= successfullInitTest("FIRST successfullInitTest");
 
@@ -31,7 +31,7 @@ int main() {
     if(problem == 0) {
         problem |= noInitTest("AFTER sqlDeinit");
 
-        sqlInit(":memory:");
+        dbInit(":memory:");
 
         problem |= successfullInitTest("SECOND successfullInitTest");
 
