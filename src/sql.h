@@ -1,5 +1,5 @@
-#ifndef SQL_DTLWS
-#define SQL_DTLWS
+#ifndef DATA_BASE_DTLWS
+#define DATA_BASE_DTLWS
 
 typedef struct {
     char word[128];
@@ -31,4 +31,4 @@ db_return_code dbIsDatabaseOkay(char *destination, int destination_limit);
 
 void dbWordDefinitionStr(const DBWordDefinition *const word_definition, char *destination, int destination_limit);
 
-#endif // SQL_DTLWS
+#endif // DATA_BASE_DTLWS
