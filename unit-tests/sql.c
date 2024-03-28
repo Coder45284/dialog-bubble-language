@@ -54,7 +54,7 @@ int noInitTest(const char *const text) {
 
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbAddWord(&word_def), "dbAddWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbUpdateWord(1, &word_def), "dbUpdateWord");
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWord(1, &word_def), "sqlGetWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWord(1, &word_def), "dbGetWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
     }
 
@@ -110,9 +110,9 @@ int successfullInitTest(const char *const text) {
         }
 
         if(expected_returns[i] > DB_DNE) {
-            int result = sqlGetWord(english_id, &definition_test);
+            int result = dbGetWord(english_id, &definition_test);
 
-            STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "dbGetWord");
 
             if(result == DB_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
@@ -134,7 +134,7 @@ int successfullInitTest(const char *const text) {
             }
         }
         else {
-            STATUS_CHECK(DB_DNE, "DB_DNE", sqlGetWord(english_id, &definition_test), "sqlGetWord");
+            STATUS_CHECK(DB_DNE, "DB_DNE", dbGetWord(english_id, &definition_test), "dbGetWord");
         }
     }
 
@@ -147,14 +147,14 @@ int successfullInitTest(const char *const text) {
         STATUS_CHECK(DB_DNE,     "DB_DNE",     dbUpdateWord(29,      &expected_def), "dbUpdateWord");
         STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", dbUpdateWord(word_id, &expected_def), "dbUpdateWord");
 
-        int result = sqlGetWord(word_id, &word_defs[1]);
+        int result = dbGetWord(word_id, &word_defs[1]);
 
-        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "sqlGetWord from updated word");
+        STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "dbGetWord from updated word");
 
         for(int i = 0; i < 4; i++) {
-            int result = sqlGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
+            int result = dbGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
 
-            STATUS_CHECK(DB_SUCCESS, "update DB_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(DB_SUCCESS, "update DB_SUCCESS", result, "dbGetWord");
 
             if(result == DB_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {
@@ -185,12 +185,12 @@ int successfullInitTest(const char *const text) {
         STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlRemoveWord(word_id), "sqlRemoveWord");
 
         for(int i = 0; i < 4; i++) {
-            int result = sqlGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
+            int result = dbGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
 
             if(i == 2)
                 continue;
 
-            STATUS_CHECK(DB_SUCCESS, "remove DB_SUCCESS", result, "sqlGetWord");
+            STATUS_CHECK(DB_SUCCESS, "remove DB_SUCCESS", result, "dbGetWord");
 
             if(result == DB_SUCCESS) {
                 if(strncmp(word_defs[i].word, definition_test.word, sizeof(definition_test.word) / sizeof(definition_test.word[0])) != 0) {

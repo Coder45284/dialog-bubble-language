@@ -282,7 +282,7 @@ db_return_code dbUpdateWord(int word_id, const DBWordDefinition *const word_defi
         return DB_NOT_INIT; // Missing prepared statements
 
     // Check if word_id exists.
-    db_return_code status = sqlGetWord(word_id, NULL);
+    db_return_code status = dbGetWord(word_id, NULL);
 
     if(status != DB_SUCCESS)
         return status;
@@ -338,7 +338,7 @@ db_return_code dbUpdateWord(int word_id, const DBWordDefinition *const word_defi
     return status;
 }
 
-db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition) {
+db_return_code dbGetWord(int word_id, DBWordDefinition *word_definition) {
     int db_return;
     db_return_code status = DB_DNE;
 
@@ -422,7 +422,7 @@ db_return_code sqlRemoveWord(int word_id) {
     if(sql_delete_dictionary_entry_code == NULL || sql_delete_english_translation_entry_code == NULL)
         return DB_NOT_INIT; // Cannot delete without this prepared statement.
 
-    db_return_code status = sqlGetWord(word_id, NULL);
+    db_return_code status = dbGetWord(word_id, NULL);
 
     if(status != DB_SUCCESS)
         return status;
@@ -536,7 +536,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
         while(db_return == SQLITE_ROW && success) {
             dictionary_id = sqlite3_column_int64(sql_get_english_translation_all_ids_code, 0);
 
-            if(sqlGetWord(dictionary_id, &definition) != DB_SUCCESS) {
+            if(dbGetWord(dictionary_id, &definition) != DB_SUCCESS) {
                 wordDefinitionStr(&definition, destination, destination_limit);
                 success = 0;
             }
