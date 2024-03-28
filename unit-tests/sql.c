@@ -301,7 +301,11 @@ int successfullInitTest(const char *const text) {
         STATUS_CHECK(SQL_ONLY_ONE_ENTRY, "Same Language Keyword Update SQL_ONLY_ONE_ENTRY", sqlUpdateWord(second_id, &word_defs[1]), "sqlUpdateWord");
     }
 
-    // TODO Find a way to make a stability test on both tables. Each table should have the same amount of entries. Also, they should have the same identifiers.
+    // Find a way to make a stability test on both tables. Each table should have the same amount of entries.
+    // Check the stability of the table.
+    if(sqlIsDatabaseOkay(output, sizeof(output) / sizeof(output[0])) != SQL_SUCCESS) {
+        printf("Database %s", output);
+    }
 
     return problem;
 }

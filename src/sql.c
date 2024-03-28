@@ -24,6 +24,8 @@ static sqlite3_stmt *sql_get_dictionary_entry_code = NULL;
 static sqlite3_stmt *sql_get_english_translation_entry_code = NULL;
 static sqlite3_stmt *sql_delete_dictionary_entry_code = NULL;
 static sqlite3_stmt *sql_delete_english_translation_entry_code = NULL;
+static sqlite3_stmt *sql_count_dictionary_entries_code = NULL;
+static sqlite3_stmt *sql_count_english_translation_entries_code = NULL;
 
 int sqlInit(const char *const path) {
     int db_return;
@@ -79,6 +81,8 @@ int sqlInit(const char *const path) {
     sqlLitePrepare("SELECT KEYWORD,DEFINITION FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_get_english_translation_entry_code);
     sqlLitePrepare("DELETE FROM DICTIONARY WHERE W_ID=?1;", &sql_delete_dictionary_entry_code);
     sqlLitePrepare("DELETE FROM ENGLISH_TRANSLATION WHERE W_ID=?1;", &sql_delete_english_translation_entry_code);
+    sqlLitePrepare("SELECT COUNT(*) FROM DICTIONARY;", &sql_count_dictionary_entries_code);
+    sqlLitePrepare("SELECT COUNT(*) FROM ENGLISH_TRANSLATION;", &sql_count_english_translation_entries_code);
 
     return 0;
 }
@@ -109,6 +113,10 @@ void sqlDeinit() {
     sql_delete_dictionary_entry_code = NULL;
     sqlite3_finalize(sql_delete_english_translation_entry_code);
     sql_delete_english_translation_entry_code = NULL;
+    sqlite3_finalize(sql_count_dictionary_entries_code);
+    sql_count_dictionary_entries_code = NULL;
+    sqlite3_finalize(sql_count_english_translation_entries_code);
+    sql_count_english_translation_entries_code = NULL;
 
     sqlite3_close(database);
     database = NULL;
@@ -450,6 +458,69 @@ db_return_code sqlRemoveWord(int word_id) {
     }
 
     return status;
+}
+
+db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
+    int db_return;
+    sqlite3_int64 dictionary_count = 0;
+    sqlite3_int64 english_translation_count = 0;
+
+    // Make sure the prepared statements are allocated.
+    if(sql_count_dictionary_entries_code == NULL || sql_count_english_translation_entries_code == NULL)
+        return SQL_NOT_INIT; // Missing prepared statements
+
+    {
+        db_return = sqlite3_step(sql_count_dictionary_entries_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_count_dictionary_entries_code);
+        }
+
+        if(db_return == SQLITE_ROW)
+            dictionary_count = sqlite3_column_int64(sql_count_dictionary_entries_code, 0);
+
+        db_return = sqlite3_step(sql_count_dictionary_entries_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_count_dictionary_entries_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+
+        sqlite3_reset(sql_count_dictionary_entries_code);
+    }
+
+    {
+        db_return = sqlite3_step(sql_count_english_translation_entries_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_count_english_translation_entries_code);
+        }
+
+        if(db_return == SQLITE_ROW)
+            english_translation_count = sqlite3_column_int64(sql_count_english_translation_entries_code, 0);
+
+        db_return = sqlite3_step(sql_count_english_translation_entries_code);
+
+        for(int limit = 0; limit < 256 && db_return == SQLITE_BUSY; limit++) {
+            db_return = sqlite3_step(sql_count_english_translation_entries_code);
+        }
+
+        if(db_return != SQLITE_DONE) {
+            printf("sqlGetWordIDLanguage prepare error: %s\n", sqlite3_errstr(db_return) );
+        }
+
+        sqlite3_reset(sql_count_english_translation_entries_code);
+    }
+
+    if(dictionary_count != english_translation_count) {
+        snprintf(destination, destination_limit, "Dictionary entries %d\nEnglish Translation entries %d\n", dictionary_count, english_translation_count);
+        return SQL_INVALID_TABLE;
+    }
+
+    return SQL_SUCCESS;
 }
 
 void wordDefinitionStr(const WordDefinition *const def, char *destination, int destination_limit) {
