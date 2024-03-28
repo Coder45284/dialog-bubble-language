@@ -523,7 +523,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
 
     if(dictionary_count != english_translation_count) {
         snprintf(destination, destination_limit, "Dictionary entries %d\nEnglish Translation entries %d\n", dictionary_count, english_translation_count);
-        return SQL_INVALID_TABLE;
+        return DB_INVALID_TABLE;
     }
 
     {
@@ -558,7 +558,7 @@ db_return_code sqlIsDatabaseOkay(char *destination, int destination_limit) {
     if(success)
         return DB_SUCCESS;
     else
-        return SQL_INVALID_TABLE;
+        return DB_INVALID_TABLE;
 }
 
 void wordDefinitionStr(const DBWordDefinition *const def, char *destination, int destination_limit) {

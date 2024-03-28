@@ -13,7 +13,7 @@ typedef enum {
     DB_DNE = 0, // This means does not exist.
     DB_NOT_INIT = -1,
     DB_ONLY_ONE_ENTRY = -2,
-    SQL_INVALID_TABLE = -3
+    DB_INVALID_TABLE = -3
 } db_return_code;
 
 int sqlInit(const char *const path);
