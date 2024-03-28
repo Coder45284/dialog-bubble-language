@@ -196,7 +196,7 @@ int dbGetWordIDEnglish(const char *const word) {
     return id_number;
 }
 
-int sqlAddWord(const DBWordDefinition *const word_definition) {
+int dbAddWord(const DBWordDefinition *const word_definition) {
     int db_return;
 
     // Make sure the prepared statements are allocated.

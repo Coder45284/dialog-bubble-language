@@ -52,7 +52,7 @@ int noInitTest(const char *const text) {
     {
         DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
 
-        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlAddWord(&word_def), "sqlAddWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbAddWord(&word_def), "dbAddWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlUpdateWord(1, &word_def), "sqlUpdateWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWord(1, &word_def), "sqlGetWord");
         STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
@@ -79,7 +79,7 @@ int successfullInitTest(const char *const text) {
     for(int i = 0; i < 4; i++) {
         const char word[2] = {'1' + i, '\0'};
 
-        STATUS_CHECK(1 + i, word, sqlAddWord(&word_defs[i]), "sqlAddWord");
+        STATUS_CHECK(1 + i, word, dbAddWord(&word_defs[i]), "dbAddWord");
     }
 
     char output[0x100];
@@ -213,7 +213,7 @@ int successfullInitTest(const char *const text) {
         }
 
         // Add this word back
-        const int result = sqlAddWord(&word_defs[2]);
+        const int result = dbAddWord(&word_defs[2]);
         if(result <= DB_DNE) {
             wordDefinitionStr(&word_defs[2], output, sizeof(output) / sizeof(output[0]));
             printf("Definition cannot be placed back: Code %d. For definition\n%s\n", result, output);
@@ -229,13 +229,13 @@ int successfullInitTest(const char *const text) {
             {"QeeSoeQee", "NOUN", "BLA", "An word of nothingness."}
         };
 
-        const int result = sqlAddWord(&word_defs[0]);
+        const int result = dbAddWord(&word_defs[0]);
         if(result <= DB_DNE) {
             wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("Same Language Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
-        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Word Case: DB_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same Language Word Case: DB_ONLY_ONE_ENTRY", dbAddWord(&word_defs[1]), "dbAddWord");
     }
     // Test Add same English keyword test.
     {
@@ -244,13 +244,13 @@ int successfullInitTest(const char *const text) {
             {"QeeToeTel", "NOUN", "WAITING", "An word of nothingness."}
         };
 
-        const int result = sqlAddWord(&word_defs[0]);
+        const int result = dbAddWord(&word_defs[0]);
         if(result <= DB_DNE) {
             wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("Same English Word Case:This should have not had failed: Code %d. For definition\n%s\n", result, output);
             problem |= 1;
         }
-        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same English Word Case: DB_ONLY_ONE_ENTRY", sqlAddWord(&word_defs[1]), "sqlAddWord");
+        STATUS_CHECK(DB_ONLY_ONE_ENTRY, "Same English Word Case: DB_ONLY_ONE_ENTRY", dbAddWord(&word_defs[1]), "dbAddWord");
     }
     // Test Update same language word test.
     {
@@ -259,13 +259,13 @@ int successfullInitTest(const char *const text) {
             {"TeeToeTeeQee", "NOUN", "BLAY", "An word of nothingness."}
         };
 
-        const int id = sqlAddWord(&word_defs[0]);
+        const int id = dbAddWord(&word_defs[0]);
         if(id <= DB_DNE) {
             wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 0, id, output);
             problem |= 1;
         }
-        const int second_id = sqlAddWord(&word_defs[1]);
+        const int second_id = dbAddWord(&word_defs[1]);
         if(id <= DB_DNE) {
             wordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 1, id, output);
@@ -283,13 +283,13 @@ int successfullInitTest(const char *const text) {
             {"TeeToeTeeTeh", "ADJECTIVE", "BAD", "Opsite of good."}
         };
 
-        const int id = sqlAddWord(&word_defs[0]);
+        const int id = dbAddWord(&word_defs[0]);
         if(id <= DB_DNE) {
             wordDefinitionStr(&word_defs[0], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 0, id, output);
             problem |= 1;
         }
-        const int second_id = sqlAddWord(&word_defs[1]);
+        const int second_id = dbAddWord(&word_defs[1]);
         if(id <= DB_DNE) {
             wordDefinitionStr(&word_defs[1], output, sizeof(output) / sizeof(output[0]));
             printf("At %d. Same Language Word Update Case:This should have not had failed: Code %d. For definition\n%s\n", 1, id, output);

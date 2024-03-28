@@ -21,7 +21,7 @@ void dbDeinit();
 
 int dbGetWordIDLanguage(const char *const word);
 int dbGetWordIDEnglish(const char *const word);
-int sqlAddWord(const DBWordDefinition *const word_definition);
+int dbAddWord(const DBWordDefinition *const word_definition);
 
 db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_definition);
 db_return_code sqlGetWord(int word_id, DBWordDefinition *word_definition);
