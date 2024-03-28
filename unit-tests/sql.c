@@ -47,7 +47,7 @@ int noInitTest(const char *const text) {
     printf("noInitTest %s\n", text);
 
     STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWordIDLanguage("QeeSoeWee"), "dbGetWordIDLanguage");
-    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", dbGetWordIDEnglish("RUN"), "dbGetWordIDEnglish");
 
     {
         DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
@@ -88,7 +88,7 @@ int successfullInitTest(const char *const text) {
     // Sanity checks
     for(int i = 0; i < 5; i++) {
         int language_id = dbGetWordIDLanguage(word_defs[i].word);
-        int english_id = sqlGetWordIDEnglish(word_defs[i].keyword);
+        int english_id = dbGetWordIDEnglish(word_defs[i].keyword);
 
         if(language_id != english_id) {
             printf("language_id != english_id\n");
@@ -142,7 +142,7 @@ int successfullInitTest(const char *const text) {
     {
         const DBWordDefinition expected_def = {"Weh", "PARTITION", "CARD", "It is non sense."};
 
-        const int word_id = sqlGetWordIDEnglish(word_defs[1].keyword);
+        const int word_id = dbGetWordIDEnglish(word_defs[1].keyword);
 
         STATUS_CHECK(DB_DNE,     "DB_DNE",     sqlUpdateWord(29,      &expected_def), "sqlUpdateWord");
         STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlUpdateWord(word_id, &expected_def), "sqlUpdateWord");
@@ -152,7 +152,7 @@ int successfullInitTest(const char *const text) {
         STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", result, "sqlGetWord from updated word");
 
         for(int i = 0; i < 4; i++) {
-            int result = sqlGetWord(sqlGetWordIDEnglish(word_defs[i].keyword), &definition_test);
+            int result = sqlGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
 
             STATUS_CHECK(DB_SUCCESS, "update DB_SUCCESS", result, "sqlGetWord");
 
@@ -179,13 +179,13 @@ int successfullInitTest(const char *const text) {
 
     // Remove tests.
     {
-        const int word_id = sqlGetWordIDEnglish(word_defs[2].keyword);
+        const int word_id = dbGetWordIDEnglish(word_defs[2].keyword);
 
         STATUS_CHECK(DB_DNE,     "DB_DNE",     sqlRemoveWord(29),      "sqlRemoveWord");
         STATUS_CHECK(DB_SUCCESS, "DB_SUCCESS", sqlRemoveWord(word_id), "sqlRemoveWord");
 
         for(int i = 0; i < 4; i++) {
-            int result = sqlGetWord(sqlGetWordIDEnglish(word_defs[i].keyword), &definition_test);
+            int result = sqlGetWord(dbGetWordIDEnglish(word_defs[i].keyword), &definition_test);
 
             if(i == 2)
                 continue;

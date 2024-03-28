@@ -20,7 +20,7 @@ int dbInit(const char *const path);
 void dbDeinit();
 
 int dbGetWordIDLanguage(const char *const word);
-int sqlGetWordIDEnglish(const char *const word);
+int dbGetWordIDEnglish(const char *const word);
 int sqlAddWord(const DBWordDefinition *const word_definition);
 
 db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_definition);

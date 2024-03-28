@@ -160,7 +160,7 @@ int dbGetWordIDLanguage(const char *const word) {
     return id_number;
 }
 
-int sqlGetWordIDEnglish(const char *const word) {
+int dbGetWordIDEnglish(const char *const word) {
     int db_return;
     sqlite3_int64 id_number = DB_DNE;
 
@@ -187,7 +187,7 @@ int sqlGetWordIDEnglish(const char *const word) {
         }
 
         if(db_return != SQLITE_DONE) {
-            printf("sqlGetWordIDEnglish prepare error: %s\n", sqlite3_errstr(db_return) );
+            printf("dbGetWordIDEnglish prepare error: %s\n", sqlite3_errstr(db_return) );
         }
 
         sqlite3_reset(sql_get_english_word_to_id_code);
@@ -207,7 +207,7 @@ int sqlAddWord(const DBWordDefinition *const word_definition) {
     if(dbGetWordIDLanguage(word_definition->word) != 0)
         return DB_ONLY_ONE_ENTRY; // Language Word already exists.
 
-    if(sqlGetWordIDEnglish(word_definition->keyword) != 0)
+    if(dbGetWordIDEnglish(word_definition->keyword) != 0)
         return DB_ONLY_ONE_ENTRY; // English Word already exists.
 
     {
@@ -293,7 +293,7 @@ db_return_code sqlUpdateWord(int word_id, const DBWordDefinition *const word_def
         if(language_id != DB_DNE && language_id != word_id)
             return DB_ONLY_ONE_ENTRY;
 
-        language_id = sqlGetWordIDEnglish(word_definition->keyword);
+        language_id = dbGetWordIDEnglish(word_definition->keyword);
 
         if(language_id != DB_DNE && language_id != word_id)
             return DB_ONLY_ONE_ENTRY;
