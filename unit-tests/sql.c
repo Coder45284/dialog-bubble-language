@@ -46,16 +46,16 @@ int noInitTest(const char *const text) {
 
     printf("noInitTest %s\n", text);
 
-    STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
-    STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWordIDLanguage("QeeSoeWee"), "sqlGetWordIDLanguage");
+    STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWordIDEnglish("RUN"), "sqlGetWordIDEnglish");
 
     {
         DBWordDefinition word_def = {"QeeSoeWee", "VERB", "RUN", "The action of running."};
 
-        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlAddWord(&word_def), "sqlAddWord");
-        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlUpdateWord(1, &word_def), "sqlUpdateWord");
-        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlGetWord(1, &word_def), "sqlGetWord");
-        STATUS_CHECK(SQL_NOT_INIT, "SQL_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlAddWord(&word_def), "sqlAddWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlUpdateWord(1, &word_def), "sqlUpdateWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlGetWord(1, &word_def), "sqlGetWord");
+        STATUS_CHECK(DB_NOT_INIT, "DB_NOT_INIT", sqlRemoveWord(1), "sqlRemoveWord");
     }
 
     return problem;
