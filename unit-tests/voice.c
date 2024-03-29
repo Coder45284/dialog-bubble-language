@@ -76,6 +76,24 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
             memset(&single_voice_context, 0, sizeof(single_voice_context));
             single_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
+            for(int h = 0; h < 5; h++) {
+                static const char start[5] = {'S','Q', ' ', 'T', 'W'};
+
+                if(start[h] == ' ') {
+                    voiceInputPhonemic(&single_voice_context, "", volume, min_frequency[i], add_frequency[i]);
+                    continue;
+                }
+
+                for(int g = 0; g < 5; g++) {
+                    static const char last[5][2] = {{'e', 'e'}, {'e', 'h'}, {'e', 'l'}, {'o', 'e'}, {'i', 'e'}};
+
+                    const char word[] = {start[h], last[g][0], last[g][1], '\0'};
+
+                    voiceInputPhonemic(&single_voice_context, word, volume, min_frequency[i], add_frequency[i]);
+                }
+            }
+            voiceReadyContext(&single_voice_context);
+
             memset(&string_voice_context, 0, sizeof(string_voice_context));
             string_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
