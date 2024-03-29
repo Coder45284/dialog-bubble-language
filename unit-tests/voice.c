@@ -4,6 +4,9 @@
 #include "audio_2.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+
+int test_buffer(unsigned char *buffer, unsigned int buffer_size);
 
 int main() {
     if(AUDIO_1_FRAME_COUNT != AUDIO_2_FRAME_COUNT) {
@@ -40,12 +43,23 @@ int main() {
         return 1;
     }
 
+    unsigned int buffer_size = sizeof(AUDIO_1_DATA);
+    unsigned char *buffer = malloc(buffer_size);
+
+    int result = test_buffer(buffer, buffer_size);
+
+    free(buffer);
+
+    return result;
+}
+
+int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
     VoiceContext single_voice_context;
     VoiceContext string_voice_context;
 
     static const int volume = 16384;
-    static const min_frequency[2] = {500, 250};
-    static const add_frequency[2] = {1000, 500};
+    static const int min_frequency[2] = {500, 250};
+    static const int add_frequency[2] = {1000, 500};
     static const unsigned char* audios[2] = {AUDIO_1_DATA, AUDIO_2_DATA};
 
     static const char entire_alphabet[] = "SeeSehSelSoeSieQeeQehQelQoeQie TeeTehTelToeTieWeeWehWelWoeWie";
@@ -74,5 +88,5 @@ int main() {
             slice--; // less than 10. Just subtract by one.
     }
 
-    return 1;
+    return 0;
 }
