@@ -68,7 +68,7 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
 
     static const char entire_alphabet[] = "SeeSehSelSoeSieQeeQehQelQoeQie TeeTehTelToeTieWeeWehWelWoeWie";
 
-    for(unsigned int slice = 2048; slice != 0; ) {
+    for(unsigned int slice = 1867; slice != 0; ) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
         unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
 
