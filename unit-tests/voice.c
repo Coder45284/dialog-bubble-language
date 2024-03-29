@@ -45,9 +45,6 @@ int main() {
     }
 
     unsigned int buffer_size = sizeof(AUDIO_1_DATA);
-
-    printf("buffer_size = %d\n", buffer_size);
-
     unsigned char *buffer = malloc(buffer_size);
 
     int result = test_buffer(buffer, buffer_size);
@@ -72,7 +69,7 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
         unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
 
-        for(int i = 1; i >= 0; i--) {
+        for(int i = 0; i < 2; i++) {
             memset(&single_voice_context, 0, sizeof(single_voice_context));
             single_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
@@ -92,12 +89,20 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
                     voiceInputPhonemic(&single_voice_context, word, volume, min_frequency[i], add_frequency[i]);
                 }
             }
+            voiceInputPhonemic(&single_voice_context, "", volume, min_frequency[i], add_frequency[i]);
             voiceReadyContext(&single_voice_context);
 
             memset(&string_voice_context, 0, sizeof(string_voice_context));
             string_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
             voiceInputPhonemics(&string_voice_context, entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
+
+            int mem_data = memcmp(&single_voice_context, &string_voice_context, sizeof(string_voice_context));
+
+            if(mem_data != 0) {
+                printf("Error: single_voice_context is not the same as string_voice_context; %d\n", mem_data);
+                return 1;
+            }
 
             memset(buffer, 0x1e, sizeof(AUDIO_1_DATA));
 
