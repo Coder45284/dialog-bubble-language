@@ -75,15 +75,13 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         printf("s = %d; a = %d; f = %d; s * a + f = %d\n", slice, frame_amount, last_frame, slice * frame_amount + last_frame);
 
         for(int i = 0; i < 2; i++) {
-            single_voice_context.note_amount = 0;
-            single_voice_context.call_reloader = NULL;
+            memset(&single_voice_context, 0, sizeof(single_voice_context));
+            single_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
-            string_voice_context.note_amount = 0;
-            string_voice_context.call_reloader = NULL;
+            memset(&string_voice_context, 0, sizeof(string_voice_context));
+            string_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
             voiceInputPhonemics(&string_voice_context, entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
-
-            printf("string_voice_context.note_amount = %d\n", string_voice_context.note_amount);
 
             memset(buffer, 0x1e, sizeof(AUDIO_1_DATA));
 
@@ -93,8 +91,7 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
             }
 
             if(last_frame != 0) {
-                printf("last string_voice_context.note_amount = %d\n", string_voice_context.note_amount);
-                printf("offset = %d; size = %d. last\n", buffer_size - sizeof(short) * last_frame, sizeof(short) * last_frame);
+                printf("last offset = %d; size = %d\n", buffer_size - sizeof(short) * last_frame, sizeof(short) * last_frame);
                 voiceWriteToSoundBuffer(&string_voice_context, &buffer[buffer_size - sizeof(short) * last_frame], sizeof(short) * last_frame);
             }
         }

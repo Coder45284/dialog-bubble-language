@@ -44,11 +44,11 @@ int voiceInputPhonemic(VoiceContext *context, const char *const string, unsigned
 
     const unsigned int start_volumes[3] = {volume, volume, 0};
     const unsigned int   end_volumes[3] = {volume,      0, volume};
-    const char         volumes_chars[3] = {   'e',    'o', 'i'};
+    const char         volumes_chars[3] = {'e', 'o', 'i'};
 
     const unsigned int   base_frequency = min_frequency + add_frequency / 2;
     const unsigned int   frequencies[3] = {base_frequency, min_frequency, min_frequency + add_frequency};
-    const char       frequency_chars[3] = {           'e', 'h', 'l'};
+    const char       frequency_chars[3] = {'e', 'h', 'l'};
 
     VoiceWaveType    wave_type = SINE;
     unsigned int  start_volume = volume;
@@ -204,6 +204,10 @@ void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned 
                     context->note_amount = 1;
 
                     context->notes[context->note_index].type = SQUARE;
+                    context->notes[context->note_index].total_time = 5512;
+                    context->notes[context->note_index].sound_time = 2756;
+                    context->notes[context->note_index].start_period = 2048;
+                    context->notes[context->note_index].end_period = 2048;
                     context->notes[context->note_index].start_amp = 0;
                     context->notes[context->note_index].end_amp = 0;
                 }
