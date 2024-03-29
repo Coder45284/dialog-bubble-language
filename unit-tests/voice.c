@@ -72,7 +72,7 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
         unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
 
-        for(int i = 0; i < 2; i++) {
+        for(int i = 1; i >= 0; i--) {
             memset(&single_voice_context, 0, sizeof(single_voice_context));
             single_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
 
