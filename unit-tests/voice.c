@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int test_buffer(unsigned char *buffer, unsigned int buffer_size);
 
@@ -44,6 +45,9 @@ int main() {
     }
 
     unsigned int buffer_size = sizeof(AUDIO_1_DATA);
+
+    printf("buffer_size = %d\n", buffer_size);
+
     unsigned char *buffer = malloc(buffer_size);
 
     int result = test_buffer(buffer, buffer_size);
@@ -64,7 +68,11 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
 
     static const char entire_alphabet[] = "SeeSehSelSoeSieQeeQehQelQoeQie TeeTehTelToeTieWeeWehWelWoeWie";
 
-    for(unsigned int slice = AUDIO_1_FRAME_COUNT; slice != 0; ) {
+    for(unsigned int slice = 2048; slice != 0; ) {
+        unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
+        unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
+
+        printf("s = %d; a = %d; f = %d; s * a + f = %d\n", slice, frame_amount, last_frame, slice * frame_amount + last_frame);
 
         for(int i = 0; i < 2; i++) {
             single_voice_context.note_amount = 0;
@@ -74,8 +82,21 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
             string_voice_context.call_reloader = NULL;
 
             voiceInputPhonemics(&string_voice_context, entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
+
+            memset(buffer, 0x1e, sizeof(AUDIO_1_DATA));
+
+            for(unsigned int f = 0; f < frame_amount; f++) {
+                printf("offset = %d; size = %d\n", sizeof(short) * f * slice, sizeof(short) * slice);
+                voiceWriteToSoundBuffer(&string_voice_context, &buffer[sizeof(short) * f * slice], sizeof(short) * slice);
+            }
+
+            if(last_frame != 0) {
+                printf("offset = %d; size = %d. last\n", buffer_size - sizeof(short) * last_frame, sizeof(short) * last_frame);
+                voiceWriteToSoundBuffer(&string_voice_context, &buffer[buffer_size - sizeof(short) * last_frame], sizeof(short) * last_frame);
+            }
         }
 
+        /*
         // With this this whole loop would go for only 20 times rather than 115752 times.
         if(slice > 10) // Divide up the sound generation beyond the size of 10.
         {
@@ -86,7 +107,9 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         }
         else
             slice--; // less than 10. Just subtract by one.
+        */
+        slice--;
     }
 
-    return 0;
+    return 1;
 }
