@@ -102,7 +102,6 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
             }
         }
 
-        /*
         // With this this whole loop would go for only 20 times rather than 115752 times.
         if(slice > 10) // Divide up the sound generation beyond the size of 10.
         {
@@ -113,8 +112,6 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         }
         else
             slice--; // less than 10. Just subtract by one.
-        */
-        slice--;
     }
 
     return 0;
