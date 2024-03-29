@@ -68,7 +68,7 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
 
     static const char entire_alphabet[] = "SeeSehSelSoeSieQeeQehQelQoeQie TeeTehTelToeTieWeeWehWelWoeWie";
 
-    for(unsigned int slice = 1867; slice != 0; ) {
+    for(unsigned int slice = AUDIO_1_FRAME_COUNT; slice != 0; ) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
         unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
 
@@ -86,13 +86,11 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
             memset(buffer, 0x1e, sizeof(AUDIO_1_DATA));
 
             for(unsigned int f = 0; f < frame_amount; f++) {
-                // printf("offset = %d; size = %d\n", sizeof(short) * f * slice, sizeof(short) * slice);
-                voiceWriteToSoundBuffer(&string_voice_context, &buffer[sizeof(short) * f * slice], sizeof(short) * slice);
+                voiceWriteToSoundBuffer(&string_voice_context, &buffer[sizeof(short) * f * slice], slice);
             }
 
             if(last_frame != 0) {
-                printf("last offset = %d; size = %d\n", buffer_size - sizeof(short) * last_frame, sizeof(short) * last_frame);
-                voiceWriteToSoundBuffer(&string_voice_context, &buffer[buffer_size - sizeof(short) * last_frame], sizeof(short) * last_frame);
+                voiceWriteToSoundBuffer(&string_voice_context, &buffer[buffer_size - sizeof(short) * last_frame], last_frame);
             }
         }
 

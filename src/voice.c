@@ -129,9 +129,6 @@ void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned 
 
     static int counter = 0;
 
-    if(context->note_amount == 1)
-        printf("context->note_amount == 1; %d\n", counter++);
-
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
 
