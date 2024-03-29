@@ -51,6 +51,33 @@ char TextBoxLanguageEntryText[128] = "";
 //------------------------------------------------------------------------------------
 int main()
 {
+    {
+        char entire_alphabet[] = "SeeSehSelSoeSieQeeQehQelQoeQie TeeTehTelToeTieWeeWehWelWoeWie";
+
+        VoiceTextContext context;
+
+        context.voice_context.note_amount = 0;
+        context.voice_context.call_reloader = NULL;
+        context.head = 0;
+        context.volume = 16384;
+        context.min_frequency = 500;
+        context.add_frequency = 1000;
+
+        context.text = entire_alphabet;
+        context.length = strlen(context.text);
+
+        voiceFromTextSetup(&context);
+
+        voiceFromTextExportWAV(&context, "audio_1.wav");
+
+        context.min_frequency = 250;
+        context.add_frequency = 500;
+
+        voiceFromTextSetup(&context);
+
+        voiceFromTextExportWAV(&context, "audio_2.wav");
+    }
+
     dbInit("database.db");
 
     // Initialization
