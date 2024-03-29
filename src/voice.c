@@ -121,11 +121,16 @@ void voiceGenerateAllPhonemics(VoiceContext *context, unsigned int volume, unsig
         }
     }
 }
-
+#include <stdio.h>
 void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
     VoiceNoteState *note_r = &context->note_state;
+
+    static int counter = 0;
+
+    if(context->note_amount == 1)
+        printf("context->note_amount == 1; %d\n", counter++);
 
     for(unsigned int f = 0; f < frames; f++) {
         current_frame_r = &frame_data[f];
