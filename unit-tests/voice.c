@@ -72,8 +72,6 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
         unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
 
-        printf("s = %d; a = %d; f = %d; s * a + f = %d\n", slice, frame_amount, last_frame, slice * frame_amount + last_frame);
-
         for(int i = 0; i < 2; i++) {
             memset(&single_voice_context, 0, sizeof(single_voice_context));
             single_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
@@ -92,6 +90,16 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
             if(last_frame != 0) {
                 voiceWriteToSoundBuffer(&string_voice_context, &buffer[buffer_size - sizeof(short) * last_frame], last_frame);
             }
+
+            for(unsigned int b = 0; b < sizeof(AUDIO_1_DATA); b++) {
+                if(audios[i][b] != buffer[b]) {
+                    printf("Error audio did not produce correct results.\n"
+                        "  min_frequency = %d; add_frequency = %d; test_index = %d\n", min_frequency[i], add_frequency[i], i);
+                    printf("  s = %d; a = %d; f = %d; s * a + f = %d\n", slice, frame_amount, last_frame, slice * frame_amount + last_frame);
+                    printf("  byte offset = %d; expected %d. received %d.\n", b, audios[i][b], buffer[b]);
+                    return 1;
+                }
+            }
         }
 
         /*
@@ -109,5 +117,5 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         slice--;
     }
 
-    return 1;
+    return 0;
 }
