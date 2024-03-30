@@ -164,13 +164,15 @@ void callbackTest(struct VoiceContext *voice) {
 
     self->times_called++;
 
-    for(int i = 0; i < VOICE_NOTE_LIMIT && self->note_spawn_amount != 0; i++) {
+    for(int i = 0; i < VOICE_NOTE_LIMIT - 1 && self->note_spawn_amount != 0; i++) {
         voiceInputPhonemic(voice, "Tee", 16384, 500, 1000);
         self->note_spawn_amount--;
     }
 
     if(self->note_spawn_amount == 0)
         voiceInputPhonemic(voice, "", 16384, 500, 1000);
+    else
+        voiceInputPhonemic(voice, "Seh", 16384, 500, 1000);
 
     voiceReadyContext(voice);
 }
@@ -203,7 +205,7 @@ int test_callback(unsigned char *buffer, unsigned int buffer_size) {
     }
 
     int note_spawn_amount[6] = {0, VOICE_NOTE_LIMIT - 2, VOICE_NOTE_LIMIT - 1, VOICE_NOTE_LIMIT, VOICE_NOTE_LIMIT + 1, VOICE_NOTE_LIMIT + 2};
-    int expected_times_cl[6] = {1,                    1,                    2,                1,                    2,                    2};
+    int expected_times_cl[6] = {1,                    1,                    2,                2,                    2,                    2};
 
     for(int i = 0; i < 6; i++){
         memset(&voice_context, 0, sizeof(voice_context));
