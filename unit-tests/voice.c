@@ -153,19 +153,26 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
 typedef struct {
     VoiceContext voice_context;
     int times_called;
+    int note_spawn_amount;
 } VoiceContextCallbackTest;
 
 void callbackTest(struct VoiceContext *voice) {
     voice->note_index = 0;
     voice->note_amount = 0;
 
-    voiceInputPhonemic(voice, "", 16384, 500, 1000);
-
-    voiceReadyContext(voice);
-
     VoiceContextCallbackTest *self = (VoiceContextCallbackTest*)voice;
 
     self->times_called++;
+
+    for(int i = 0; i < VOICE_NOTE_LIMIT && self->note_spawn_amount != 0; i++) {
+        voiceInputPhonemic(voice, "Tee", 16384, 500, 1000);
+        self->note_spawn_amount--;
+    }
+
+    if(self->note_spawn_amount == 0)
+        voiceInputPhonemic(voice, "", 16384, 500, 1000);
+
+    voiceReadyContext(voice);
 }
 
 int test_callback(unsigned char *buffer, unsigned int buffer_size) {
@@ -175,10 +182,11 @@ int test_callback(unsigned char *buffer, unsigned int buffer_size) {
 
     VoiceContextCallbackTest voice_context;
 
-    for(int note_amount = 0; note_amount < VOICE_NOTE_LIMIT + 1; note_amount++) {
+    for(int note_amount = 0; note_amount < VOICE_NOTE_LIMIT; note_amount++) {
         memset(&voice_context, 0, sizeof(voice_context));
         voice_context.voice_context.call_reloader = callbackTest;
         voice_context.times_called = 0;
+        voice_context.note_spawn_amount = 0;
 
         for(int l = 0; l < note_amount; l++)
             voiceInputPhonemic(&voice_context.voice_context, "Qee", volume, min_frequency, add_frequency);
@@ -189,7 +197,27 @@ int test_callback(unsigned char *buffer, unsigned int buffer_size) {
             voiceWriteToSoundBuffer(&voice_context.voice_context, buffer, buffer_size / (PCM_SAMPLE_BITS / 8));
 
         if(voice_context.times_called != 0) {
-            printf("Error: the callback ran when it should have not been; %d\n", voice_context.times_called);
+            printf("Error: the callback ran when it should have not been; times_called %d at note_amount %d\n", voice_context.times_called, note_amount);
+            return 1;
+        }
+    }
+
+    {
+        memset(&voice_context, 0, sizeof(voice_context));
+        voice_context.voice_context.call_reloader = callbackTest;
+        voice_context.times_called = 0;
+        voice_context.note_spawn_amount = 0;
+
+        for(int l = 0; l < VOICE_NOTE_LIMIT; l++)
+            voiceInputPhonemic(&voice_context.voice_context, "Qee", volume, min_frequency, add_frequency);
+
+        voiceReadyContext(&voice_context.voice_context);
+
+        while(voice_context.voice_context.notes[0].start_amp != 0 && voice_context.voice_context.notes[0].end_amp != 0)
+            voiceWriteToSoundBuffer(&voice_context.voice_context, buffer, buffer_size / (PCM_SAMPLE_BITS / 8));
+
+        if(voice_context.times_called != 1) {
+            printf("Error: the callback did not run once; times_called %d at note_amount %d\n", voice_context.times_called, VOICE_NOTE_LIMIT);
             return 1;
         }
     }
