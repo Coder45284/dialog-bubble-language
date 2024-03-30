@@ -66,45 +66,48 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
     VoiceContext voice_context[2];
 
     // Setup the voice_contexts
+    for(int i = 0; i < 2; i++) {
+        memset(&current_voice_context, 0, sizeof(current_voice_context));
+        current_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
+
+        for(int h = 0; h < 5; h++) {
+            static const char start[5] = {'S','Q', ' ', 'T', 'W'};
+
+            if(start[h] == ' ') {
+                voiceInputPhonemic(&current_voice_context, "", volume, min_frequency[i], add_frequency[i]);
+                continue;
+            }
+
+            for(int g = 0; g < 5; g++) {
+                static const char last[5][2] = {{'e', 'e'}, {'e', 'h'}, {'e', 'l'}, {'o', 'e'}, {'i', 'e'}};
+
+                const char word[] = {start[h], last[g][0], last[g][1], '\0'};
+
+                voiceInputPhonemic(&current_voice_context, word, volume, min_frequency[i], add_frequency[i]);
+            }
+        }
+        voiceInputPhonemic(&current_voice_context, "", volume, min_frequency[i], add_frequency[i]);
+        voiceReadyContext(&current_voice_context);
+
+        memset(&voice_context[i], 0, sizeof(voice_context[i]));
+        voice_context[i].call_reloader = NULL; // Just in case NULL is set to be a different value.
+
+        voiceInputPhonemics(&voice_context[i], entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
+
+        int mem_data = memcmp(&current_voice_context, &voice_context[i], sizeof(voice_context[i]));
+
+        if(mem_data != 0) {
+            printf("Error: current_voice_context is not the same as voice_context[%d]; %d\n", i, mem_data);
+            return 1;
+        }
+    }
 
     for(unsigned int slice = AUDIO_1_FRAME_COUNT; slice != 0; ) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
         unsigned int last_frame = AUDIO_1_FRAME_COUNT % slice;
 
         for(int i = 0; i < 2; i++) {
-            memset(&current_voice_context, 0, sizeof(current_voice_context));
-            current_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
-
-            for(int h = 0; h < 5; h++) {
-                static const char start[5] = {'S','Q', ' ', 'T', 'W'};
-
-                if(start[h] == ' ') {
-                    voiceInputPhonemic(&current_voice_context, "", volume, min_frequency[i], add_frequency[i]);
-                    continue;
-                }
-
-                for(int g = 0; g < 5; g++) {
-                    static const char last[5][2] = {{'e', 'e'}, {'e', 'h'}, {'e', 'l'}, {'o', 'e'}, {'i', 'e'}};
-
-                    const char word[] = {start[h], last[g][0], last[g][1], '\0'};
-
-                    voiceInputPhonemic(&current_voice_context, word, volume, min_frequency[i], add_frequency[i]);
-                }
-            }
-            voiceInputPhonemic(&current_voice_context, "", volume, min_frequency[0], add_frequency[i]);
-            voiceReadyContext(&current_voice_context);
-
-            memset(&voice_context[i], 0, sizeof(voice_context[i]));
-            voice_context[i].call_reloader = NULL; // Just in case NULL is set to be a different value.
-
-            voiceInputPhonemics(&voice_context[i], entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
-
-            int mem_data = memcmp(&current_voice_context, &voice_context[i], sizeof(voice_context[i]));
-
-            if(mem_data != 0) {
-                printf("Error: current_voice_context is not the same as voice_context[%d]; %d\n", i, mem_data);
-                return 1;
-            }
+            memcpy(&current_voice_context, &voice_context[i], sizeof(current_voice_context));
 
             memset(buffer, 0x1e, sizeof(AUDIO_1_DATA));
 
