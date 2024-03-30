@@ -86,7 +86,6 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
                 voiceInputPhonemic(&current_voice_context, word, volume, min_frequency[i], add_frequency[i]);
             }
         }
-        voiceInputPhonemic(&current_voice_context, "", volume, min_frequency[i], add_frequency[i]);
         voiceReadyContext(&current_voice_context);
 
         memset(&voice_context[i], 0, sizeof(voice_context[i]));

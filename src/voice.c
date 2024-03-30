@@ -83,6 +83,10 @@ void voiceInputPhonemics(VoiceContext *context, const char *const string, unsign
     unsigned int n = 0;
 
     while(n != length) {
+        if(string[n] == '\0') {
+            n++;
+        }
+        else
         if(string[n] == ' ') {
             voiceInputPhonemic(context, "", volume, min_frequency, add_frequency);
             n++;
@@ -121,7 +125,7 @@ void voiceGenerateAllPhonemics(VoiceContext *context, unsigned int volume, unsig
         }
     }
 }
-#include <stdio.h>
+
 void voiceWriteToSoundBuffer(VoiceContext *context, void *buffer_data, unsigned int frames) {
     PCM_SAMPLE_TYPE *frame_data = (PCM_SAMPLE_TYPE*)buffer_data;
     PCM_SAMPLE_TYPE *current_frame_r;
