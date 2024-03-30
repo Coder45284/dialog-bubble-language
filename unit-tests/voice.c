@@ -55,15 +55,17 @@ int main() {
 }
 
 int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
-    VoiceContext single_voice_context;
-    VoiceContext string_voice_context;
-
     static const int volume = 16384;
     static const int min_frequency[2] = {500, 250};
     static const int add_frequency[2] = {1000, 500};
     static const unsigned char* audios[2] = {AUDIO_1_DATA, AUDIO_2_DATA};
 
     static const char entire_alphabet[] = "SeeSehSelSoeSieQeeQehQelQoeQie TeeTehTelToeTieWeeWehWelWoeWie";
+
+    VoiceContext single_voice_context;
+    VoiceContext voice_context[2];
+
+    // Setup the voice_contexts
 
     for(unsigned int slice = AUDIO_1_FRAME_COUNT; slice != 0; ) {
         unsigned int frame_amount = AUDIO_1_FRAME_COUNT / slice;
@@ -89,29 +91,29 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
                     voiceInputPhonemic(&single_voice_context, word, volume, min_frequency[i], add_frequency[i]);
                 }
             }
-            voiceInputPhonemic(&single_voice_context, "", volume, min_frequency[i], add_frequency[i]);
+            voiceInputPhonemic(&single_voice_context, "", volume, min_frequency[0], add_frequency[i]);
             voiceReadyContext(&single_voice_context);
 
-            memset(&string_voice_context, 0, sizeof(string_voice_context));
-            string_voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
+            memset(&voice_context[i], 0, sizeof(voice_context[i]));
+            voice_context[i].call_reloader = NULL; // Just in case NULL is set to be a different value.
 
-            voiceInputPhonemics(&string_voice_context, entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
+            voiceInputPhonemics(&voice_context[i], entire_alphabet, sizeof(entire_alphabet) / sizeof(entire_alphabet[0]), volume, min_frequency[i], add_frequency[i]);
 
-            int mem_data = memcmp(&single_voice_context, &string_voice_context, sizeof(string_voice_context));
+            int mem_data = memcmp(&single_voice_context, &voice_context[i], sizeof(voice_context[i]));
 
             if(mem_data != 0) {
-                printf("Error: single_voice_context is not the same as string_voice_context; %d\n", mem_data);
+                printf("Error: single_voice_context is not the same as voice_context[%d]; %d\n", i, mem_data);
                 return 1;
             }
 
             memset(buffer, 0x1e, sizeof(AUDIO_1_DATA));
 
             for(unsigned int f = 0; f < frame_amount; f++) {
-                voiceWriteToSoundBuffer(&string_voice_context, &buffer[sizeof(short) * f * slice], slice);
+                voiceWriteToSoundBuffer(&voice_context[i], &buffer[sizeof(short) * f * slice], slice);
             }
 
             if(last_frame != 0) {
-                voiceWriteToSoundBuffer(&string_voice_context, &buffer[buffer_size - sizeof(short) * last_frame], last_frame);
+                voiceWriteToSoundBuffer(&voice_context[i], &buffer[buffer_size - sizeof(short) * last_frame], last_frame);
             }
 
             for(unsigned int b = 0; b < sizeof(AUDIO_1_DATA); b++) {
