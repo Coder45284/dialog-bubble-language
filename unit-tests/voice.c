@@ -8,6 +8,7 @@
 #include <string.h>
 
 int test_buffer(unsigned char *buffer, unsigned int buffer_size);
+int test_callback(unsigned char *buffer, unsigned int buffer_size);
 
 int main() {
     if(AUDIO_1_FRAME_COUNT != AUDIO_2_FRAME_COUNT) {
@@ -47,7 +48,10 @@ int main() {
     unsigned int buffer_size = sizeof(AUDIO_1_DATA);
     unsigned char *buffer = malloc(buffer_size);
 
-    int result = test_buffer(buffer, buffer_size);
+    int result = 0;
+
+    result |= test_buffer(buffer, buffer_size);
+    result |= test_callback(buffer, buffer_size);
 
     free(buffer);
 
@@ -141,6 +145,53 @@ int test_buffer(unsigned char *buffer, unsigned int buffer_size) {
         }
         else
             slice--; // less than 10. Just subtract by one.
+    }
+
+    return 0;
+}
+
+typedef struct {
+    VoiceContext voice_context;
+    int times_called;
+} VoiceContextCallbackTest;
+
+void callbackTest(struct VoiceContext *voice) {
+    voice->note_index = 0;
+    voice->note_amount = 0;
+
+    voiceInputPhonemic(voice, "", 16384, 500, 1000);
+
+    voiceReadyContext(voice);
+
+    VoiceContextCallbackTest *self = (VoiceContextCallbackTest*)voice;
+
+    self->times_called++;
+}
+
+int test_callback(unsigned char *buffer, unsigned int buffer_size) {
+    static const int volume = 16384;
+    static const int min_frequency = 500;
+    static const int add_frequency = 1000;
+
+    VoiceContextCallbackTest voice_context;
+
+    for(int note_amount = 0; note_amount < VOICE_NOTE_LIMIT + 1; note_amount++) {
+        memset(&voice_context, 0, sizeof(voice_context));
+        voice_context.voice_context.call_reloader = callbackTest;
+        voice_context.times_called = 0;
+
+        for(int l = 0; l < note_amount; l++)
+            voiceInputPhonemic(&voice_context.voice_context, "Qee", volume, min_frequency, add_frequency);
+
+        voiceReadyContext(&voice_context.voice_context);
+
+        while(voice_context.voice_context.notes[0].start_amp != 0 && voice_context.voice_context.notes[0].end_amp != 0)
+            voiceWriteToSoundBuffer(&voice_context.voice_context, buffer, buffer_size / (PCM_SAMPLE_BITS / 8));
+
+        if(voice_context.times_called != 0) {
+            printf("Error: the callback ran when it should have not been; %d\n", voice_context.times_called);
+            return 1;
+        }
     }
 
     return 0;
