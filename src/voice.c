@@ -86,8 +86,7 @@ void voiceInputPhonemics(VoiceContext *context, const char *const string, unsign
         if(string[n] == '\0') {
             n++;
         }
-        else
-        if(string[n] == ' ') {
+        else if(string[n] == ' ') {
             voiceInputPhonemic(context, "", volume, min_frequency, add_frequency);
             n++;
         }

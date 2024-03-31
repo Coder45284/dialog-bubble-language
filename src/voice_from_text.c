@@ -10,7 +10,10 @@ static void callReloader(VoiceContext *voice) {
     VoiceTextContext *context = (VoiceTextContext*)voice;
 
     while(context->head != context->length && context->voice_context.note_amount != VOICE_NOTE_LIMIT) {
-        if(context->text[context->head] == ' ') {
+        if(context->text[context->head] == '\0') {
+            context->head++;
+        }
+        else if(context->text[context->head] == ' ') {
             voiceInputPhonemic(&context->voice_context, "", context->volume, context->min_frequency, context->add_frequency);
             context->head++;
         }
@@ -35,7 +38,10 @@ void voiceFromTextSetup(VoiceTextContext *context) {
     context->head = 0;
 
     while(context->head != context->length && context->voice_context.note_amount != VOICE_NOTE_LIMIT) {
-        if(context->text[context->head] == ' ') {
+        if(context->text[context->head] == '\0') {
+            context->head++;
+        }
+        else if(context->text[context->head] == ' ') {
             voiceInputPhonemic(&context->voice_context, "", context->volume, context->min_frequency, context->add_frequency);
             context->head++;
         }
@@ -63,7 +69,10 @@ unsigned int voiceFromTextSize(VoiceTextContext *context) {
     while(head < context->length) {
         safe_context.note_index = 0;
 
-        if(context->text[head] == ' ') {
+        if(context->text[head] == '\0') {
+            head++;
+        }
+        else if(context->text[head] == ' ') {
             voiceInputPhonemic(&safe_context, "", context->volume, context->min_frequency, context->add_frequency);
             head++;
         }
