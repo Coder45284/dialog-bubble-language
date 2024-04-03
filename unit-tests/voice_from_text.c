@@ -8,6 +8,8 @@ static const char entire_pattern[] = "SeeSehSelSoeSieQeeQehQelQoeQieTeeTehToeTie
 
 int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_string, int volume, int min_frequency, int add_frequency);
 
+int testSizes(int volume, int min_frequency, int add_frequency);
+
 int main() {
     int status = 0;
 
@@ -24,6 +26,7 @@ int main() {
     long_string[string_size - 1] = '\0';
 
     status |= testBuffer(buffer, buffer_size, long_string, 16384, 500, 1000);
+    status |= testSizes(16384, 500, 1000);
 
     free(buffer);
 
@@ -32,7 +35,6 @@ int main() {
 
 int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_string, int volume, int min_frequency, int add_frequency) {
     const unsigned int frame_amount = buffer_size / (PCM_SAMPLE_BITS / 8);
-    int status = 0;
     unsigned int head = 0;
     unsigned int iteration = 0;
     VoiceContext voice_context;
@@ -90,5 +92,49 @@ int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_strin
         iteration++;
     }
 
-    return status;
+    return 0;
+}
+
+
+int testSizes(int volume, int min_frequency, int add_frequency) {
+    VoiceTextContext voice_from_text_context;
+
+    const char word[] = {' ', '\0'};
+
+    memset(&voice_from_text_context, 0, sizeof(voice_from_text_context));
+    voice_from_text_context.length = strlen(word);
+    voice_from_text_context.volume = volume;
+    voice_from_text_context.min_frequency = min_frequency;
+    voice_from_text_context.add_frequency = add_frequency;
+    voice_from_text_context.text = word;
+    voiceFromTextSetup(&voice_from_text_context);
+
+    const unsigned int space_size = voiceFromTextSize(&voice_from_text_context);
+
+    for(int h = 0; h < 4; h++) {
+        static const char start[4] = {'S','Q', 'T', 'W'};
+
+        for(int g = 0; g < 5; g++) {
+            static const char last[5][2] = {{'e', 'e'}, {'e', 'h'}, {'e', 'l'}, {'o', 'e'}, {'i', 'e'}};
+
+            const char word[] = {start[h], last[g][0], last[g][1], '\0'};
+
+            memset(&voice_from_text_context, 0, sizeof(voice_from_text_context));
+            voice_from_text_context.length = strlen(word);
+            voice_from_text_context.volume = volume;
+            voice_from_text_context.min_frequency = min_frequency;
+            voice_from_text_context.add_frequency = add_frequency;
+            voice_from_text_context.text = word;
+            voiceFromTextSetup(&voice_from_text_context);
+
+            const unsigned int glyph_size = voiceFromTextSize(&voice_from_text_context);
+
+            if(glyph_size != space_size) {
+                printf("glyph_size != space_size;\nspace_size = %d\nglyph_size = %d\nword = %s\n", space_size, glyph_size, word);
+                return 1;
+            }
+        }
+    }
+
+    return 0;
 }
