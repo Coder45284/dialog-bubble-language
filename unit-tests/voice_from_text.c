@@ -1,7 +1,12 @@
 #include "voice_from_text.h"
-#include <stdlib.h>
 
-int testBuffer(unsigned char *buffer, unsigned int buffer_size, int volume, int min_frequency, int add_frequency, int frames);
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+static const char entire_pattern[] = "SeeSehSelSoeSieQeeQehQelQoeQieTeeTehToeTieWeeWehWelWoeWie ";
+
+int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_string, int volume, int min_frequency, int add_frequency);
 
 int main() {
     int status = 1;
@@ -9,28 +14,60 @@ int main() {
     unsigned int buffer_size = 2048;
     unsigned char *buffer = malloc(buffer_size);
 
-    static const char rambling[] = "Tie Sie TieSoeToe QeeQeeQie QeeTeeQie QelWelQie TeeWelTee SeeTeh SeeSee SeeQehSie WoeTehQie TeeWeeQie TeeWeeWeeQie SeeWehTee QeeSeeTeh WehSehTee TelQelTee WeeQeeTee QeeTeh WehTee SelTee WeeTeeTee SeeTeh QehSehTee TelSelTee WeeSeeTee Qel QieWelSoe TehQeeWee WeeQeeSie WoeTehQie QeeTeeQie SeeWehTee SeeTeh TelQelSelTee WeeTeeQeeSeeTee SeeSee QelQehSie TeeWeeWeeQie WoeTehQie QeeQeeQie TeeWelTee SeeTeh WehTehTee QeeTee SeeTel WehTehQehSehTee WelTelQelSelTee WeeTeeQeeSeeTee Seh SieSoe TehQeeWee SeeSeeSehSie See Soe Toe Sie QelQehSie SeeSeeSeeQeeWel QelQehSie See Tie Sie SieSoe TehQeeWee TeeQeeSieToe See Soe Toe Sie SieSoe TehQeeWee QeeToeWie TeeTeeSieToe See Soe Soe TeeWeeSie TehQeeWee QeeTeeTeeSie SeeSee QehQehTieSieToe SeeWehTee SeeTeh TeeSeeTee Qee WehSeeQel TehQeeWee TieWelSoe Qel QieWelSoe Tel WehSeeQolTeh TehQeeWee TieWelSoe See WehSeeTel TehQeeWee TieWelSoe See WehSeeWeh TehQeeWee TieWelSoe Sel WehSeeWoe TehQeeWee QeeTelQee TieWelSoe See";
+    const unsigned int string_size = 2494;
+    char long_string[string_size];
 
-    status |= testBuffer(buffer, buffer_size, 16384, 500, 1000, VOICE_NOTE_LIMIT * 3 - 8);
+    for(int l = 0; l < string_size; l++) {
+        long_string[l] = entire_pattern[l % (sizeof(entire_pattern) / sizeof(entire_pattern[0]) - 1)];
+    }
+
+    long_string[string_size - 1] = '\0';
+
+    printf("\n%s\n", long_string);
+
+    status |= testBuffer(buffer, buffer_size, long_string, 16384, 500, 1000);
 
     free(buffer);
 
     return status;
 }
 
-int testBuffer(unsigned char *buffer, unsigned int buffer_size, int volume, int min_frequency, int add_frequency, int frames) {
-    static const char entire_pattern[] = "SeeSehSelSoeSieQeeQehQelQoeQieTeeTehTelToeTieWeeWehWelWoeWie";
+int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_string, int volume, int min_frequency, int add_frequency) {
     int status = 0;
+    unsigned int head = 0;
     VoiceContext voice_context;
+    VoiceTextContext voice_from_text_context;
 
-    for(int l = 0, h = 0; l < frames; l++, h = (l % (VOICE_NOTE_LIMIT + 1)) * 3) {
-        if(h != VOICE_NOTE_LIMIT * 3)
-            voiceInputPhonemic(&voice_context, &entire_pattern[h], volume, min_frequency, add_frequency);
-        else
-            voiceInputPhonemic(&voice_context, " ", volume, min_frequency, add_frequency);
+    memset(&voice_from_text_context, 0, sizeof(voice_from_text_context));
+    voice_from_text_context.length = strlen(long_string);
+    voice_from_text_context.volume = volume;
+    voice_from_text_context.min_frequency = min_frequency;
+    voice_from_text_context.add_frequency = add_frequency;
+    voice_from_text_context.text = long_string;
+    voiceFromTextSetup(&voice_from_text_context);
+
+    while(long_string[head] = '\0') {
+        memset(&voice_context, 0, sizeof(voice_context));
+        voice_context.call_reloader = NULL; // Just in case NULL is set to be a different value.
+
+        for(unsigned int i = 0; i < VOICE_NOTE_LIMIT; i++) {
+            if(long_string[head] == ' ') {
+                voiceInputPhonemic(&voice_context, " ", volume, min_frequency, add_frequency);
+                head++;
+            }
+            else if(long_string[head] == '\0')
+                i = VOICE_NOTE_LIMIT;
+            else {
+                voiceInputPhonemic(&voice_context, &long_string[head], volume, min_frequency, add_frequency);
+
+                head++;
+                if(long_string[head] != ' ' || long_string[head] != '\0')
+                    head++;
+                if(long_string[head] != ' ' || long_string[head] != '\0')
+                    head++;
+            }
+        }
     }
-
-
 
     return status;
 }
