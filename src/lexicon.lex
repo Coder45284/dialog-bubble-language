@@ -8,7 +8,11 @@ int lex_last_token = 0; // None
 int lex_line = 1;
 int lex_word_count = 0;
 
-#define LEX_TOKEN_RETURN(x) {lex_word_count++; lex_last_token = x; return x;}
+void lexerNullCallback(int token_type, const YYSTYPE *const yystype);
+
+void (*lex_callback)(int token_type, const YYSTYPE *const yystype) = lexerNullCallback;
+
+#define LEX_TOKEN_RETURN(x) {lex_word_count++; lex_last_token = x; lex_callback(x, &yylval); return x;}
 
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
 
@@ -277,4 +281,8 @@ int translateNumberWord(const char *word, char *prefix) {
     *prefix = word_head[0];
 
     return number;
+}
+
+void lexerNullCallback(int token_type, const YYSTYPE *const yystype) {
+    // No implementation
 }
