@@ -14,3 +14,7 @@ add_executable(voice_from_text ../src/voice.c ../src/voice_from_text.c  voice_fr
 target_link_libraries(voice_from_text m)
 target_link_libraries(voice_from_text raylib)
 add_test(NAME voice_from_text COMMAND $<TARGET_FILE:voice_from_text>)
+
+add_executable(lexer_test "${CMAKE_CURRENT_BINARY_DIR}/../generated-code/lexer.c" "${CMAKE_CURRENT_BINARY_DIR}/../generated-code/y.tab.c" lexicon.c)
+target_link_libraries(lexer_test m)
+add_test(NAME lexer_test COMMAND $<TARGET_FILE:lexer_test>)

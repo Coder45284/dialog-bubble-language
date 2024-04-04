@@ -239,13 +239,13 @@ int lexerParse(const char *string) {
     lex_line = 1;
     lex_word_count = 0;
 
-     YY_BUFFER_STATE buffer_state = yy_scan_string (string);
+    YY_BUFFER_STATE buffer_state = yy_scan_string (string);
 
-     int yy_result = yylex();
+    int yy_result = yylex();
 
-     yy_delete_buffer(buffer_state);
+    yy_delete_buffer(buffer_state);
 
-     return yy_result;
+    return yy_result;
 }
 
 int translateNumberWord(const char *word, char *prefix) {
