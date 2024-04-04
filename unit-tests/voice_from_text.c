@@ -8,7 +8,7 @@ static const char entire_pattern[] = "SeeSehSelSoeSieQeeQehQelQoeQieTeeTehToeTie
 
 int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_string, int volume, int min_frequency, int add_frequency);
 
-int testSizes(int volume, int min_frequency, int add_frequency);
+int testSizes(const char *long_string, const char *pattern, int volume, int min_frequency, int add_frequency);
 
 int main() {
     int status = 0;
@@ -16,7 +16,7 @@ int main() {
     unsigned int buffer_size = 2048;
     unsigned char *buffer = malloc(buffer_size);
 
-    const unsigned int string_size = 2494;
+    const unsigned int string_size = 2494 + 1;
     char long_string[string_size];
 
     for(int l = 0; l < string_size; l++) {
@@ -25,8 +25,8 @@ int main() {
 
     long_string[string_size - 1] = '\0';
 
+    status |= testSizes(long_string, entire_pattern, 16384, 500, 1000);
     status |= testBuffer(buffer, buffer_size, long_string, 16384, 500, 1000);
-    status |= testSizes(16384, 500, 1000);
 
     free(buffer);
 
@@ -96,7 +96,7 @@ int testBuffer(unsigned char *buffer, unsigned int buffer_size, char *long_strin
 }
 
 
-int testSizes(int volume, int min_frequency, int add_frequency) {
+int testSizes(const char *long_string, const char *pattern, int volume, int min_frequency, int add_frequency) {
     VoiceTextContext voice_from_text_context;
 
     const char word[] = {' ', '\0'};
@@ -134,6 +134,44 @@ int testSizes(int volume, int min_frequency, int add_frequency) {
                 return 1;
             }
         }
+    }
+
+    memset(&voice_from_text_context, 0, sizeof(voice_from_text_context));
+    voice_from_text_context.length = strlen(pattern);
+    voice_from_text_context.volume = volume;
+    voice_from_text_context.min_frequency = min_frequency;
+    voice_from_text_context.add_frequency = add_frequency;
+    voice_from_text_context.text = pattern;
+    voiceFromTextSetup(&voice_from_text_context);
+
+    const unsigned int pattern_frame_size = voiceFromTextSize(&voice_from_text_context);
+    const unsigned int pattern_frame_amount = pattern_frame_size / space_size;
+    const unsigned int pattern_frame_remainder = pattern_frame_size % space_size;
+
+    if(pattern_frame_remainder != 0) {
+        printf("pattern_frame_size = %d\n", pattern_frame_size);
+        printf("pattern_frame_amount = %d\n", pattern_frame_amount);
+        printf("pattern_frame_remainder = %d\n", pattern_frame_remainder);
+        return 1;
+    }
+
+    memset(&voice_from_text_context, 0, sizeof(voice_from_text_context));
+    voice_from_text_context.length = strlen(long_string);
+    voice_from_text_context.volume = volume;
+    voice_from_text_context.min_frequency = min_frequency;
+    voice_from_text_context.add_frequency = add_frequency;
+    voice_from_text_context.text = long_string;
+    voiceFromTextSetup(&voice_from_text_context);
+
+    const unsigned int long_string_frame_size = voiceFromTextSize(&voice_from_text_context);
+    const unsigned int long_string_frame_amount = long_string_frame_size / space_size;
+    const unsigned int long_string_frame_remainder = long_string_frame_size % space_size;
+
+    if(long_string_frame_remainder != 0) {
+        printf("long_string_frame_size = %d\n", long_string_frame_size);
+        printf("long_string_frame_amount = %d\n", long_string_frame_amount);
+        printf("long_string_frame_remainder = %d\n", long_string_frame_remainder);
+        return 1;
     }
 
     return 0;
