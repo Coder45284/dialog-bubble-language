@@ -3,9 +3,12 @@
 #include "y.tab.h"
 
 char lexer_status[0x100];
-int lex_last_token = 0; // None
 
-#define LEX_TOKEN_RETURN(x) {lex_last_token = x; return x;}
+int lex_last_token = 0; // None
+int lex_line = 1;
+int lex_word_count = 0;
+
+#define LEX_TOKEN_RETURN(x) {lex_word_count++; lex_last_token = x; return x;}
 
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
 
@@ -17,9 +20,6 @@ int lex_last_token = 0; // None
 #define LOG_DEBUG_EXT(DATA, TRANSLATE)
 #endif
 
-int lex_line = 1;
-int lex_word_count = 0;
-
 int translateNumberWord(const char *word, char *prefix);
 
 #include "correlatives.h"
@@ -28,36 +28,34 @@ int translateNumberWord(const char *word, char *prefix);
 %}
 
 %%
-Sie { LOG_DEBUG("GROUP_BEGIN"); lex_word_count++; LEX_TOKEN_RETURN(GROUP_BEGIN); }
-Soe { LOG_DEBUG("GROUP_END"); lex_word_count++; LEX_TOKEN_RETURN(GROUP_END); }
-Tie { LOG_DEBUG("IF"); lex_word_count++; LEX_TOKEN_RETURN(IF); }
-Teh { LOG_DEBUG("ELIF"); lex_word_count++; LEX_TOKEN_RETURN(ELIF); }
-Tee { LOG_DEBUG("ELSE"); lex_word_count++; LEX_TOKEN_RETURN(ELSE); }
-Toe { LOG_DEBUG("THEN"); lex_word_count++; LEX_TOKEN_RETURN(THEN); }
-See { LOG_DEBUG("DELIMITER END"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(DELIMITER); }
-Qee { LOG_DEBUG("DELIMITER END | Yes/No Question"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(DELIMITER); }
-END { LOG_DEBUG("END"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(END); }
-Seh { LOG_DEBUG("CONJUNCTION 'and"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
-Sel { LOG_DEBUG("CONJUNCTION 'or'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
-Tel { LOG_DEBUG("CONJUNCTION 'because'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
-Weh { LOG_DEBUG("CONJUNCTION 'so'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
-Qel { LOG_DEBUG("PHRASE_CONJUNCTION 'and'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PHRASE_CONJUNCTION); }
-Qeh { LOG_DEBUG("PHRASE_CONJUNCTION 'or'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PHRASE_CONJUNCTION); }
-SelSel { LOG_DEBUG("PROPOSITION 'similar to'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-TelSeh { LOG_DEBUG("PROPOSITION 'because'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-TeeWel { LOG_DEBUG("PROPOSITION 'using'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-QeeTelQee { LOG_DEBUG("PROPOSITION 'to'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-TelQeeTel { LOG_DEBUG("PROPOSITION 'from'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-QehTel { LOG_DEBUG("PROPOSITION 'on|at'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-QelSee { LOG_DEBUG("PROPOSITION 'in/inside of'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-WelQeeQee { LOG_DEBUG("PROPOSITION 'for'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-SehWee { LOG_DEBUG("PROPOSITION 'because of'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-SeeSee { LOG_DEBUG("PROPOSITION 'of'"); lex_word_count++; ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
-TeeWelTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number =  1; LEX_TOKEN_RETURN(NUMBER_SIGN); }
-SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_TOKEN_RETURN(NUMBER_SIGN); }
+Sie { LOG_DEBUG("GROUP_BEGIN"); LEX_TOKEN_RETURN(GROUP_BEGIN); }
+Soe { LOG_DEBUG("GROUP_END"); LEX_TOKEN_RETURN(GROUP_END); }
+Tie { LOG_DEBUG("IF"); LEX_TOKEN_RETURN(IF); }
+Teh { LOG_DEBUG("ELIF"); LEX_TOKEN_RETURN(ELIF); }
+Tee { LOG_DEBUG("ELSE"); LEX_TOKEN_RETURN(ELSE); }
+Toe { LOG_DEBUG("THEN"); LEX_TOKEN_RETURN(THEN); }
+See { LOG_DEBUG("DELIMITER END"); ENTER_WORD_IN; LEX_TOKEN_RETURN(DELIMITER); }
+Qee { LOG_DEBUG("DELIMITER END | Yes/No Question"); ENTER_WORD_IN; LEX_TOKEN_RETURN(DELIMITER); }
+END { LOG_DEBUG("END"); ENTER_WORD_IN; LEX_TOKEN_RETURN(END); }
+Seh { LOG_DEBUG("CONJUNCTION 'and"); ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
+Sel { LOG_DEBUG("CONJUNCTION 'or'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
+Tel { LOG_DEBUG("CONJUNCTION 'because'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
+Weh { LOG_DEBUG("CONJUNCTION 'so'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(CONJUNCTION); }
+Qel { LOG_DEBUG("PHRASE_CONJUNCTION 'and'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PHRASE_CONJUNCTION); }
+Qeh { LOG_DEBUG("PHRASE_CONJUNCTION 'or'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PHRASE_CONJUNCTION); }
+SelSel { LOG_DEBUG("PROPOSITION 'similar to'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+TelSeh { LOG_DEBUG("PROPOSITION 'because'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+TeeWel { LOG_DEBUG("PROPOSITION 'using'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+QeeTelQee { LOG_DEBUG("PROPOSITION 'to'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+TelQeeTel { LOG_DEBUG("PROPOSITION 'from'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+QehTel { LOG_DEBUG("PROPOSITION 'on|at'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+QelSee { LOG_DEBUG("PROPOSITION 'in/inside of'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+WelQeeQee { LOG_DEBUG("PROPOSITION 'for'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+SehWee { LOG_DEBUG("PROPOSITION 'because of'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+SeeSee { LOG_DEBUG("PROPOSITION 'of'"); ENTER_WORD_IN; LEX_TOKEN_RETURN(PROPOSITION); }
+TeeWelTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; LEX_TOKEN_RETURN(NUMBER_SIGN); }
+SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBER_SIGN); }
 (Wee)?(Tee)?(Qee)?(See)?Te[lh] {
-    lex_word_count++;
-
     LOG_DEBUG("NUMBER_PLACE");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -75,8 +73,6 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
     LEX_TOKEN_RETURN(NUMBER_PLACE);
 }
 (Weh)?(Teh)?(Qeh)?(Seh)?Tee {
-    lex_word_count++;
-
     LOG_DEBUG("NUMBER_100");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -86,8 +82,6 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
     LEX_TOKEN_RETURN(NUMBER_100);
 }
 (Wel)?(Tel)?(Qel)?(Sel)?Tee {
-    lex_word_count++;
-
     LOG_DEBUG("NUMBER_10");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -97,8 +91,6 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
     LEX_TOKEN_RETURN(NUMBER_10);
 }
 (Wee)?(Tee)?(Qee)?(See)?Tee {
-    lex_word_count++;
-
     LOG_DEBUG("NUMBER_1");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -108,8 +100,6 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
     LEX_TOKEN_RETURN(NUMBER_1);
 }
 [SWTQ]ie([SWTQ]el)?[SW]oe(Toe)? {
-    lex_word_count++;
-
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     int person; // 4 possibilities
@@ -163,8 +153,6 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
         LEX_TOKEN_RETURN(ADJECTIVE)
 }
 ((QieQelQoe)|(Se[hl])|([TW]eh))(See)((Qel)|(QolTeh)|(Tel)|(Weh)|(Woe)) {
-    lex_word_count++;
-
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
     int type_index;
@@ -217,11 +205,9 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
 
     LEX_TOKEN_RETURN(NOUN);
 }
-([SQTW][ieo][ehl])+Sie(Toe)? { lex_word_count++; LOG_DEBUG("NOUN"); ENTER_WORD_IN; LEX_TOKEN_RETURN(NOUN); }
-([SQTW][ieo][ehl])+Qie { lex_word_count++; LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; LEX_TOKEN_RETURN(ADJECTIVE); }
+([SQTW][ieo][ehl])+Sie(Toe)? { LOG_DEBUG("NOUN"); ENTER_WORD_IN; LEX_TOKEN_RETURN(NOUN); }
+([SQTW][ieo][ehl])+Qie { LOG_DEBUG("ADJECTIVE"); ENTER_WORD_IN; LEX_TOKEN_RETURN(ADJECTIVE); }
 ([SQTW][ieo][ehl])+Qee[SW]e[ehl] {
-    lex_word_count++;
-
     LOG_DEBUG("VERB");
 
     // Weh: Past
@@ -235,7 +221,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); lex_word_count++; yylval.number = -1; LEX_
 
     LEX_TOKEN_RETURN(VERB);
 }
-([SQTW][ieo][ehl])+Wie { lex_word_count++; LOG_DEBUG("ADVERB"); ENTER_WORD_IN; LEX_TOKEN_RETURN(ADVERB); }
+([SQTW][ieo][ehl])+Wie { LOG_DEBUG("ADVERB"); ENTER_WORD_IN; LEX_TOKEN_RETURN(ADVERB); }
 \n { lex_line++; }
 [ \t]+ ; /* Do nothing */
 [^[:space:]]+  { snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "Lexer Error: \"%s\" is not a valid word in the language on line %d!\n", yytext, lex_line); LEX_TOKEN_RETURN(NOT_A_KEYWORD); }
