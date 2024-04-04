@@ -243,6 +243,9 @@ int lexerParse(const char *string) {
 
     int yy_result = yylex();
 
+    while(yy_result != 0)
+        yy_result = yylex();
+
     yy_delete_buffer(buffer_state);
 
     return yy_result;
