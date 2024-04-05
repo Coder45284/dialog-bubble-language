@@ -15,6 +15,7 @@ void (*lex_callback)(int token_type, const YYSTYPE *const yystype) = lexerNullCa
 #define LEX_TOKEN_RETURN(x) {lex_word_count++; lex_last_token = x; lex_callback(x, &yylval); return x;}
 
 #define ENTER_WORD_IN snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", yytext)
+#define ENTER_WORD_TEXT(x) snprintf(yylval.word, sizeof(yylval.word) / sizeof(yylval.word[0]), "%s", x)
 
 #ifdef ENABLE_LEX_TRACE
 #define LOG_DEBUG(DATA) snprintf(lexer_status, sizeof(lexer_status) / sizeof(lexer_status[0]), "%s: \"%s\"\n", DATA, yytext)
@@ -76,7 +77,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_PLACE);
 }
-(Weh)?(Teh)?(Qeh)?(Seh)?Tee {
+((Weh(Teh)?(Qeh)?(Seh)?)|(Teh(Qeh)?(Seh)?)|(Qeh(Seh)?)|(Seh))Tee {
     LOG_DEBUG("NUMBER_100");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -85,7 +86,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_100);
 }
-(Wel)?(Tel)?(Qel)?(Sel)?Tee {
+((Wel(Tel)?(Qel)?(Sel)?)|(Tel(Qel)?(Sel)?)|(Qel(Sel)?)|(Sel))Tee {
     LOG_DEBUG("NUMBER_10");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -94,7 +95,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_10);
 }
-(Wee)?(Tee)?(Qee)?(See)?Tee {
+((Wee(Tee)?(Qee)?(See)?)|(Tee(Qee)?(See)?)|(Qee(See)?)|(See))Tee {
     LOG_DEBUG("NUMBER_1");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
