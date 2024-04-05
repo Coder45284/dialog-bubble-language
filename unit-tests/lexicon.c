@@ -6,19 +6,27 @@ void lexerTestCallback(int token_type, const YYSTYPE *const yystype);
 
 const char *const tokenTypeString(int token_type);
 
+static const char text[] = "SieSoe SieSoeToe SieWoe SieWoeToe SieSelSoe SieSelSoeToe SieSelWoe SieSelWoeToe SieWelSoe SieWelSoeToe SieWelWoe SieWelWoeToe SieTelSoe SieTelSoeToe SieTelWoe SieTelWoeToe SieQelSoe SieQelSoeToe SieQelWoe SieQelWoeToe WieSoe WieSoeToe WieWoe WieWoeToe WieSelSoe WieSelSoeToe WieSelWoe WieSelWoeToe WieWelSoe WieWelSoeToe WieWelWoe WieWelWoeToe WieTelSoe WieTelSoeToe WieTelWoe WieTelWoeToe WieQelSoe WieQelSoeToe WieQelWoe WieQelWoeToe TieSoe TieSoeToe TieWoe TieWoeToe TieSelSoe TieSelSoeToe TieSelWoe TieSelWoeToe TieWelSoe TieWelSoeToe TieWelWoe TieWelWoeToe TieTelSoe TieTelSoeToe TieTelWoe TieTelWoeToe TieQelSoe TieQelSoeToe TieQelWoe TieQelWoeToe QieSoe QieSoeToe QieWoe QieWoeToe QieSelSoe QieSelSoeToe QieSelWoe QieSelWoeToe QieWelSoe QieWelSoeToe QieWelWoe QieWelWoeToe QieTelSoe QieTelSoeToe QieTelWoe QieTelWoeToe QieQelSoe QieQelSoeToe QieQelWoe QieQelWoeToe Seh Sel Tel Weh Qel Qeh Tie Teh Tee Toe Sie Soe See Qee SelSel TelSeh TeeWel QeeTelQee TelQeeTel QehTel QelSee WelQeeQee SehWee SeeSee SelTee QelTee QelSelTee TelTee TelSelTee TelQelTee TelQelSelTee WelTee WelSelTee WelQelTee WelQelSelTee WelTelTee WelTelSelTee WelTelQelTee WelTelQelSelTee SeeTee QeeTee QeeSeeTee TeeTee TeeSeeTee TeeQeeTee TeeQeeSeeTee WeeTee WeeSeeTee WeeQeeTee WeeQeeSeeTee WeeTeeTee WeeTeeSeeTee WeeTeeQeeTee WeeTeeQeeSeeTee SehTee QehTee QehSehTee TehTee TehSehTee TehQehTee TehQehSehTee WehTee WehSehTee WehQehTee WehQehSehTee WehTehTee WehTehSehTee WehTehQehTee WehTehQehSehTee SeeTel QeeTel QeeSeeTel TeeTel TeeSeeTel TeeQeeTel TeeQeeSeeTel WeeTel WeeSeeTel WeeQeeTel WeeQeeSeeTel WeeTeeTel WeeTeeSeeTel WeeTeeQeeTel WeeTeeQeeSeeTel SeeTeh QeeTeh QeeSeeTeh TeeTeh TeeSeeTeh TeeQeeTeh TeeQeeSeeTeh WeeTeh WeeSeeTeh WeeQeeTeh WeeQeeSeeTeh WeeTeeTeh WeeTeeSeeTeh WeeTeeQeeTeh WeeTeeQeeSeeTeh TeeWelTee SeeWehTee QieQelQoeSeeQel SehSeeQel SelSeeQel TehSeeQel WehSeeQel QieQelQoeSeeQolTeh SehSeeQolTeh SelSeeQolTeh TehSeeQolTeh WehSeeQolTeh QieQelQoeSeeTel SehSeeTel SelSeeTel TehSeeTel WehSeeTel QieQelQoeSeeWeh SehSeeWeh SelSeeWeh TehSeeWeh WehSeeWeh QieQelQoeSeeWoe SehSeeWoe SelSeeWoe TehSeeWoe WehSeeWoe";
+
+static const int token_types[] = {NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, NOUN, NOUN, ADJECTIVE, ADJECTIVE, CONJUNCTION, CONJUNCTION, CONJUNCTION, CONJUNCTION, PHRASE_CONJUNCTION, PHRASE_CONJUNCTION, IF, ELIF, ELSE, THEN, GROUP_BEGIN, GROUP_END, DELIMITER, DELIMITER, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, PROPOSITION, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_1, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_10, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_100, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_PLACE, NUMBER_SIGN, NUMBER_SIGN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN, NOUN};
+
+int token_type_index = 0;
+int problem = 0;
+
 int main() {
-    static const char text[] = "Tie Sie TieSoeToe QeeQeeQie QeeTeeQie QelWelQie TeeWelTee SeeTeh SeeSee SeeQehSie WoeTehQie TeeWeeQie TeeWeeWeeQie SeeWehTee QeeSeeTeh WehSehTee TelQelTee WeeQeeTee QeeTeh WehTee SelTee WeeTeeTee SeeTeh QehSehTee TelSelTee WeeSeeTee Qel QieWelSoe TehQeeWee WeeQeeSie WoeTehQie QeeTeeQie SeeWehTee SeeTeh TelQelSelTee WeeTeeQeeSeeTee SeeSee QelQehSie TeeWeeWeeQie WoeTehQie QeeQeeQie TeeWelTee SeeTeh WehTehTee QeeTee SeeTel WehTehQehSehTee WelTelQelSelTee WeeTeeQeeSeeTee Seh SieSoe TehQeeWee SeeSeeSehSie Soe Toe Sie QelQehSie SeeSeeSeeQeeWel QelQehSie See Tie Sie SieSoe TehQeeWee TeeQeeSieToe Soe Toe Sie SieSoe TehQeeWee QeeToeWie TeeTeeSieToe See Soe Soe TeeWeeSie TehQeeWee QeeTeeTeeSie SeeSee QehQehTieSieToe SeeWehTee SeeTeh TeeSeeTee Qee WehSeeQel TehQeeWee TieWelSoe Qel QieWelSoe Tel WehSeeQolTeh TehQeeWee TieWelSoe See WehSeeTel TehQeeWee TieWelSoe See WehSeeWeh TehQeeWee TieWelSoe Sel WehSeeWoe TehQeeWee QeeTelQee TieWelSoe See";
-
-    int status = 1;
-
     lex_callback = lexerTestCallback;
 
     lexerParse(text);
 
-    return status;
+    return problem;
 }
 
+extern char *yytext;
+
 void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
+    if(problem)
+        return;
+
     switch(token_type) {
         case GROUP_BEGIN:
         case GROUP_END:
@@ -60,6 +68,12 @@ void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
             printf("%s(%d) = %s\n", tokenTypeString(token_type), token_type, yystype->word);
         }
     }
+
+    if(token_types[token_type_index] != token_type) {
+        printf("Type wrong expected %s(%d) for word at %i index. %s\n", tokenTypeString(token_types[token_type_index]), token_types[token_type_index], token_type_index, yytext);
+        problem = 1;
+    }
+    token_type_index++;
 }
 
 static const char tokens[][19] = {
