@@ -19,7 +19,47 @@ int main() {
 }
 
 void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
-    printf("%s(%d) = %s\n", tokenTypeString(token_type), token_type, yystype->word);
+    switch(token_type) {
+        case GROUP_BEGIN:
+        case GROUP_END:
+        case END:
+        case IF:
+        case ELIF:
+        case ELSE:
+        case THEN: {
+            printf("%s(%d)\n", tokenTypeString(token_type), token_type);
+            break;
+        }
+        case DELIMITER:
+        case CONJUNCTION:
+        case PHRASE_CONJUNCTION:
+        case PROPOSITION:
+        case NOUN:
+        case ADJECTIVE:
+        case VERB:
+        case ADVERB:
+        case NOT_A_KEYWORD:
+        {
+            printf("%s(%d) = \"%s\"\n", tokenTypeString(token_type), token_type, yystype->word);
+            break;
+        }
+        case NUMBER_SIGN:
+        case NUMBER_100:
+        case NUMBER_10:
+        case NUMBER_1:
+        {
+            printf("%s(%d) = %lli\n", tokenTypeString(token_type), token_type, yystype->number);
+            break;
+        }
+        case NUMBER_PLACE:
+        {
+            printf("%s(%d) = %Lf\n", tokenTypeString(token_type), token_type, yystype->real_number);
+            break;
+        }
+        default: {
+            printf("%s(%d) = %s\n", tokenTypeString(token_type), token_type, yystype->word);
+        }
+    }
 }
 
 static const char tokens[][19] = {
