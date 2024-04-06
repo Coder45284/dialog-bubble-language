@@ -97,9 +97,9 @@ void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
         }
         case NUMBER_PLACE:
         {
-            printf("%s(%d) = %Lf\n", tokenTypeString(token_type), token_type, yystype->real_number);
+            printf("%s(%d) = %Le\n", tokenTypeString(token_type), token_type, yystype->real_number);
 
-            snprintf(result, sizeof(result) / sizeof(result[0]), "%Lf", yystype->real_number);
+            snprintf(result, sizeof(result) / sizeof(result[0]), "%Le", yystype->real_number);
 
             break;
         }
@@ -115,7 +115,7 @@ void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
         problem = 1;
     }
     if(strcmp(return_text[token_type_index], result) != 0) {
-        printf("Return does not match expected %s(%d) for word at %i index. \"%s\" is not \"%s\"\n", tokenTypeString(token_types[token_type_index]), token_types[token_type_index], token_type_index, return_text[token_type_index], result);
+        printf("Return does not match expected %s(%d) for word at %i index. Original Word: %s. Expected: \"%s\". Returned: \"%s\"\n", tokenTypeString(token_types[token_type_index]), token_types[token_type_index], token_type_index, yytext, return_text[token_type_index], result);
         problem = 1;
     }
     token_type_index++;

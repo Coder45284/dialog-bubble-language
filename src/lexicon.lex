@@ -263,24 +263,29 @@ int translateNumberWord(const char *word, char *prefix) {
 
     for(int pre = 0; pre < 4; pre++) {
         if(word_head[0] == PREFIXES[pre]) {
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 2; i++) {
                 word_head++;
                 if(word_head[0] == '\0')
-                    return -1;
+                    return -2;
             }
-
-            number += NUMBERS[pre];
+            word_head++;
+            if(word_head[0] == '\0'){
+                word_head -= 3;
+                pre = 4;
+            }
+            else
+                number += NUMBERS[pre];
         }
     }
 
     if(word_head[0] != 'T')
-        return -1;
+        return -3;
     word_head++;
     if(word_head[0] != 'e')
-        return -1;
+        return -4;
     word_head++;
     if(word_head[0] == '\0')
-        return -1;
+        return -5;
 
     *prefix = word_head[0];
 
