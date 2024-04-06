@@ -58,7 +58,7 @@ static const char *return_text[] = {
     "She", "They (all-female)", "Her", "Their (all-female)",
     "It", "They (all-neuter)", "Its", "Their (all-neuter)",
     "He", "They (all-male)", "His", "Their (all-male)",
-    "They (singular,all-non-binary)", "They (plural,all-non-binary)", "Their (singular,all-non-binary)", "Their (plural,all-non-binary)",
+    "They (all-non-binary,singular)", "They (all-non-binary,plural)", "Their (all-non-binary,singular)", "Their (all-non-binary,plural)",
     "You (singular)", "You all (plural)", "Your (singular)", "You all's (plural)",
     "You (female,singular)", "You all (female,plural)", "Your (female,singular)", "You all's (female,plural)",
     "You (neuter,singular)", "You all (neuter,plural)", "Your (neuter,singular)", "You all's (neuter,plural)",

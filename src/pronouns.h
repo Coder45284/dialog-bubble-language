@@ -154,12 +154,12 @@ const char PRONOUN_TABLE[MAX_PRONOUN_PERSON][MAX_PRONOUN_GENDER][MAX_PRONOUN_TYP
         },
         { // Genderless
             { // Noun
-                "They (singular,all-non-binary)", // Singular
-                "They (plural,all-non-binary)"    // Plural
+                "They (all-non-binary,singular)", // Singular
+                "They (all-non-binary,plural)"    // Plural
             },
             { // Adjective
-                "Their (singular,all-non-binary)", // Singular
-                "Their (plural,all-non-binary)"    // Plural
+                "Their (all-non-binary,singular)", // Singular
+                "Their (all-non-binary,plural)"    // Plural
             }
         }
     },
