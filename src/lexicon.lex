@@ -77,7 +77,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_PLACE);
 }
-((Weh(Teh)?(Qeh)?(Seh)?)|(Teh(Qeh)?(Seh)?)|(Qeh(Seh)?)|(Seh))Tee {
+(Weh)?(Teh)?(Qeh)?(Seh)?Tee {
     LOG_DEBUG("NUMBER_100");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -86,7 +86,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_100);
 }
-((Wel(Tel)?(Qel)?(Sel)?)|(Tel(Qel)?(Sel)?)|(Qel(Sel)?)|(Sel))Tee {
+(Wel)?(Tel)?(Qel)?(Sel)?Tee {
     LOG_DEBUG("NUMBER_10");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -95,7 +95,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_10);
 }
-((Wee(Tee)?(Qee)?(See)?)|(Tee(Qee)?(See)?)|(Qee(See)?)|(See))Tee {
+(Wee)?(Tee)?(Qee)?(See)?Tee {
     LOG_DEBUG("NUMBER_1");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
