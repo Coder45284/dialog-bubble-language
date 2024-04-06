@@ -33,7 +33,12 @@ static const char *return_text[] = {
     "You (male,singular)", "You all (male,plural)", "Your (male,singular)", "You all's (male,plural)",
     "You (non-binary,singular)", "You all (non-binary,plural)", "Your (non-binary,singular)", "You all's (non-binary,plural)",
     "And", "Or", "Because", "So", "And", "Or", "", "", "", "", "", "", "END", "END Yes|No", "Similar to", "Because", "Using", "To", "From", "On/At", "In/Inside of", "For", "Because of", "Of",
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "1", "-1",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+    "2.441406e-04", "5.960464e-08", "1.455192e-11", "3.552714e-15", "8.673617e-19", "3.906250e-03", "9.536743e-07", "2.328306e-10", "5.684342e-14", "1.387779e-17", "6.250000e-02", "1.525879e-05", "3.725290e-09", "9.094947e-13", "2.220446e-16",
+    "1.000000e+00", "4.096000e+03", "1.677722e+07", "6.871948e+10", "2.814750e+14", "1.152922e+18", "2.560000e+02", "1.048576e+06", "4.294967e+09", "1.759219e+13", "7.205759e+16", "1.600000e+01", "6.553600e+04", "2.684355e+08", "1.099512e+12",
+    "1", "-1",
     "Nowhere", "Everywhere", "Somewhere", "Where", "There", "None (no amount)", "All (amount)", "Some (amount)", "How much", "That amount", "No reason", "Every reason", "Some reason", "Why", "That reason", "Never", "Everytime", "Sometime", "When", "Then", "No one/Nothing", "Everyone/Everything", "Someone/Something", "Who/What", "That/That (one)"};
 
 
@@ -52,9 +57,6 @@ extern char *yytext;
 
 void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
     char result[sizeof(YYSTYPE)];
-
-    if(problem)
-        return;
 
     switch(token_type) {
         case GROUP_BEGIN:
