@@ -1,7 +1,7 @@
 def addPronouns(keywords : {}):
     A = [('S','1st Person'), ('W','1st Person Exclusionary'), ('T','3rd Person'), ('Q','2nd Person')]
     B = ['\0', ('S','Female'), ('W','Neuter'), ('T', 'Male'), ('Q','Genderless')]
-    C = [('S', 'Noun'), ('W','Adjective')]
+    C = [('S', 'NOUN'), ('W','ADJECTIVE')]
     D = ['\0', 'T']
 
     c_header = ""
@@ -53,7 +53,7 @@ def addPronouns(keywords : {}):
                     else:
                         c_header += "                \"BLANK\"  // {}\n".format("Plural")
 
-                    keywords[pronoun] = description
+                    keywords[pronoun] = (status_description, description)
 
                 if c != C[-1]:
                     c_header += "            },"
@@ -76,75 +76,75 @@ def addPronouns(keywords : {}):
 
 def addSentenceConjunctions(keywords : {}):
     conjunctions = []
-    conjunctions.append(("Seh", "And conjunction"))
-    conjunctions.append(("Sel", "Or conjunction"))
-    conjunctions.append(("Tel", "Because conjunction"))
-    conjunctions.append(("Weh", "So conjunction"))
+    conjunctions.append(("Seh", "CONJUNCTION", "And"))
+    conjunctions.append(("Sel", "CONJUNCTION", "Or"))
+    conjunctions.append(("Tel", "CONJUNCTION", "Because"))
+    conjunctions.append(("Weh", "CONJUNCTION", "So"))
 
     for d in conjunctions:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
-        keywords[d[0]] = d[1]
+        keywords[d[0]] = (d[1], d[2])
 
 def addPhraseConjunctions(keywords : {}):
     conjunctions = []
-    conjunctions.append(("Qel", "And phrase conjunction"))
-    conjunctions.append(("Qeh", "Or phrase conjunction"))
+    conjunctions.append(("Qel", "PHRASE_CONJUNCTION", "And"))
+    conjunctions.append(("Qeh", "PHRASE_CONJUNCTION", "Or"))
 
     for d in conjunctions:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
-        keywords[d[0]] = d[1]
+        keywords[d[0]] = (d[1], d[2])
 
 def addIfElses(keywords : {}):
     delimiters = []
-    delimiters.append(("Tie", "If <sentences>"))
-    delimiters.append(("Teh", "Else if"))
-    delimiters.append(("Tee", "Else"))
-    delimiters.append(("Toe", "Then"))
-    delimiters.append(("Sie", "Group begin"))
-    delimiters.append(("Soe", "Group end"))
+    delimiters.append(("Tie", "IF"))
+    delimiters.append(("Teh", "ELIF"))
+    delimiters.append(("Tee", "ELSE"))
+    delimiters.append(("Toe", "THEN"))
+    delimiters.append(("Sie", "GROUP_BEGIN"))
+    delimiters.append(("Soe", "GROUP_END"))
 
     for d in delimiters:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
-        keywords[d[0]] = d[1]
+        keywords[d[0]] = (d[1], "")
 
 def addDelimiters(keywords : {}):
     delimiters = []
-    delimiters.append(("See", "End of sentence"))
-    delimiters.append(("Qee", "End of sentence with Yes/No?"))
+    delimiters.append(("See", "DELIMITER", "END"))
+    delimiters.append(("Qee", "DELIMITER", "END Yes|No"))
 
     for d in delimiters:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
-        keywords[d[0]] = d[1]
+        keywords[d[0]] = (d[1], d[2])
 
 def addPrepositions(keywords : {}):
     # These where influnced from Toki Pona.
     # I had divided there meanings from Toki Pona and came up with 10 prepositions.
     # Esperanto has over 20 prepositions, so I decided it would be easier to to use Toki Pona's instead.
     prepositions = []
-    prepositions.append(("SelSel", "Preposition: 'similar to' noun"))
-    prepositions.append(("TelSeh", "Preposition: because noun"))
-    prepositions.append(("TeeWel", "Preposition: 'using' noun"))
-    prepositions.append(("QeeTelQee", "Preposition: to noun"))
-    prepositions.append(("TelQeeTel", "Preposition: from noun"))
-    prepositions.append(("QehTel", "Preposition: 'on|at' noun"))
-    prepositions.append(("QelSee", "Preposition: 'in/inside of' noun"))
-    prepositions.append(("WelQeeQee", "Preposition: 'for' noun"))
-    prepositions.append(("SehWee", "Preposition: 'because of' noun"))
-    prepositions.append(("SeeSee", "Preposition: 'of' noun"))
+    prepositions.append(("SelSel",    "PROPOSITION", "Similar to"))
+    prepositions.append(("TelSeh",    "PROPOSITION", "Before"))
+    prepositions.append(("TeeWel",    "PROPOSITION", "Using"))
+    prepositions.append(("QeeTelQee", "PROPOSITION", "To"))
+    prepositions.append(("TelQeeTel", "PROPOSITION", "From"))
+    prepositions.append(("QehTel",    "PROPOSITION", "On|At"))
+    prepositions.append(("QelSee",    "PROPOSITION", "In/Inside of"))
+    prepositions.append(("WelQeeQee", "PROPOSITION", "For"))
+    prepositions.append(("SehWee",    "PROPOSITION", "Because of"))
+    prepositions.append(("SeeSee",    "PROPOSITION", "Of"))
 
     for d in prepositions:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
-        keywords[d[0]] = d[1]
+        keywords[d[0]] = (d[1], d[2])
 
 
 def addNumbers(keywords : {}):
@@ -153,7 +153,7 @@ def addNumbers(keywords : {}):
     three = "Te"
     four  = "We"
 
-    kind = {("e", "first place"), ("l", "second place"), ("h", "third place")}
+    kind = {("e", "NUMBER_1"), ("l", "NUMBER_10"), ("h", "NUMBER_100")}
 
     for k in kind:
         for x in range(0, 16):
@@ -172,14 +172,15 @@ def addNumbers(keywords : {}):
             if (x & 0b0001) != 0:
                 number += one + k[0]
 
-            description = "Number {} in the {}".format(x,k[1])
-
             number += "Tee"
+
+            description = "Error: Number {} in the {}".format(number,k[1])
+            print(description)
 
             if number in keywords:
                 print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(number))
 
-            keywords[number] = description
+            keywords[number] = (k[1], "{}".format(x))
 
     kind = {("l", "lower from decimal"), ("h", "higher from decimal")}
 
@@ -207,17 +208,17 @@ def addNumbers(keywords : {}):
             if number in keywords:
                 print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(number))
 
-            keywords[number] = description
+            keywords[number] = ("NUMBER_PLACE", "{}".format(x))
 
     number_starts = []
-    number_starts.append(("TeeWelTee", "Positive number beginning"))
-    number_starts.append(("SeeWehTee", "Negative number beginning"))
+    number_starts.append(("TeeWelTee", "NUMBER_SIGN",  1))
+    number_starts.append(("SeeWehTee", "NUMBER_SIGN", -1))
 
     for d in number_starts:
         if d[0] in keywords:
             print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(d[0]))
 
-        keywords[d[0]] = d[1]
+        keywords[d[0]] = (d[1], "{}".format(d[2]))
 
 def addCorrelatives(keywords : {}):
     types = [("QieQelQoe", "None"), ("Seh", "Every"), ("Sel", "Some"), ("Teh", "What"), ("Weh", "That")]
@@ -245,7 +246,7 @@ def addCorrelatives(keywords : {}):
             if correlative in keywords:
                 print("Error: There should be no duplicate definitions. '{}' has been declared before.".format(correlative))
 
-            keywords[correlative] = t[1] + " " + k[1]
+            keywords[correlative] = ("NOUN", t[1] + " " + k[1])
 
             if t != types[-1]:
                 c_header += "        \"BLANK\", // {}\n".format(t[1])
@@ -276,4 +277,19 @@ print("Keywords amount is ", len(keywords))
 for key in keywords:
     print(key, ": ", keywords[key])
 
+text = 'static const char text[] = "'
+token = 'static const int token_types[] = {'
+return_text = 'static const char *return_text[] = {'
 
+for key in keywords:
+    text += key + " "
+    token += keywords[key][0] + ", "
+    return_text += '"' + keywords[key][1] + '", '
+
+text += '";'
+token += '};'
+return_text += '};'
+
+print(text, end="\n\n")
+print(token, end="\n\n")
+print(return_text, end="\n\n")
