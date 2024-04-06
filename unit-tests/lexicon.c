@@ -50,6 +50,21 @@ int main() {
 
     lexerParse(text);
 
+    long double number = 1.0;
+    printf("static const long double BEFORE_DECIMAL[] = {");
+    for(int i = 0; i < 16; i++) {
+        number *= (long double)((long double)1.0 / (long double)4096.0);
+        printf("%Le, ", number);
+    }
+    printf("};\n");
+    number = 1.000000e+00;
+    printf("static const long double POST_DECIMAL[] = {");
+    for(int i = 0; i < 16; i++) {
+        printf("%Le, ", number);
+        number *= (long double)4096.0;
+    }
+    printf("};\n");
+
     return problem;
 }
 
