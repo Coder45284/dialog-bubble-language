@@ -78,7 +78,7 @@ typedef struct {
     const char *string;
 } ExpectedResult;
 
-ExpectedResult expected_results[] = {
+static const ExpectedResult expected_results[] = {
     {NOUN, "I/Me"}, {NOUN, "We/Us"}, {ADJECTIVE, "My"}, {ADJECTIVE, "Our"}
 };
 
@@ -86,6 +86,12 @@ int token_type_index = 0;
 int problem = 0;
 
 int main() {
+    printf("static const ExpectedResult expected_results[] = {\n    ");
+    for(int i = 0; i < sizeof(token_types)/sizeof(token_types[0]); i++) {
+        printf("{%s, \"%s\"}, ", tokenTypeString(token_types[i]), return_text[i]);
+    }
+    printf("}\n");
+
     lex_callback = lexerTestCallback;
 
     lexerParse(text);
