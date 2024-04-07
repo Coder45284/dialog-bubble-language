@@ -60,7 +60,7 @@ SehWee { LOG_DEBUG("PROPOSITION 'because of'"); ENTER_WORD_TEXT("Because of"); L
 SeeSee { LOG_DEBUG("PROPOSITION 'of'"); ENTER_WORD_TEXT("Of"); LEX_TOKEN_RETURN(PROPOSITION); }
 TeeWelTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number =  1; LEX_TOKEN_RETURN(NUMBER_SIGN); }
 SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBER_SIGN); }
-(Wee)?(Tee)?(Qee)?(See)?Te[lh] {
+((Wee(Tee)?(Qee)?(See)?)|(Tee(Qee)?(See)?)|(Qee(See)?)|(See))Te[lh] {
     LOG_DEBUG("NUMBER_PLACE");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -82,7 +82,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_PLACE);
 }
-(Weh)?(Teh)?(Qeh)?(Seh)?Tee {
+((Weh(Teh)?(Qeh)?(Seh)?)|(Teh(Qeh)?(Seh)?)|(Qeh(Seh)?)|(Seh))Tee {
     LOG_DEBUG("NUMBER_100");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -91,7 +91,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_100);
 }
-(Wel)?(Tel)?(Qel)?(Sel)?Tee {
+((Wel(Tel)?(Qel)?(Sel)?)|(Tel(Qel)?(Sel)?)|(Qel(Sel)?)|(Sel))Tee {
     LOG_DEBUG("NUMBER_10");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
@@ -100,7 +100,7 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     LEX_TOKEN_RETURN(NUMBER_10);
 }
-(Wee)?(Tee)?(Qee)?(See)?Tee {
+((Wee(Tee)?(Qee)?(See)?)|(Tee(Qee)?(See)?)|(Qee(See)?)|(See))Tee {
     LOG_DEBUG("NUMBER_1");
     // WARNING: If you change this regex, make sure that this code will still work. This code relies on the structure of this regex.
 
