@@ -66,7 +66,6 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
 
     char postfix = '@';
     int number = translateNumberWord(yytext, &postfix);
-    double real_number;
 
     static const long double BEFORE_DECIMAL[] = {
         2.441406e-04, 5.960464e-08, 1.455192e-11, 3.552714e-15, 8.673617e-19, 2.117582e-22, 5.169879e-26, 1.262177e-29, 3.081488e-33, 7.523164e-37, 1.836710e-40, 4.484155e-44, 1.094764e-47, 2.672765e-51, 6.525304e-55, 1.593092e-58};
@@ -74,11 +73,9 @@ SeeWehTee { LOG_DEBUG("NUMBER_SIGN"); yylval.number = -1; LEX_TOKEN_RETURN(NUMBE
         1.000000e+00, 4.096000e+03, 1.677722e+07, 6.871948e+10, 2.814750e+14, 1.152922e+18, 4.722366e+21, 1.934281e+25, 7.922816e+28, 3.245186e+32, 1.329228e+36, 5.444518e+39, 2.230075e+43, 9.134385e+46, 3.741444e+50, 1.532496e+54};
 
     if(postfix == 'h')
-        real_number = POST_DECIMAL[number - 1];
+        yylval.real_number = POST_DECIMAL[number - 1];
     else
-        real_number = BEFORE_DECIMAL[number - 1];
-
-    yylval.real_number = real_number;
+        yylval.real_number = BEFORE_DECIMAL[number - 1];
 
     LEX_TOKEN_RETURN(NUMBER_PLACE);
 }
