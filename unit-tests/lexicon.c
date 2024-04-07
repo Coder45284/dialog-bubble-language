@@ -59,13 +59,18 @@ static const Test main_test = {
     }
 };
 
-int token_type_index = 0;
+static const Test *selected_test;
+
+int token_type_index;
 int problem = 0;
 
 int main() {
     lex_callback = lexerTestCallback;
 
-    lexerParse(main_test.text);
+    selected_test = &main_test;
+    token_type_index = 0;
+
+    lexerParse(selected_test->text);
 
     return problem;
 }
@@ -132,12 +137,12 @@ void lexerTestCallback(int token_type, const YYSTYPE *const yystype) {
         }
     }
 
-    if(main_test.results[token_type_index].token_type != token_type) {
-        printf("Type wrong expected %s(%d) for word at %i index. %s\n", tokenTypeString(main_test.results[token_type_index].token_type), main_test.results[token_type_index].token_type, token_type_index, yytext);
+    if(selected_test->results[token_type_index].token_type != token_type) {
+        printf("Type wrong expected %s(%d) for word at %i index. %s\n", tokenTypeString(selected_test->results[token_type_index].token_type), selected_test->results[token_type_index].token_type, token_type_index, yytext);
         problem = 1;
     }
-    if(strcmp(main_test.results[token_type_index].string, result) != 0) {
-        printf("Return does not match expected %s(%d) for word at %i index. Original Word: %s. Expected: \"%s\". Returned: \"%s\"\n", tokenTypeString(main_test.results[token_type_index].token_type), main_test.results[token_type_index].token_type, token_type_index, yytext, main_test.results[token_type_index].string, result);
+    if(strcmp(selected_test->results[token_type_index].string, result) != 0) {
+        printf("Return does not match expected %s(%d) for word at %i index. Original Word: %s. Expected: \"%s\". Returned: \"%s\"\n", tokenTypeString(selected_test->results[token_type_index].token_type), selected_test->results[token_type_index].token_type, token_type_index, yytext, selected_test->results[token_type_index].string, result);
         problem = 1;
     }
     token_type_index++;
