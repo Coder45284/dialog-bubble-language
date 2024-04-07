@@ -73,6 +73,14 @@ static const char *return_text[] = {
     "1", "-1",
     "Nowhere", "Everywhere", "Somewhere", "Where", "There", "None (no amount)", "All (amount)", "Some (amount)", "How much", "That amount", "No reason", "Every reason", "Some reason", "Why", "That reason", "Never", "Everytime", "Sometime", "When", "Then", "No one/Nothing", "Everyone/Everything", "Someone/Something", "Who/What", "That/That (one)"};
 
+typedef struct {
+    int         token_type;
+    const char *string;
+} ExpectedResult;
+
+ExpectedResult expected_results[] = {
+    {NOUN, "I/Me"}, {NOUN, "We/Us"}, {ADJECTIVE, "My"}, {ADJECTIVE, "Our"}
+};
 
 int token_type_index = 0;
 int problem = 0;
